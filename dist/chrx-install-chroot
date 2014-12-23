@@ -1,0 +1,173 @@
+#!/bin/bash
+#
+# chrx-install-chroot
+#
+# This portion of the installation process is run in a chroot.
+#
+
+
+## these are the currently-newest LTS/latest released kernel packages
+## 3.17 includes important patches for the cyapa trackpad
+## 3.18 is currently released in development only
+## TODO: keep these updated, though we do check before installing!
+NEW_KERNEL_BASE="http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17.1-utopic"
+NEW_KERNEL_REV="3.17.1-031701_3.17.1-031701.201410150735"
+NEW_KERNEL_GREV="3.17.1-031701-generic_3.17.1-031701.201410150735"
+NEW_KV_MAJ=3
+NEW_KV_MIN=17
+NEW_KV_PAT=1
+
+
+export DEBIAN_FRONTEND=noninteractive
+
+echo -e "\n${ANSI_GRN}Upgrading Ubuntu core image files.${ANSI_RST}"
+echo ${CHRX_TZ} > /etc/timezone
+
+apt-get -y ${VERBOSITY_APTGET} update
+apt-get -y ${VERBOSITY_APTGET} dist-upgrade
+apt-get -y ${VERBOSITY_APTGET} install ubuntu-minimal
+apt-get -y ${VERBOSITY_APTGET} install curl
+apt-get -y ${VERBOSITY_APTGET} install software-properties-common
+
+echo -e "\n${ANSI_GRN}Adding software respositories.${ANSI_RST}"
+add-apt-repository main
+add-apt-repository universe
+add-apt-repository restricted
+add-apt-repository multiverse 
+# for google chrome
+curl -O ${VERBOSITY_CURL} https://dl-ssl.google.com/linux/linux_signing_key.pub
+sudo apt-key add linux_signing_key.pub
+add-apt-repository "deb http://dl.google.com/linux/chrome/deb/ stable main"
+apt-get -y ${VERBOSITY_APTGET} update
+
+## set TZ
+echo -e "\n${ANSI_GRN}Setting timezone to \"${CHRX_TZ}\".${ANSI_RST}"
+dpkg-reconfigure tzdata
+
+if [ "${CHRX_OS_METAPKG}" != "ubuntu-minimal" ]; then
+  echo -e "\n${ANSI_GRN}Installing Ubuntu metapackage \"${CHRX_OS_METAPKG}\".${ANSI_RST}"
+  apt-get -y ${VERBOSITY_APTGET} install ${CHRX_OS_METAPKG}
+fi
+
+echo -e "\n${ANSI_GRN}Installing language support.${ANSI_RST}"
+apt-get -y ${VERBOSITY_APTGET} install language-pack-en language-pack-gnome-en firefox-locale-en wbritish hunspell-en-ca
+
+echo -e "\n${ANSI_GRN}Setting locale to \"${CHRX_LOCALE}\".${ANSI_RST}"
+update-locale LANG=${CHRX_LOCALE} LC_MESSAGES=${CHRX_LOCALE}
+
+## install google chrome iff we have X.
+if [ -x /usr/bin/X ]; then
+  echo -e "\n${ANSI_GRN}Installing Google Chrome.${ANSI_RST}"
+  apt-get -y ${VERBOSITY_APTGET} install google-chrome-stable
+fi
+
+
+## install base kernel (save some space by omitting headers)
+echo -e "\n${ANSI_GRN}Installing Linux kernel and boot environment${ANSI_RST}"
+apt-get -y ${VERBOSITY_APTGET} install linux-image-generic
+#apt-get -y ${VERBOSITY_APTGET} install linux-headers-generic
+
+
+## install newest-released kernel, iff installed kernel is older
+KV=`dpkg -s linux-image-generic|grep "^Version:"|cut -d\  -f2|cut -d\. -f1-3`
+KV_MAJ=`echo ${KV} | cut -d\. -f1`
+KV_MIN=`echo ${KV} | cut -d\. -f2`
+KV_PAT=`echo ${KV} | cut -d\. -f3`
+
+echo -e "\n${ANSI_GRN}Installed kernel is version ${KV_MAJ}.${KV_MIN}.${KV_PAT}${ANSI_RST}"
+
+new_is_newer=""
+if [ "${NEW_KV_MAJ}" -gt "${KV_MAJ}" ]; then
+  new_is_newer="yes"
+elif [ "${NEW_KV_MAJ}" -eq "${KV_MAJ}" ]; then
+  if [ "${NEW_KV_MIN}" -gt "${KV_MIN}" ]; then
+    new_is_newer="yes"
+  elif [ "${NEW_KV_MIN}" -eq "${KV_MIN}" ]; then
+    if [ "${NEW_KV_PAT}" -gt "${KV_PAT}" ]; then
+      new_is_newer="yes"
+    fi
+  fi
+fi
+
+if [ "${new_is_newer}" ]; then
+  echo "Newer kernel available (${NEW_KERNEL_REV} > ${KV})"
+  echo -e "\n${ANSI_GRN}Installing updated Linux kernel (version ${NEW_KERNEL_REV})${ANSI_RST}"
+  rm -f linux-*.deb
+  curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-image-${NEW_KERNEL_GREV}_amd64.deb
+  #curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_GREV}_amd64.deb
+  #curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_REV}_all.deb
+  dpkg -i linux-*.deb
+  rm -f linux-*.deb
+else
+  echo "Installed kernel is newest-known (${KV} >= ${NEW_KERNEL_REV})"
+fi
+
+apt-get -y ${VERBOSITY_APTGET} install grub-pc
+
+
+## GRUB: modify boot settings
+## unfortunately, we have to do this in the chroot. 
+
+## comment old settings
+sed -i~ 's/^\(GRUB_HIDDEN_TIMEOUT\)/#\1/g' /etc/default/grub
+sed -i~ 's/^\(GRUB_TIMEOUT\)/#\1/g' /etc/default/grub
+sed -i~ 's/^\(GRUB_CMDLINE_LINUX\)/#\1/g' /etc/default/grub
+## add our settings
+cat >> /etc/default/grub <<EO_GRUB
+
+## boot settings
+##
+## GRUB_TIMEOUT        delay before boot (ESC for menu), in seconds
+## GRUB_TIMEOUT_STYLE  UI for delay (menu|countdown|hidden)
+GRUB_TIMEOUT=3
+GRUB_TIMEOUT_STYLE=countdown
+
+## kernel parameters
+##
+## GRUB_CMDLINE_LINUX_DEFAULT   sets parms for normal boot
+## GRUB_CMDLINE_LINUX           sets parms for normal and recovery boot
+##
+##  quiet                     suppress most messages
+##  splash                    boot with splash screen
+##  boot=local                (redundant?)
+##  acpi_osi=Linux            add Linux to list of supported OS interfaces
+##  acpi_backlight=vendor     prefer vendor backlight driver
+##  add_efi_memmap            include EFI extensions to E820 BIOS map
+##  intel_pstate=enable       enable CPI power state management, cpupower(8)
+##  i915.modeset=1            setting for Intel 915 GPU/HD Audio chip
+##  tpm_tis.force=1           ignore ACPI TPM interrupts, poll instead
+##  tpm_tis.interrupts=0      skip TPM interrupt probing (redundant with prev)
+##  nmi_watchdog=panic,lapic  panic when NMI watchdog expires or local APIC
+##  elevator=noop             do not reorder disk IO to minimize head seeks
+##  resume=/dev/sda5          save hibernation state to /dev/sda5
+##  noresume                  no resume partition (for hibernate)
+##  noswap                    no swap partition
+##
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash boot=local acpi_osi=Linux acpi_backlight=vendor add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic elevator=noop resume=/dev/sda5"
+
+EO_GRUB
+
+grub-mkconfig -o /boot/grub/grub.cfg
+grub-install ${CHRX_TARGET_DISK} --force
+
+echo -e "\n${ANSI_GRN}Adding user \"${CHRX_USERNAME}\".${ANSI_RST}"
+useradd -m ${CHRX_USERNAME} -s /bin/bash
+echo ${CHRX_USERNAME} | echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
+#passwd -e ${CHRX_USERNAME}
+adduser ${CHRX_USERNAME} adm
+adduser ${CHRX_USERNAME} sudo
+
+#echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
+#apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
+#apt-get -y ${VERBOSITY_APTGET} autoremove
+
+## add desktop bits, iff we have X
+if [ -x /usr/bin/X ]; then
+  echo -e "\n${ANSI_GRN}Installing desktop compatibility pkgs.${ANSI_RST}"
+  apt-get -y ${VERBOSITY_APTGET} install xbindkeys xdotool xbacklight pulseaudio-utils xvkbd zram-config
+fi
+
+apt-get -y ${VERBOSITY_APTGET} clean
+
+apt list --installed > ${CHRX_CACHE_DIR}/apt-list-installed
+

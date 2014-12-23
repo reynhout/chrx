@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# chrx-install-extras
+#
+# This is installed into /var/cache/chrx/dist/chrx-install-extras on the
+# newly-built system. It is not run automatically, but exists for the
+# convenience of those who have requested it.
+#
+
+DEBIAN_FRONTEND="noninteractive"
+
+export DEBIAN_FRONTEND
+
+## admin bits
+apt-get -y install vim tmux ssh
+
+## dev
+apt-get -y install arduino geany geany-plugins idle3 ruby squeak-vm #scratch
+
+## office
+apt-get -y install libreoffice qpdf
+
+## graphics
+apt-get -y install blender gimp inkscape
+
+## music/video
+apt-get -y install lame rhythmbox youtube-dl
+#apt-get -y install ubuntu-restricted-extras vlc
+
+## games
+#apt-get -y install wesnoth teeworlds
+
+## minecraft
+#apt-get -y install openjdk-8-jre  # total: 111MB
+apt-get -y install default-jdk    # total: 112MB
+cat << EOM
+Download minecraft.jar from link on https://minecraft.net/download
+  https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+Run with:
+  java -jar Minecraft.jar
+
+Or, to install for all users and add a menu launcher:
+  sudo bash
+  curl -o /usr/local/bin/Minecraft.jar https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+  mkdir -p /usr/local/share/applications
+  cat > /usr/local/share/applications/minecraft.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=Minecraft
+Comment=Minecraft
+Exec=java -jar /usr/local/bin/Minecraft.jar
+Icon=
+Categories=Game;
+EOF
+
+(you might need to restart the menu panel, or log out/in to see the menu item)
+EOM

@@ -1,0 +1,16 @@
+PREREQ=""
+
+prereqs()
+{
+        echo "${PREREQ}"
+}
+
+case ${1} in
+        prereqs)
+                prereqs
+                exit 0
+                ;;
+esac
+
+echo -n "0000:00:1d.0" > /sys/bus/pci/drivers/ehci-pci/unbind
+exit 0

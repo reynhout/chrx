@@ -1,0 +1,11 @@
+#!/bin/sh
+
+case "${1}" in
+    hibernate)
+        /sbin/rmmod ath9k
+        ;;
+    resume|thaw)
+        /sbin/modprobe ath9k
+        ;;
+esac
+exit 0

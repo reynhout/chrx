@@ -1,0 +1,8 @@
+## begin chrx additions
+#HandleLidSwitch=ignore
+#HandlePowerKey=ignore
+HandlePowerKey=suspend
+HandleSuspendKey=suspend
+HandleHibernateKey=suspend
+HandleLidSwitch=suspend
+## end chrx additions

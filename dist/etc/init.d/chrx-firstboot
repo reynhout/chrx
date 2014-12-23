@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# chrx-firstboot
+#
+# fix unresolved bits from install
+#
+
+CHRX_CACHE_DIR="/var/cache/chrx"
+FIRSTBOOT_LOG="${CHRX_CACHE_DIR}/firstboot.log"
+SENTINEL_FILE="${CHRX_CACHE_DIR}/firstboot.done"
+
+[ ! -d ${CHRX_CACHE_DIR} ] && mkdir -p ${CHRX_CACHE_DIR}
+
+if [ ! -f ${SENTINEL_FILE} ]; then
+  echo "chrx first boot finalization, `date`" | tee -a ${FIRSTBOOT_LOG}
+
+  ## whoopsie fails to fully install in chroot, leaving itself
+  ## and therefore the metapackage incompletely installed.
+  ##
+  ## this should fix it, but we should find a good test to make
+  ## sure it's necessary.
+  apt-get -y install whoopsie | tee -a ${FIRSTBOOT_LOG}
+
+  touch ${SENTINEL_FILE}
+fi
+

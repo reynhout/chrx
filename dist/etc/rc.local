@@ -1,0 +1,43 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+#exit 0
+
+## begin chrx additions
+
+## fixes for suspend/resume
+##
+## set list of devices that are capable if triggering a wakeup.
+## each echo toggles device status; each device is capable on boot,
+## so any devices listed here will become incapable.
+##
+## LID0 Lid Switch
+## TPAD Touchpad
+## TSCR (prevent wakeup immediately after sleep) (no longer needed?)
+## HDEF (unknown)
+## EHCI Enhanced Host Controller Interface (USB controller)
+## XHCI Extensible Host Controller Interface (USB controller)
+
+echo LID0 > /proc/acpi/wakeup
+echo TPAD > /proc/acpi/wakeup
+echo TSCR > /proc/acpi/wakeup
+#echo HDEF > /proc/acpi/wakeup
+echo EHCI > /proc/acpi/wakeup
+echo XHCI > /proc/acpi/wakeup
+
+## set backlight brightness on boot (min is 0, max is 937)
+echo 400 > /sys/class/backlight/intel_backlight/brightness
+
+exit 0
+## end chrx additions
+

@@ -1,0 +1,33 @@
+# backward/forward
+"xvkbd -xsendevent -text "\A\[Left]""
+F1
+
+"xvkbd -xsendevent -text "\A\[Right]""
+F2
+
+# backlight decrease/increase
+"xbacklight -dec 10"
+F6
+"xbacklight -inc 10"
+F7
+
+# volume mute/decrease/increase
+"pactl set-sink-mute alsa_output.pci-0000_00_1b.0.analog-stereo toggle"
+F8
+"pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- -10%"
+F9
+"pactl set-sink-volume alsa_output.pci-0000_00_1b.0.analog-stereo -- +10%"
+F10
+
+# page up/down, home, end
+"xvkbd -xsendevent -text '\[Page_Up]'"
+Alt + Up
+
+"xvkbd -xsendevent -text '\[Page_Down]'"
+Alt + Down
+
+"xvkbd -xsendevent -text '\[Home]'"
+Alt + Left
+
+"xvkbd -xsendevent -text '\[End]'"
+Alt + Right

@@ -1,0 +1,199 @@
+#!/bin/bash
+#
+# setup_storage
+#
+# This script is _sourced_ from install-chrx (not exec'ed),
+# so all functions and variables from there are available.
+#
+# It cannot be run directly from the commandline.
+#
+
+case "${HWID}" in
+  PEPPY*)
+    echo_info "Hardware ID \"${HWID}\" is recognized and tested."
+    ;;
+  *)
+    echo_warn "Hardware ID \"${HWID}\" is unknown and untested. Trying anyway!"
+    ;;
+esac
+
+echo_info "Checking hardware support for legacy boot...  \c"
+
+if [ ! -x /usr/sbin/mosys ]; then
+  echo_fail "ERROR"
+  cat <<- EOF
+	${ANSI_RED}
+	Can't find /usr/bin/mosys. Make sure you are running the default
+	developer mode Linux shell, logged in as chronos@localhost.
+	${ANSI_RST}
+	EOF
+  exit 1
+fi
+
+if [ -z "`/usr/sbin/mosys eeprom map | grep RW_LEGACY`" ]; then
+  echo_fail "ERROR"
+  cat <<- EOF
+	${ANSI_RED}
+	This Chrome device does not support CTRL-L Legacy SeaBIOS booting.
+
+	You might have better luck with the old ChrUbuntu script.
+	${ANSI_RST}
+	EOF
+
+  exit 1
+else
+  echo_info "OK"
+fi
+
+
+if [ "${CHRX_TARGET_DISK}" ]; then
+  echo_info "Installing to target disk ${ANSI_WHT}${CHRX_TARGET_DISK}${ANSI_RST}"
+  cat <<- EOF
+	${ANSI_YEL}
+	  WARNING: All data on ${CHRX_TARGET_DISK} will be erased!
+	           Continue at your own risk!
+	${ANSI_RST}
+	EOF
+
+  echo_warn "Press [enter] to continue or CTRL-C to quit: \c"
+  prompt_if_interactive
+
+  echo_info "Setting up target disk ${CHRX_TARGET_DISK}... \c"
+  ext_size="`blockdev --getsz ${CHRX_TARGET_DISK}`"
+  aroot_size=$((${ext_size} - 65600 - 33))
+  parted --script ${CHRX_TARGET_DISK} "mktable gpt"
+  cgpt create ${CHRX_TARGET_DISK} 
+  cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l GRUB-BOOT -t "reserved" ${CHRX_TARGET_DISK}
+  cgpt add -i 7 -b 65600 -s ${aroot_size} -l ROOT-A -t "rootfs" ${CHRX_TARGET_DISK}
+  sync
+  blockdev --rereadpt ${CHRX_TARGET_DISK}
+  partprobe ${CHRX_TARGET_DISK}
+  crossystem dev_boot_usb=1
+  parted ${CHRX_TARGET_DISK} set 6 bios_grub on
+  echo_info "OK"
+else
+  CHRX_TARGET_DISK="`rootdev -d -s`"
+  echo_info "Setting up target disk ${CHRX_TARGET_DISK}..."
+  # Do partitioning (if we haven't already)
+  ckern_size="`cgpt show -i 6 -n -s -q ${CHRX_TARGET_DISK}`"
+  croot_size="`cgpt show -i 7 -n -s -q ${CHRX_TARGET_DISK}`"
+  state_size="`cgpt show -i 1 -n -s -q ${CHRX_TARGET_DISK}`"
+
+  max_os_size=$((${state_size}/1024/1024/2))
+  rec_os_size=$((${max_os_size} - 1))
+  # If KERN-C and ROOT-C are one, we partition, otherwise assume they're what they need to be...
+  if [ "${ckern_size}" = "1" -o "${croot_size}" = "1" ]; then
+    while :
+    do
+      cat <<- EOF
+
+	How much disk space (in gigabytes) should we reserve for Ubuntu?
+
+	Choose between 5 and ${max_os_size} GB (recommended: ${rec_os_size})
+
+	EOF
+      echo_info "Enter size in GB [${rec_os_size}]: \c"
+      prompt_if_interactive
+      os_size=${PROMPT_RESPONSE}
+      [ -z "${os_size}" ] && os_size=${rec_os_size}
+      os_size_test=`echo ${os_size} | grep "^[0-9][0-9]*$"`
+      if [ -z "${os_size_test}" ]; then
+        echo_fail "\nNumbers only please!"
+        continue
+      fi
+      if [ ${os_size} -lt 5 -o ${os_size} -gt ${max_os_size} ]; then
+        echo_fail "\nPlease enter a number between 5 and ${max_os_size}!"
+        continue
+      fi
+      break
+    done
+
+    # We've got our size in GB for ROOT-C so do the math...
+
+    rootc_size=$((${os_size}*1024*1024*2)) # sector size for rootc
+    kernc_size=32768 # kernc is always 16MB
+
+    #new stateful size with rootc and kernc subtracted from original
+    stateful_size=$((${state_size} - ${rootc_size} - ${kernc_size}))
+
+    #start stateful at the same spot it currently starts at
+    stateful_start="`cgpt show -i 1 -n -b -q ${CHRX_TARGET_DISK}`"
+
+    #start kernc at stateful start plus stateful size
+    kernc_start=$((${stateful_start} + ${stateful_size}))
+
+    #start rootc at kernc start plus kernc size
+    rootc_start=$((${kernc_start} + ${kernc_size}))
+
+    echo "  stateful_start ${stateful_start}"
+    echo "  stateful_size  ${stateful_size}"
+    echo "  kernc_start    ${kernc_start}"
+    echo "  kernc_size     ${kernc_size}"
+    echo "  rootc_start    ${rootc_start}"
+    echo "  rootc_size     ${rootc_size}"
+
+    ## Do the real work
+    echo_info "\n\nModifying partition table to make room for Ubuntu." 
+
+    umount -f /mnt/stateful_partition > /dev/null 2>&1
+    cgpt add -i 1 -b ${stateful_start} -s ${stateful_size} -l STATE ${CHRX_TARGET_DISK}
+    cgpt add -i 6 -b ${kernc_start} -s ${kernc_size} -l KERN-C -t "kernel" ${CHRX_TARGET_DISK}
+    cgpt add -i 7 -b ${rootc_start} -s ${rootc_size} -l ROOT-C ${CHRX_TARGET_DISK}
+
+    cat <<- EOF
+		${ANSI_GRN}
+		Your Chromebook will reboot and clear your data.
+
+		Run chrx again to install Ubuntu.
+		${ANSI_RST}
+		EOF
+    echo_warn "Press [enter] to continue: \c"
+    prompt_if_interactive
+
+    reboot
+    exit
+  fi
+fi
+
+## find targets
+## target_kern isn't used anywhere, and I'm not sure what the original
+## intent was, but I'm leaving these harmless bits in for now.
+if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]
+then
+  target_rootfs="${CHRX_TARGET_DISK}p7"
+  target_kern="${CHRX_TARGET_DISK}p6"
+else
+  target_rootfs="${CHRX_TARGET_DISK}7"
+  target_kern="${CHRX_TARGET_DISK}6"
+fi
+
+echo_info "\nInstallation partitions:"
+cat <<EOF
+
+  kernel: ${target_kern}
+  root:   ${target_rootfs}
+
+EOF
+
+if [ "`mount | grep ${target_rootfs}`" ]; then
+  echo_fail "Install target ${target_rootfs} is already mounted!\n"
+  echo_warn "Unmount manually (sudo umount -R ${CHRX_INSTALL_ROOT}) or reboot"
+  echo_warn "to try again."
+  exit 1
+fi
+
+mkfs.ext4 ${VERBOSITY_MKFS} ${target_rootfs}
+
+echo_info "Preparing installation root directory ${CHRX_INSTALL_ROOT}"
+rm -rf ${CHRX_INSTALL_ROOT}
+mkdir -p ${CHRX_INSTALL_ROOT}
+if [ ! -d "${CHRX_INSTALL_ROOT}" ]; then
+  echo_fail "fatal: Unable to create installation root directory!"
+  exit 1
+fi
+
+mount -t ext4 ${target_rootfs} ${CHRX_INSTALL_ROOT}
+
+## clear error variable, which is checked in the calling script
+SETUP_STORAGE_ERROR=""
+
