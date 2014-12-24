@@ -1,5 +1,7 @@
 # chrx
 
+**[github.com/reynhout/chrx](https://github.com/reynhout/chrx)**
+
 Use **chrx** to install Linux onto your Chromebook.
 
 Presently, this means Ubuntu (or a variant) onto your Acer C720.
@@ -35,6 +37,8 @@ Run the following command from your `chronos@localhost` shell:
 
 `curl -Oks https://chrx.org/go && sh go`
 <!-- yes, by all means read the all of the code first! -->
+
+Then follow the instructions from there.
 
 When installing onto the internal SSD of a clean Chromebook, **chrx**
 will repartition the drive to allocate space for the new operating system,
