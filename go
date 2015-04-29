@@ -9,6 +9,7 @@
 CHRX_CACHE0_DIR="/var/tmp/chrx"
 
 ## silence sudo msg
+## TODO: use sudo -v instead
 sudo true >/dev/null 2>&1
 
 rm -rf ${CHRX_CACHE0_DIR}

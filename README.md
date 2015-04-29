@@ -1,5 +1,7 @@
 # chrx
 
+**[chrx.org](https://chrx.org/)**
+<br />
 **[github.com/reynhout/chrx](https://github.com/reynhout/chrx)**
 
 Use **chrx** to install Linux onto your Chromebook.
@@ -57,6 +59,8 @@ Options
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
    -i IMAGE        OS-specific image name (lts, dev, latest) [latest]
+   -r RELEASE      OS-specific release version (14.10, etc) []
+                   (takes precedence over version derived from IMAGE, if any)
    -U USERNAME     username of first created user [chrx]
    -H HOSTNAME     hostname for new system [chrx]
    -L LOCALE       locale for new system [en_US.UTF-8]
@@ -90,7 +94,10 @@ complicated, and instructions are outside the scope of this README.
 To point **chrx** at your cache, just set the `CHRX_WEB_ROOT`
 environment variable before running the `go` script, like this:
 
-`CHRX_WEB_ROOT="http://myserver/chrx" curl -O http://myserver/chrx/go && sh go`
+```
+export CHRX_WEB_ROOT="http://myserver/chrx"
+curl -O http://myserver/chrx/go && sh go
+```
 
 
 ## test suite
@@ -152,7 +159,7 @@ can be installed from USB/SD flash RAM.
 Running code from the net is always an act that requires careful thought.
 **chrx** can be run directly from the net, and by default will download
 additional code via the same mechanisms. Any of these downloads could be
-misdirected or compromised. Downloading from a unsecured network (e.g.
+misdirected or compromised. Downloading over an unsecured network (e.g.
 public Wi-Fi) raises the likelihood of such malfeasance, but it can never
 be fully eliminated.
 
