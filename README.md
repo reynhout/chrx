@@ -19,7 +19,7 @@ and configure your network from the ChromeOS setup screen.
 
 ## status
 
-Version 0.9.5 beta -- **working** but more testers welcome!
+Version 1.1: Updated for Ubuntu 15.04 (20150504)
 
 status| chromebook | unix | notes
 :----:| ---------- | ---- | -----
@@ -67,6 +67,7 @@ Options
    -Z TIMEZONE     timezone for new system [America/New_York]
                    (America/San_Francisco, Etc/UTC, etc)
    -n              disable success/failure notifications
+   -s              skip all customization, install stock OS only
    -y              run non-interactively, take defaults and do not confirm
    -v              increase output verbosity
    -h              show this help
@@ -79,10 +80,10 @@ Options
 
 ### example
 
-To verbosely install a Lubuntu system named "unicorn", with a first user
+To verbosely install a Lubuntu system named "vivid", with a first user
 named "marc", run:
 
-`curl -Oks https://chrx.org/go && sh go -v -m lubuntu-desktop -H unicorn -U marc`
+`curl -Oks https://chrx.org/go && sh go -v -m lubuntu-desktop -H vivid -U marc`
 
 ### advanced usage
 
@@ -132,10 +133,9 @@ disk partitioning bits).
 
 ## chrx present
 
-**chrx** is being used to mass-install Lubuntu onto dozens of Acer C720s.
+**chrx** has been used to install Linux on hundreds of Chromebooks.
+Users and discussion can be found on [/r/chrubuntu](https://www.reddit.com/r/chrubuntu).
 
-The 1.0 release will mark the point when things are working well enough
-to begin the first large rollout batches.
 
 ## chrx future
 
@@ -148,10 +148,23 @@ that driver support is not imminent.
 
 ## alternatives
 
-**chrx** is a command-line installer, by necessity (mine). If this is not
-a necessity that you share, you should take a look at Hugh Greenberg's
-[Distroshare](https://www.distroshare.com/) for nicely updated ISOs which
-can be installed from USB/SD flash RAM.
+**chrx** is a command-line installer which requires requires no physical
+media or other preparation to install. It allows you to dual-boot, so you
+can choose Linux or ChromeOS each time you turn on your Chromebook. This
+is a flexible setup, well-suited for many users, but of course not all.
+
+Consider these alternatives:
+
+- Hugh Greenberg's [Distroshare](https://www.distroshare.com/) has nicely
+updated ISOs (for Ubuntu and many other Linux distros!), which can be
+installed from USB/SD flash RAM. This method completely removes ChromeOS
+from your Chromebook, and devotes your entire SSD to Linux.
+- [Crouton](https://github.com/dnschneid/crouton) allows you to run ChromeOS
+and Linux simultaneously, instead of dual-booting like **chrx** or ChrUbuntu.
+This arrangement has a few drawbacks, but if you spend most of your time in
+ChromeOS and your Linux needs are limited, it should serve well.
+- The original [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html) has been tested on a wide variety of hardware. Unfortunately, it hasn't been updated in a while, and requires quite a bit of additional configuration after installation. No longer recommended for Acer C720s,
+but if your hardware is not supported by **chrx**, it's worth a try.
 
 
 ## notes on security and privacy
@@ -177,7 +190,7 @@ Log entries created by these pings look like this:
 
 ```
 17.x.x.x - - [22/Dec/2014:07:37:00 +0000] "GET /end_ok HTTP/1.1" 200 0 "-"
-  "chrx/0.9.5 hw=PEPPY_C6A-V7C-A2C sw=linux,ubuntu,latest,amd64,ubuntu-minimal" "-"
+  "chrx/1.1 hw=PEPPY_C6A-V7C-A2C sw=linux,ubuntu,latest,-,15.04,amd64,ubuntu-minimal" "-"
 ```
 
 `hw` is a hardware ID that corresponds to your model of Chromebook.
@@ -196,7 +209,5 @@ can be disabled with the `-n` switch.
 
 ## thanks
 
-To Jay Lee for ChrUbuntu, to [/r/chrubuntu](http://reddit.com/r/chrubuntu)
-for assembling links to tons of helpful resources, and to the dozens of people
-who found answers and solved problems before I even started looking.
+To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html), to [/r/chrubuntu](https://www.reddit.com/r/chrubuntu) for assembling links to tons of helpful resources, and to the dozens of people who found answers and solved problems before I even started looking.
 

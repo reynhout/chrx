@@ -9,7 +9,7 @@
 #   unix ==       (k|l|x|edu|)ubuntu Linux, v == (14.04|14.10)
 #
 
-CHRX_VERSION="0.9.6"
+CHRX_VERSION="1.1"
 
 CHRX_TARGET_DISK=""
 CHRX_OS="linux"
@@ -31,8 +31,10 @@ VERBOSITY_APTGET="-q"
 VERBOSITY_MKFS="-q"
 VERBOSITY_CURL="-s"
 VERBOSITY_INSTALL=""
-PROMPT_ENABLED=1
-NOTIFY_ENABLED=1
+CHRX_PROMPT_ENABLED=1
+CHRX_NOTIFY_ENABLED=1
+CHRX_SKIP_CUSTOMIZATION=""
+CHRX_DO_INSTALL_UPSTART=""
 
 USAGE="
 chrx installer, version ${CHRX_VERSION}
@@ -53,6 +55,7 @@ Options
    -Z TIMEZONE     timezone for new system [${CHRX_TZ}]
                    (America/San_Francisco, Etc/UTC, etc)
    -n              disable success/failure notifications
+   -s              skip all customization, install stock OS only
    -y              run non-interactively, take defaults and do not confirm
    -v              increase output verbosity
    -h              show this help
@@ -65,6 +68,7 @@ If TARGETDISK is not specified, chrx will select the internal SSD.
 ANSI_RED=$'\033[1;31m'
 ANSI_YEL=$'\033[1;33m'
 ANSI_GRN=$'\033[1;32m'
+ANSI_VIO=$'\033[1;35m'
 ANSI_BLU=$'\033[1;36m'
 ANSI_WHT=$'\033[1;37m'
 ANSI_RST=$'\033[0m'
@@ -77,6 +81,9 @@ echo_info() {
 }
 echo_warn() {
   echo -e "${ANSI_YEL}${1}${ANSI_RST}"
+}
+echo_debug() {
+  echo -e "${ANSI_VIO}${1}${ANSI_RST}"
 }
 echo_fail() {
   echo -e "${ANSI_RED}${1}${ANSI_RST}"
@@ -91,15 +98,24 @@ usage()
 prompt_if_interactive()
 {
   PROMPT_RESPONSE=
-  if [ "${PROMPT_ENABLED}" ]; then
+  if [ "${CHRX_PROMPT_ENABLED}" ]; then
     read PROMPT_RESPONSE
   else
     echo
   fi
 }
 
+ping_chrx_org()
+{
+  msg=$1
+  CHRX_UA="chrx/${CHRX_VERSION} hw=${CHRX_HWID} sw=${CHRX_OS},${CHRX_OS_DIST},${CHRX_OS_IMG},${CHRX_OS_RELEASE:-"-"},${CHRX_OS_VERSION:-"(tbd)"},${CHRX_OS_ARCH},${CHRX_OS_METAPKG}"
+  if [ "${CHRX_NOTIFY_ENABLED}" ]; then
+    curl -s -m 7 -A "${CHRX_UA}" http://ping.chrx.org/${msg}
+  fi
+}
+
 ## parse command line options
-while getopts "hm:a:t:i:r:H:U:L:Z:nvy" OPTION
+while getopts "hm:a:t:i:r:H:U:L:Z:nsyv" OPTION
 do
      case $OPTION in
          h)
@@ -133,7 +149,13 @@ do
              CHRX_TZ=$OPTARG
              ;;
          n)
-             NOTIFY_ENABLED=
+             CHRX_NOTIFY_ENABLED=
+             ;;
+         s)
+             CHRX_SKIP_CUSTOMIZATION=1
+             ;;
+         y)
+             CHRX_PROMPT_ENABLED=
              ;;
          v)
              VERBOSITY="v"
@@ -141,9 +163,6 @@ do
              VERBOSITY_MKFS=""
              VERBOSITY_CURL=""
              VERBOSITY_INSTALL="-v"
-             ;;
-         y)
-             PROMPT_ENABLED=
              ;;
          ?)
              usage
@@ -155,19 +174,16 @@ done
 ## begin
 echo_note "chrx installer, version ${CHRX_VERSION}\n"
 
-HWID=`crossystem hwid | sed 's/ /_/g'`
-CHRX_UA="chrx/${CHRX_VERSION} hw=${HWID} sw=${CHRX_OS},${CHRX_OS_DIST},${CHRX_OS_IMG},${CHRX_OS_RELEASE},${CHRX_OS_ARCH},${CHRX_OS_METAPKG}"
+CHRX_HWID=`crossystem hwid | sed 's/ /_/g'`
 
 ## ping begin, try to track any failures
-if [ "${NOTIFY_ENABLED}" ]; then
-  curl -s -m 7 -A "${CHRX_UA}" http://ping.chrx.org/begin
-fi
+ping_chrx_org "begin"
 
 ## setup
 if [ "`initctl status powerd | grep running`" ]; then
   initctl stop powerd > /dev/null 2>&1
 fi
-setterm -blank 0
+#setterm -blank 0
 
 ## setup storage
 SETUP_STORAGE_ERROR="failed"
@@ -182,22 +198,6 @@ fi
 
 start_date=`date`
 start_secs=`date +%s`
-
-## latest (15.04) is breaking. override til fixed
-if [ -z "${CHRX_OS_RELEASE}" -a "${CHRX_OS_IMG}" = "latest" ]; then
-cat <<EOWARN
-${ANSI_YEL}
-  ** NOTE **
-
-  You have selected Ubuntu "latest" (15.04), which has critical
-  unresolved issues with this Chromebook or configuration.
-
-  We will install 14.10 instead.
-${ANSI_RST}
-EOWARN
-  CHRX_OS_RELEASE="14.10"
-  tmp_version_err_msg="${ANSI_YEL}(see above)${ANSI_RST}"
-fi
 
 if [ "${CHRX_OS_RELEASE}" ]; then
   CHRX_OS_VERSION=${CHRX_OS_RELEASE}
@@ -236,7 +236,7 @@ cat << EOCONFIG
   Installing
     operating system:   ${CHRX_OS}
     distribution:       ${CHRX_OS_DIST}
-    version             ${CHRX_OS_VERSION} ${tmp_version_err_msg}
+    version             ${CHRX_OS_VERSION}
       image (-i):       ${CHRX_OS_IMG}
       release (-r):     ${CHRX_OS_RELEASE}
     architecture (-a):  ${CHRX_OS_ARCH}
@@ -251,8 +251,38 @@ cat << EOCONFIG
 
 EOCONFIG
 
+
+if [ "${CHRX_SKIP_CUSTOMIZATION}" ]; then
+  cat << EOMSG
+${ANSI_YEL}\
+  .------------------------------------------------------------------.
+  | NOTE: Will install stock OS only, skipping chrx customizations.  |
+  '------------------------------------------------------------------'
+${ANSI_RST}
+EOMSG
+fi
+
+if [ "${CHRX_OS_VERSION}" = "15.04" ]; then
+  CHRX_DO_INSTALL_UPSTART=1
+  cat << EOMSG
+${ANSI_YEL}\
+  .---------------------------------------------------------------------.
+  | NOTE:                                                               |
+  |                                                                     |
+  | Ubuntu 15.04 introduces systemd as the new default boot manager.    |
+  |                                                                     |
+  | Currently, systemd fails to boot Acer C720s (and possibly other     |
+  | Chromebooks). Details at https://www.reddit.com/r/chrubuntu/34o63m  |
+  |                                                                     |
+  | ${ANSI_WHT}Will install the Upstart boot manager instead.${ANSI_YEL}                      |
+  '---------------------------------------------------------------------'
+${ANSI_RST}
+EOMSG
+fi
+
 echo_note "Press [enter] to confirm and continue: \c"
 prompt_if_interactive
+
 
 echo_info "\nFetching ${CHRX_OS}-${CHRX_OS_DIST} core image files..."
 curl ${VERBOSITY_CURL} ${core_image_url} | tar xzp -C ${CHRX_INSTALL_ROOT}
@@ -276,7 +306,6 @@ echo -e "\n127.0.0.1       ${CHRX_HOSTNAME}" >> ${CHRX_INSTALL_ROOT}/etc/hosts
 
 
 ## get customization files
-echo_info "\nInstalling C720 customization files, set #1/2..."
 mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 curl -k ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
@@ -311,21 +340,27 @@ APPENDED_FILES="
   etc/systemd/logind.conf
 "
 
-for fpath in ${CONF_FILES} ${EXEC_FILES} ${SKEL_FILES} ${APPENDED_FILES}; do
-  if [ ! -d "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`" ]; then
-    #echo mkdir -p "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`"
-    install ${VERBOSITY_INSTALL} -d "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`"
-  fi
-done
-for fpath in ${SKEL_FILES}; do
-  install ${VERBOSITY_INSTALL} -m 644 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
-done
+if [ "${CHRX_SKIP_CUSTOMIZATION}" ]; then
+  echo_warn "\n(skipping installation of chrx customization files [1/2])"
+else
+  echo_info "\nInstalling chrx customization files for C720 [1/2]..."
+  for fpath in ${CONF_FILES} ${EXEC_FILES} ${SKEL_FILES} ${APPENDED_FILES}; do
+    if [ ! -d "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`" ]; then
+      #echo mkdir -p "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`"
+      install ${VERBOSITY_INSTALL} -d "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`"
+    fi
+  done
+  for fpath in ${SKEL_FILES}; do
+    install ${VERBOSITY_INSTALL} -m 644 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
+  done
+fi
 
 ## chroot
 export CHRX_OS_METAPKG CHRX_TZ CHRX_LOCALE CHRX_USERNAME
 export CHRX_TARGET_DISK CHRX_CACHE_DIR CHRX_INSTALL_ROOT
+export CHRX_OS_RELEASE CHRX_SKIP_CUSTOMIZATION CHRX_DO_INSTALL_UPSTART
 export VERBOSITY VERBOSITY_APTGET VERBOSITY_CURL
-export ANSI_GRN ANSI_RST
+export ANSI_RED ANSI_YEL ANSI_GRN ANSI_VIO ANSI_BLU ANSI_WHT ANSI_RST
 
 install ${VERBOSITY_INSTALL} -m 755 ./dist/chrx-install-chroot ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 
@@ -335,16 +370,20 @@ chroot ${CHRX_INSTALL_ROOT} /bin/bash -c ${CHRX_CACHE_DIR}/chrx-install-chroot
 echo "<< exiting chroot"
 
 
-echo_info "\nInstalling C720 customization files, set #2/2..."
-for fpath in ${CONF_FILES}; do
-  install ${VERBOSITY_INSTALL} -m 644 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
-done
-for fpath in ${EXEC_FILES}; do
-  install ${VERBOSITY_INSTALL} -m 755 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
-done
-for fpath in ${APPENDED_FILES}; do
-  cat ./dist/${fpath}-append >> ${CHRX_INSTALL_ROOT}/${fpath}
-done
+if [ "${CHRX_SKIP_CUSTOMIZATION}" ]; then
+  echo_warn "\n(skipping installation of chrx customization files [2/2])"
+else
+  echo_info "\nInstalling chrx customization files for C720 [2/2]..."
+  for fpath in ${CONF_FILES}; do
+    install ${VERBOSITY_INSTALL} -m 644 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
+  done
+  for fpath in ${EXEC_FILES}; do
+    install ${VERBOSITY_INSTALL} -m 755 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
+  done
+  for fpath in ${APPENDED_FILES}; do
+    cat ./dist/${fpath}-append >> ${CHRX_INSTALL_ROOT}/${fpath}
+  done
+fi
 
 
 ## setup firstboot finalization
@@ -399,9 +438,7 @@ echo_info "\nCopying logfiles and installation scripts to new system..."
 cp -vr ${CHRX_CACHE0_DIR}/chrx-* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}/
 
 ## we're done! ping success
-if [ "${NOTIFY_ENABLED}" ]; then
-  curl -s -m 7 -A "${CHRX_UA}" http://ping.chrx.org/end_ok
-fi
+ping_chrx_org "end_ok"
 
 reboot
 

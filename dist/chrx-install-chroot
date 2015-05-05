@@ -62,10 +62,10 @@ if [ -x /usr/bin/X ]; then
 fi
 
 
-## install base kernel (save some space by omitting headers)
+## install base kernel
 echo -e "\n${ANSI_GRN}Installing Linux kernel and boot environment${ANSI_RST}"
 apt-get -y ${VERBOSITY_APTGET} install linux-image-generic
-#apt-get -y ${VERBOSITY_APTGET} install linux-headers-generic
+apt-get -y ${VERBOSITY_APTGET} install linux-headers-generic
 
 
 ## install newest-released kernel, iff installed kernel is older
@@ -94,8 +94,8 @@ if [ "${new_is_newer}" ]; then
   echo -e "\n${ANSI_GRN}Installing updated Linux kernel (version ${NEW_KERNEL_REV})${ANSI_RST}"
   rm -f linux-*.deb
   curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-image-${NEW_KERNEL_GREV}_amd64.deb
-  #curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_GREV}_amd64.deb
-  #curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_REV}_all.deb
+  curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_GREV}_amd64.deb
+  curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_REV}_all.deb
   dpkg -i linux-*.deb
   rm -f linux-*.deb
 else
@@ -108,12 +108,15 @@ apt-get -y ${VERBOSITY_APTGET} install grub-pc
 ## GRUB: modify boot settings
 ## unfortunately, we have to do this in the chroot. 
 
-## comment old settings
-sed -i~ 's/^\(GRUB_HIDDEN_TIMEOUT\)/#\1/g' /etc/default/grub
-sed -i~ 's/^\(GRUB_TIMEOUT\)/#\1/g' /etc/default/grub
-sed -i~ 's/^\(GRUB_CMDLINE_LINUX\)/#\1/g' /etc/default/grub
-## add our settings
-cat >> /etc/default/grub <<EO_GRUB
+if [ "${CHRX_SKIP_CUSTOMIZATION}" ]; then
+  echo -e "\n${ANSI_YEL}(skipping chrx grub config)${ANSI_RST}"
+else
+  ## comment old settings
+  sed -i~ 's/^\(GRUB_HIDDEN_TIMEOUT\)/#\1/g' /etc/default/grub
+  sed -i~ 's/^\(GRUB_TIMEOUT\)/#\1/g' /etc/default/grub
+  sed -i~ 's/^\(GRUB_CMDLINE_LINUX\)/#\1/g' /etc/default/grub
+  ## add our settings
+  cat >> /etc/default/grub <<EO_GRUB
 
 ## boot settings
 ##
@@ -146,13 +149,15 @@ GRUB_TIMEOUT_STYLE=countdown
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash boot=local acpi_osi=Linux acpi_backlight=vendor add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic elevator=noop resume=/dev/sda5"
 
 EO_GRUB
+fi
 
 grub-mkconfig -o /boot/grub/grub.cfg
 grub-install ${CHRX_TARGET_DISK} --force
 
 echo -e "\n${ANSI_GRN}Adding user \"${CHRX_USERNAME}\".${ANSI_RST}"
 useradd -m ${CHRX_USERNAME} -s /bin/bash
-echo ${CHRX_USERNAME} | echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
+#echo ${CHRX_USERNAME} | echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
+echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
 #passwd -e ${CHRX_USERNAME}
 adduser ${CHRX_USERNAME} adm
 adduser ${CHRX_USERNAME} sudo
@@ -165,6 +170,13 @@ adduser ${CHRX_USERNAME} sudo
 if [ -x /usr/bin/X ]; then
   echo -e "\n${ANSI_GRN}Installing desktop compatibility pkgs.${ANSI_RST}"
   apt-get -y ${VERBOSITY_APTGET} install xbindkeys xdotool xbacklight pulseaudio-utils xvkbd zram-config
+fi
+
+if [ "${CHRX_DO_INSTALL_UPSTART}" ]; then
+  echo -e "\n${ANSI_GRN}Installing Upstart boot manager.${ANSI_RST}"
+  apt-get -y ${VERBOSITY_APTGET} install upstart-sysv
+  ## add systemd option to GRUB boot menu
+  update-initramfs -u
 fi
 
 apt-get -y ${VERBOSITY_APTGET} clean

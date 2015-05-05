@@ -8,12 +8,12 @@
 # It cannot be run directly from the commandline.
 #
 
-case "${HWID}" in
+case "${CHRX_HWID}" in
   PEPPY*)
-    echo_info "Hardware ID \"${HWID}\" is recognized and tested."
+    echo_info "Hardware ID \"${CHRX_HWID}\" is recognized and tested."
     ;;
   *)
-    echo_warn "Hardware ID \"${HWID}\" is unknown and untested. Trying anyway!"
+    echo_warn "Hardware ID \"${CHRX_HWID}\" is unknown and untested. Trying anyway!"
     ;;
 esac
 
