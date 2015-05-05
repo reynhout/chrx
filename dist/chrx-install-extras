@@ -36,12 +36,16 @@ apt-get -y install default-jdk    # total: 112MB
 cat << EOM
 Download minecraft.jar from link on https://minecraft.net/download
   https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+Icon at
+  http://daily-craft.eu/wp-content/uploads/2014/08/minecraft.png
+
 Run with:
   java -jar Minecraft.jar
 
 Or, to install for all users and add a menu launcher:
   sudo bash
   curl -o /usr/local/bin/Minecraft.jar https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+  curl -o /usr/share/pixmaps/minecraft.png http://daily-craft.eu/wp-content/uploads/2014/08/minecraft.png
   mkdir -p /usr/local/share/applications
   cat > /usr/local/share/applications/minecraft.desktop <<EOF
 [Desktop Entry]
@@ -49,7 +53,7 @@ Type=Application
 Name=Minecraft
 Comment=Minecraft
 Exec=java -jar /usr/local/bin/Minecraft.jar
-Icon=
+Icon=/usr/share/pixmaps/minecraft.png
 Categories=Game;
 EOF
 
