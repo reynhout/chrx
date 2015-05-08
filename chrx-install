@@ -6,10 +6,10 @@
 #
 # currently tested:
 #   chromebook == Acer C720 PEPPY
-#   unix ==       (k|l|x|edu|)ubuntu Linux, v == (14.04|14.10)
+#   unix ==       (k|l|x|edu|)ubuntu Linux, v == (14.04|14.10|15.04)
 #
 
-CHRX_VERSION="1.1"
+CHRX_VERSION="1.1.1"
 
 CHRX_TARGET_DISK=""
 CHRX_OS="linux"
@@ -114,6 +114,11 @@ ping_chrx_org()
   fi
 }
 
+downcase()
+{
+  echo $1 | tr '[:upper:]' '[:lower:']
+}
+
 ## parse command line options
 while getopts "hm:a:t:i:r:H:U:L:Z:nsyv" OPTION
 do
@@ -122,19 +127,19 @@ do
              usage
              ;;
          m)
-             CHRX_OS_METAPKG=$OPTARG
+             CHRX_OS_METAPKG=$(downcase $OPTARG)
              ;;
          a)
-             CHRX_OS_ARCH=$OPTARG
+             CHRX_OS_ARCH=$(downcase $OPTARG)
              ;;
          t)
              CHRX_TARGET_DISK=$OPTARG
              ;;
          i)
-             CHRX_OS_IMG=$OPTARG
+             CHRX_OS_IMG=$(downcase $OPTARG)
              ;;
          r)
-             CHRX_OS_RELEASE=$OPTARG
+             CHRX_OS_RELEASE=$(downcase $OPTARG)
              ;;
          H)
              CHRX_HOSTNAME=$OPTARG
@@ -200,8 +205,14 @@ start_date=`date`
 start_secs=`date +%s`
 
 if [ "${CHRX_OS_RELEASE}" ]; then
-  CHRX_OS_VERSION=${CHRX_OS_RELEASE}
-  CHRX_OS_IMG=""
+  case "${CHRX_OS_RELEASE}" in
+    trusty) CHRX_OS_VERSION="14.04.2" ;;
+    utopic) CHRX_OS_VERSION="14.10" ;;
+    vivid)  CHRX_OS_VERSION="15.04" ;;
+    wily)   CHRX_OS_VERSION="15.10" ;;
+    *)      CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
+  esac
+  ## TODO: consolidate -i IMG and -r REL to derive VER ?
 else
   release_log_fn="meta-release"
   case "${CHRX_OS_IMG}" in
@@ -215,9 +226,9 @@ else
 
   pat="^Version: "
   case "${CHRX_OS_IMG}" in
-    lts|LTS)
+    lts)
       pat="^Version: ..* LTS" ;;
-    dev|development)
+    dev)
       codename=`echo "${release_log}"|grep "^Dist: "|tail -1|awk '{print $2}'`;;
   esac
 
@@ -230,17 +241,68 @@ if [ "${codename}" ]; then
   core_image_url="http://cdimage.ubuntu.com/ubuntu-core/daily/current/${codename}-core-${CHRX_OS_ARCH}.tar.gz"
 fi
 
+## validate config
+case "${CHRX_OS}" in
+  linux) ;;
+  *) msg_os="${ANSI_RED}(invalid!)${ANSI_RST}" ; FAIL=1 ;;
+esac
+
+case "${CHRX_OS_DIST}" in
+  ubuntu) ;;
+  *) msg_os_dist="${ANSI_RED}(invalid!)${ANSI_RST}" ; FAIL=1 ;;
+esac
+
+case "${CHRX_OS_VERSION}" in
+  '14.04'|14.04.*)
+    msg_os_version="${ANSI_YEL}(not well tested!)${ANSI_RST}" ;;
+  '14.10') ;;
+  '15.04') ;;
+  *)
+    if [ "`echo ${CHRX_OS_VERSION} | grep "^[0-9.][0-9.]*$"`" ]; then
+      msg_os_version="${ANSI_YEL}(unrecognized, untested!)${ANSI_RST}"
+    else
+      msg_os_version="${ANSI_RED}(invalid!)${ANSI_RST}"
+      FAIL=1
+    fi
+    ;;
+esac
+
+if [ "${CHRX_OS_RELEASE}" ]; then
+  msg_os_img="${ANSI_YEL}(ignored, using release)${ANSI_RST}"
+else
+  case "${CHRX_OS_IMG}" in
+    latest|lts|dev) ;;
+    *) msg_os_img="${ANSI_RED}(invalid!)${ANSI_RST}" ; FAIL=1 ;;
+  esac
+fi
+
+case "${CHRX_OS_ARCH}" in
+  i386|amd64) ;;
+  *) msg_os_arch="${ANSI_RED}(invalid!)${ANSI_RST}" ; FAIL=1 ;;
+esac
+
+case "${CHRX_OS_METAPKG}" in
+  ubuntu-desktop|ubuntu-minimal|ubuntu-standard) ;;
+  edubuntu-desktop|edubuntu-server) ;;
+  lubuntu-desktop) ;;
+  kubuntu-desktop) ;;
+  xubuntu-desktop) ;;
+  *) msg_os_metapkg="${ANSI_RED}(invalid!)${ANSI_RST}" ; FAIL=1 ;;
+esac
+
+
 ## confirm config
 cat << EOCONFIG
 
   Installing
-    operating system:   ${CHRX_OS}
-    distribution:       ${CHRX_OS_DIST}
-    version             ${CHRX_OS_VERSION}
-      image (-i):       ${CHRX_OS_IMG}
-      release (-r):     ${CHRX_OS_RELEASE}
-    architecture (-a):  ${CHRX_OS_ARCH}
-    metapackage (-m):   ${CHRX_OS_METAPKG}
+    operating system:   ${CHRX_OS} ${msg_os}
+    distribution:       ${CHRX_OS_DIST} ${msg_os_dist}
+    version:            ${CHRX_OS_VERSION} ${msg_os_version}
+      (determined from image and release)
+        image (-i):     ${CHRX_OS_IMG} ${msg_os_img}
+        release (-r):   ${CHRX_OS_RELEASE}
+    architecture (-a):  ${CHRX_OS_ARCH} ${msg_os_arch}
+    metapackage (-m):   ${CHRX_OS_METAPKG} ${msg_os_metapkg}
     target_disk (-t):   ${CHRX_TARGET_DISK}
 
   System Configuration
@@ -251,6 +313,11 @@ cat << EOCONFIG
 
 EOCONFIG
 
+
+if [ "${FAIL}" ]; then
+  echo_fail "fatal error(s) in configuration options (see above). exiting!"
+  exit 1
+fi
 
 if [ "${CHRX_SKIP_CUSTOMIZATION}" ]; then
   cat << EOMSG
