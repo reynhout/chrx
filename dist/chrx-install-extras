@@ -12,7 +12,7 @@ DEBIAN_FRONTEND="noninteractive"
 export DEBIAN_FRONTEND
 
 ## admin bits
-apt-get -y install vim tmux ssh
+apt-get -y install vim tmux ssh rsync
 
 ## dev
 apt-get -y install arduino geany geany-plugins idle3 ruby squeak-vm #scratch
