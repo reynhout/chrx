@@ -19,7 +19,7 @@ and configure your network from the ChromeOS setup screen.
 
 ## status
 
-Version 1.1: Updated for Ubuntu 15.04 (20150504)
+Version 1.1.1: Updated for Ubuntu 15.04 (20150504)
 
 status| chromebook | unix | notes
 :----:| ---------- | ---- | -----
@@ -55,12 +55,15 @@ Usage: chrx [ option ... ]
 
 Options
    -m METAPACKAGE  OS-specific metapackage to install [ubuntu-desktop]
-                   (ubuntu-minimal, xubuntu-desktop, etc)
+                   (ubuntu-desktop, ubuntu-minimal, ubuntu-standard,
+                   lubuntu-desktop, kubuntu-desktop, xubuntu-desktop
+                   edubuntu-desktop, edubuntu-server)
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
    -i IMAGE        OS-specific image name (lts, dev, latest) [latest]
-   -r RELEASE      OS-specific release version (14.10, etc) []
-                   (takes precedence over version derived from IMAGE, if any)
+   -r RELEASE      OS-specific release number or name []
+                   (14.10, 15.04, 15.10, utopic, vivid, wily, etc)
+                   RELEASE takes precedence over IMAGE
    -U USERNAME     username of first created user [chrx]
    -H HOSTNAME     hostname for new system [chrx]
    -L LOCALE       locale for new system [en_US.UTF-8]
