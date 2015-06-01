@@ -12,10 +12,12 @@ Presently, this means Ubuntu (or a variant) onto your Acer C720.
 are downloaded from vendor sites, and several configuration tweaks are
 downloaded from a secure mirror of this repository.
 
-**chrx** is run directly from your Chromebook's `chronos@localhost` shell.
-You must first enable
+**chrx** is run directly from your Chromebook's `chronos@localhost` shell,
+accessed via `CTRL-ALT-(top row right arrow)` and then logging in as
+`chronos`, with no password. You must first enable
 [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices),
 and configure your network from the ChromeOS setup screen.
+
 
 ## status
 
@@ -23,12 +25,12 @@ Version 1.1.1: Updated for Ubuntu 15.04 (20150504)
 
 status| chromebook | unix | notes
 :----:| ---------- | ---- | -----
-:white_check_mark:|Acer C720|Ubuntu Linux (14.10, 14.04, development)|I use `lubuntu-desktop`
+:white_check_mark:|Acer C720|Ubuntu Linux (15.04, 14.10, 14.04, development)|I use `lubuntu-desktop`
 :question:|Other Haswell Chromebooks|Ubuntu Linux|These should work but might require other config tweaks
 :x:|(any of the above)|Other UNIX or Linux distributions|Hopes are high
 :x:|ARM Chromebooks|(any)|ARM support is spotty, these might never work
 
-**Best-tested:** Lubuntu 14.10 on Acer C720
+**Best-tested:** Lubuntu 14.10 and 15.04 on Acer C720
 
 ## usage
 
@@ -37,7 +39,7 @@ running chrx!**
 
 Run the following command from your `chronos@localhost` shell:
 
-`curl -Oks https://chrx.org/go && sh go`
+`curl -Os https://chrx.org/go && sh go`
 <!-- yes, by all means read the all of the code first! -->
 
 Then follow the instructions from there.
@@ -56,7 +58,7 @@ Usage: chrx [ option ... ]
 Options
    -m METAPACKAGE  OS-specific metapackage to install [ubuntu-desktop]
                    (ubuntu-desktop, ubuntu-minimal, ubuntu-standard,
-                   lubuntu-desktop, kubuntu-desktop, xubuntu-desktop
+                   lubuntu-desktop, kubuntu-desktop, xubuntu-desktop,
                    edubuntu-desktop, edubuntu-server)
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
@@ -81,12 +83,15 @@ Options
 
 ```
 
-### example
+### examples
 
-To verbosely install a Lubuntu system named "vivid", with a first user
-named "marc", run:
+Ubuntu 15.04, system name `hal`, first user `dave`:
 
-`curl -Oks https://chrx.org/go && sh go -v -m lubuntu-desktop -H vivid -U marc`
+`curl -Os https://chrx.org/go && sh go -r 15.04 -H hal -U dave`
+
+Lubuntu (latest), verbosely:
+
+`curl -Os https://chrx.org/go && sh go -v -m lubuntu-desktop`
 
 ### advanced usage
 
@@ -192,8 +197,8 @@ only data that might be useful for investigating failures.
 Log entries created by these pings look like this:
 
 ```
-17.x.x.x - - [22/Dec/2014:07:37:00 +0000] "GET /end_ok HTTP/1.1" 200 0 "-"
-  "chrx/1.1 hw=PEPPY_C6A-V7C-A2C sw=linux,ubuntu,latest,-,15.04,amd64,ubuntu-minimal" "-"
+17.x.x.x - - [01/Jun/2015:07:37:00 +0000] "GET /end_ok HTTP/1.1" 200 0 "-"
+  "chrx/1.1.1 hw=PEPPY_C6A-V7C-A2C sw=linux,ubuntu,latest,-,15.04,amd64,ubuntu-minimal" "-"
 ```
 
 `hw` is a hardware ID that corresponds to your model of Chromebook.
