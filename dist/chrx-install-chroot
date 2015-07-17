@@ -6,9 +6,10 @@
 #
 
 
-## these are the currently-newest LTS/latest released kernel packages
-## 3.17 includes important patches for the cyapa trackpad
-## 3.18 is currently released in development only
+## Current Ubuntu LTS is 14.04.2, which delivers kernel version 3.14.1.
+## We need a minumum kernel version of 3.17 for important cyapa trackpad
+## patches, so we will update the kernel to the latest 3.17 if necessary.
+
 ## TODO: keep these updated, though we do check before installing!
 NEW_KERNEL_BASE="http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17.1-utopic"
 NEW_KERNEL_REV="3.17.1-031701_3.17.1-031701.201410150735"

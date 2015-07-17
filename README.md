@@ -4,45 +4,43 @@
 <br />
 **[github.com/reynhout/chrx](https://github.com/reynhout/chrx)**
 
-Use **chrx** to install Linux onto your Chromebook.
-
-Presently, this means Ubuntu (or a variant) onto your Acer C720.
+Use **chrx** to install Linux onto your Chromebook. Presently, this
+means Ubuntu (or a variant) onto your Acer C720.
 
 **chrx** installs OS components from the net. By default, package files
 are downloaded from vendor sites, and several configuration tweaks are
 downloaded from a secure mirror of this repository.
 
-**chrx** is run directly from your Chromebook's `chronos@localhost` shell,
-accessed via `CTRL-ALT-(top row right arrow)` and then logging in as
-`chronos`, with no password. You must first enable
-[Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices),
-and configure your network from the ChromeOS setup screen.
-
+**chrx** is run directly from your Chromebook's
+[Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices) shell on VT2 (see below).
 
 ## status
 
-Version 1.1.1: Updated for Ubuntu 15.04 (20150504)
+20150504: Version 1.1.1, Updated for compatibility with Ubuntu 15.04
 
 status| chromebook | unix | notes
 :----:| ---------- | ---- | -----
-:white_check_mark:|Acer C720|Ubuntu Linux (15.04, 14.10, 14.04, development)|I use `lubuntu-desktop`
+:white_check_mark:|Acer C720|Ubuntu Linux (15.04, 14.10, 14.04, LTS, development)|I use `lubuntu-desktop`
 :question:|Other Haswell Chromebooks|Ubuntu Linux|These should work but might require other config tweaks
-:x:|(any of the above)|Other UNIX or Linux distributions|Hopes are high
-:x:|ARM Chromebooks|(any)|ARM support is spotty, these might never work
+:x:|(any of the above)|Other Unix or Linux distributions|Hopes are high
+:x:|ARM Chromebooks|(any)|ARM support is unlikely
 
-**Best-tested:** Lubuntu 14.10 and 15.04 on Acer C720
+**Best-tested:** Lubuntu 15.04 and 14.10 on Acer C720
 
 ## usage
 
 **Be sure to back up any valuable data in ChromeOS or Linux before
 running chrx!**
 
-Run the following command from your `chronos@localhost` shell:
+### step-by-step
 
-`curl -Os https://chrx.org/go && sh go`
-<!-- yes, by all means read the all of the code first! -->
-
-Then follow the instructions from there.
+1. Enable [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices) (process is model-specific; for Acer C720, press `ESC+F3(Refresh)+Power`), then reboot
+1. Load ChromeOS by pressing `CTRL+D` at the white "OS verification is OFF" screen
+1. Configure your Wi-Fi network, if necessary
+1. Switch to virtual terminal 2 (VT2) by pressing `CTRL+ALT+F2(top row right arrow)`
+1. Log in as user `chronos` (no password) to enter `chronos@localhost` shell
+1. Run **chrx** (default options): `curl -Os https://chrx.org/go && sh go`
+1. Follow the on-screen instructions to install your new OS
 
 When installing onto the internal SSD of a clean Chromebook, **chrx**
 will repartition the drive to allocate space for the new operating system,
@@ -50,7 +48,7 @@ and will reboot after this first step. After reboot, run **chrx** again
 (with the same command line) to perform the installation.
 Subsequent installs will not require repartitioning or rebooting.
 
-**chrx** can accept several command-line arguments, all are optional:
+**chrx** can accept several command-line options:
 
 ```
 Usage: chrx [ option ... ]
