@@ -39,14 +39,17 @@ running chrx!**
 1. Configure your Wi-Fi network, if necessary
 1. Switch to virtual terminal 2 (VT2) by pressing `CTRL+ALT+F2(top row right arrow)`
 1. Log in as user `chronos` (no password) to enter `chronos@localhost` shell
-1. Run **chrx** (default options): `curl -Os https://chrx.org/go && sh go`
-1. Follow the on-screen instructions to install your new OS
+1. Run **chrx**: `curl -Os https://chrx.org/go && sh go` (see below for options)
+1. Follow on-screen instructions to prepare your Chromebook for installation
+1. Reboot, then repeat steps 2-7 to install and configure your new system
 
 When installing onto the internal SSD of a clean Chromebook, **chrx**
 will repartition the drive to allocate space for the new operating system,
 and will reboot after this first step. After reboot, run **chrx** again
 (with the same command line) to perform the installation.
 Subsequent installs will not require repartitioning or rebooting.
+
+### options
 
 **chrx** can accept several command-line options:
 
