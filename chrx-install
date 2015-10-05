@@ -192,7 +192,7 @@ fi
 
 ## setup storage
 SETUP_STORAGE_ERROR="failed"
-curl -Oks -A "${CHRX_UA}" ${CHRX_WEB_ROOT}/chrx-setup-storage
+curl -Os -A "${CHRX_UA}" ${CHRX_WEB_ROOT}/chrx-setup-storage
 [ -r ./chrx-setup-storage ] && . ./chrx-setup-storage
 if [ "${SETUP_STORAGE_ERROR}" ]; then
   echo_fail "fatal error from chrx-setup-storage. exiting!"

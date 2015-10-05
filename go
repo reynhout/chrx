@@ -18,7 +18,7 @@ cd ${CHRX_CACHE0_DIR}
 ## need sudo -E to keep exported environment vars
 (
 export CHRX_WEB_ROOT CHRX_CACHE0_DIR
-curl -Oks ${CHRX_WEB_ROOT}/chrx-install && sudo -E bash ./chrx-install $*
+curl -Os ${CHRX_WEB_ROOT}/chrx-install && sudo -E bash ./chrx-install $*
 ) | tee -a ${CHRX_CACHE0_DIR}/chrx-install.log
 
 ## logfile will be copied to chroot by install-chrx.
