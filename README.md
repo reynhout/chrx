@@ -5,7 +5,8 @@
 **[github.com/reynhout/chrx](https://github.com/reynhout/chrx)**
 
 Use **chrx** to install Linux onto your Chromebook. Presently, this
-means Ubuntu (or a variant) onto your Acer C720.
+means Ubuntu (or a variant) onto your Acer C720 (or a few similar
+models -- see "status", below).
 
 **chrx** installs OS components from the net. By default, package files
 are downloaded from vendor sites, and several configuration tweaks are
@@ -16,14 +17,25 @@ downloaded from a secure mirror of this repository.
 
 ## status
 
-20150504: Version 1.1.1, Updated for compatibility with Ubuntu 15.04
+20151005: Version 1.1.2. See "changelog", below.
 
-status| chromebook | unix | notes
-:----:| ---------- | ---- | -----
-:white_check_mark:|Acer C720|Ubuntu Linux (15.04, 14.10, 14.04, LTS, development)|I use `lubuntu-desktop`
-:question:|Other Haswell Chromebooks|Ubuntu Linux|These should work but might require other config tweaks
-:x:|(any of the above)|Other Unix or Linux distributions|Hopes are high
-:x:|ARM Chromebooks|(any)|ARM support is unlikely
+status| chromebook | hwid | unix | notes
+:----:| ---------- | ---- | ---- | -----
+:white_check_mark:|Acer C720|PEPPY|Ubuntu Linux (15.04, 14.10, 14.04, LTS, development)|I use `lubuntu-desktop`
+:white_check_mark:|Acer C720P|PEPTO|Ubuntu Linux|
+:white_check_mark:|Google Pixel|LINK|Ubuntu Linux|
+:white_check_mark:|Google Pixel 2|SAMUS|Ubuntu Linux|
+:white_check_mark:|Toshiba CB30/CB35 Chromebook|LEON|Ubuntu Linux|
+:question:|Acer Chromebook 11 C740|PAINE|Ubuntu Linux|Untested but likely
+:question:|Acer Chromebook 15 C910|YUNA|Ubuntu Linux|Untested but likely
+:question:|Acer Chromebook 15 CB5-571|YUNA|Ubuntu Linux|Untested but likely
+:question:|HP Chromebook 11|SPRING, SKATE|Ubuntu Linux|Untested but likely
+:question:|HP Chromebook 14|FALCO|Ubuntu Linux|Untested but likely
+:question:|Dell 11|WOLF|Ubuntu Linux|Untested but likely
+:question:|Other Haswell Chromebooks||Ubuntu Linux|These should work but might require other config tweaks
+:question:|Other Intel Chromebooks||Ubuntu Linux|Depends on SeaBIOS Legacy Boot availability
+:x:|(any of the above)||Other Unix or Linux distributions|Hopes are high
+:x:|ARM Chromebooks|(any)||ARM support is unlikely
 
 **Best-tested:** Lubuntu 15.04 and 14.10 on Acer C720
 
@@ -132,7 +144,9 @@ curl -O http://myserver/chrx/go && sh go
 
 This list might evolve. Your input is welcome!
 
-## chrx past
+## evolution
+
+### chrx past
 
 **chrx** began as an updated and enhanced version of
 [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html),
@@ -140,13 +154,13 @@ and still retains some original ChrUbuntu code (especially the
 disk partitioning bits).
 
 
-## chrx present
+### chrx present
 
 **chrx** has been used to install Linux on hundreds of Chromebooks.
 Users and discussion can be found on [/r/chrubuntu](https://www.reddit.com/r/chrubuntu).
 
 
-## chrx future
+### chrx future
 
 I'd like to test on a wider variety of hardware, and to install other
 Linux distributions.
@@ -219,4 +233,12 @@ can be disabled with the `-n` switch.
 ## thanks
 
 To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html), to [/r/chrubuntu](https://www.reddit.com/r/chrubuntu) for assembling links to tons of helpful resources, and to the dozens of people who found answers and solved problems before I even started looking.
+
+
+## changelog
+
+- **1.0** (20141223)
+- **1.1** (20150504): add support for Ubuntu 15.04
+  - **1.1.1** (20150508): add "-r RELEASE" switch; validate some input
+  - **1.1.2** (20151005): update Ubuntu "trusty" to 14.04.3; add recognized HWIDs (PEPTO, LINK, SAMUS, LEON, PAINE, YUNA, SPRING, SKATE, FALCO, WOLF); always verify chrx.org certificates
 

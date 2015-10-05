@@ -9,7 +9,7 @@
 #   unix ==       (k|l|x|edu|)ubuntu Linux, v == (14.04|14.10|15.04)
 #
 
-CHRX_VERSION="1.1.1"
+CHRX_VERSION="1.1.2"
 
 CHRX_TARGET_DISK=""
 CHRX_OS="linux"
