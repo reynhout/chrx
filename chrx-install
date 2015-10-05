@@ -206,7 +206,7 @@ start_secs=`date +%s`
 
 if [ "${CHRX_OS_RELEASE}" ]; then
   case "${CHRX_OS_RELEASE}" in
-    trusty) CHRX_OS_VERSION="14.04.2" ;;
+    trusty) CHRX_OS_VERSION="14.04.3" ;;
     utopic) CHRX_OS_VERSION="14.10" ;;
     vivid)  CHRX_OS_VERSION="15.04" ;;
     wily)   CHRX_OS_VERSION="15.10" ;;
