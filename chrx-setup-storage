@@ -99,9 +99,9 @@ else
     do
       cat <<- EOF
 
-	How much disk space (in gigabytes) should we reserve for Ubuntu?
+	How much disk space should we reserve for Linux?
 
-	Choose between 5 and ${max_os_size} GB (recommended: ${rec_os_size})
+	Choose between 5 and ${max_os_size} GB (recommended: ${rec_os_size}).
 
 	EOF
       echo_info "Enter size in GB [${rec_os_size}]: \c"
@@ -145,7 +145,7 @@ else
     echo "  rootc_size     ${rootc_size}"
 
     ## Do the real work
-    echo_info "\n\nModifying partition table to make room for Ubuntu." 
+    echo_info "\n\nModifying partition table to make room for Linux."
 
     umount -f /mnt/stateful_partition > /dev/null 2>&1
     cgpt add -i 1 -b ${stateful_start} -s ${stateful_size} -l STATE ${CHRX_TARGET_DISK}
@@ -156,7 +156,7 @@ else
 		${ANSI_GRN}
 		Your Chromebook will reboot and clear your data.
 
-		Run chrx again to install Ubuntu.
+		Run chrx again to install Linux.
 		${ANSI_RST}
 		EOF
     echo_warn "Press [enter] to continue: \c"
