@@ -9,8 +9,20 @@
 #
 
 case "${CHRX_HWID}" in
-  PEPPY*)
+  PEPPY*|PEPTO*)
     echo_info "Hardware ID \"${CHRX_HWID}\" is recognized and tested."
+    ;;
+  LINK*|SAMUS*|LEON*)
+    echo_info "Hardware ID \"${CHRX_HWID}\" is recognized and lightly tested. This should work."
+    ;;
+  PAINE*|YUNA*|SPRING*|SKATE*|FALCO*|WOLF*)
+    echo_info "Hardware ID \"${CHRX_HWID}\" is recognized but NOT tested. Chances of working are GOOD."
+    ;;
+  UNLIKELY*)
+    echo_warn "Hardware ID \"${CHRX_HWID}\" is recognized but NOT tested. Chances of working are LOW. Proceed with caution!"
+    ;;
+  NOWAYNOHOW*)
+    echo_fail "Hardware ID \"${CHRX_HWID}\" is recognized but WILL NOT WORK! Proceed for proof."
     ;;
   *)
     echo_warn "Hardware ID \"${CHRX_HWID}\" is unknown and untested. Trying anyway!"
