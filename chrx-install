@@ -9,7 +9,7 @@
 #   unix ==       (k|l|x|edu|)ubuntu Linux, v == (14.04|14.10|15.04)
 #
 
-CHRX_VERSION="1.1.2"
+CHRX_VERSION="1.1.3"
 
 CHRX_TARGET_DISK=""
 CHRX_OS="linux"
@@ -17,7 +17,7 @@ CHRX_OS_DIST="ubuntu"
 CHRX_OS_ARCH="amd64"
 CHRX_OS_METAPKG="ubuntu-desktop"
 CHRX_OS_IMG="latest"
-CHRX_OS_RELEASE=""
+CHRX_OS_RELEASE="15.04"
 CHRX_USERNAME="chrx"
 CHRX_HOSTNAME="chrx"
 CHRX_LOCALE="en_US.UTF-8"

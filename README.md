@@ -17,7 +17,7 @@ downloaded from a secure mirror of this repository.
 
 ## status
 
-20151005: Version 1.1.2. See "changelog", below.
+20151021: Version 1.1.3. See "changelog", below.
 
 status| chromebook | hwid | unix | notes
 :----:| ---------- | ---- | ---- | -----
@@ -241,4 +241,5 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **1.1** (20150504): add support for Ubuntu 15.04
   - **1.1.1** (20150508): add "-r RELEASE" switch; validate some input
   - **1.1.2** (20151005): update Ubuntu "trusty" to 14.04.3; add recognized HWIDs (PEPTO, LINK, SAMUS, LEON, PAINE, YUNA, SPRING, SKATE, FALCO, WOLF); always verify chrx.org certificates
+  - **1.1.3** (20151021): temporarily set default RELEASE to 15.04 until 15.10 is fully tested (override with "-r 15.10")
 
