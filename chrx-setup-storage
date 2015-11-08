@@ -8,55 +8,6 @@
 # It cannot be run directly from the commandline.
 #
 
-case "${CHRX_HWID}" in
-  PEPPY*|PEPTO*)
-    echo_info "Hardware ID \"${CHRX_HWID}\" is recognized and tested."
-    ;;
-  LINK*|SAMUS*|LEON*)
-    echo_info "Hardware ID \"${CHRX_HWID}\" is recognized and lightly tested. This should work."
-    ;;
-  PAINE*|YUNA*|SPRING*|SKATE*|FALCO*|WOLF*)
-    echo_info "Hardware ID \"${CHRX_HWID}\" is recognized but NOT tested. Chances of working are GOOD."
-    ;;
-  UNLIKELY*)
-    echo_warn "Hardware ID \"${CHRX_HWID}\" is recognized but NOT tested. Chances of working are LOW. Proceed with caution!"
-    ;;
-  NOWAYNOHOW*)
-    echo_fail "Hardware ID \"${CHRX_HWID}\" is recognized but WILL NOT WORK! Proceed for proof."
-    ;;
-  *)
-    echo_warn "Hardware ID \"${CHRX_HWID}\" is unknown and untested. Trying anyway!"
-    ;;
-esac
-
-echo_info "Checking hardware support for legacy boot...  \c"
-
-if [ ! -x /usr/sbin/mosys ]; then
-  echo_fail "ERROR"
-  cat <<- EOF
-	${ANSI_RED}
-	Can't find /usr/bin/mosys. Make sure you are running the default
-	developer mode Linux shell, logged in as chronos@localhost.
-	${ANSI_RST}
-	EOF
-  exit 1
-fi
-
-if [ -z "`/usr/sbin/mosys eeprom map | grep RW_LEGACY`" ]; then
-  echo_fail "ERROR"
-  cat <<- EOF
-	${ANSI_RED}
-	This Chrome device does not support CTRL-L Legacy SeaBIOS booting.
-
-	You might have better luck with the old ChrUbuntu script.
-	${ANSI_RST}
-	EOF
-
-  exit 1
-else
-  echo_info "OK"
-fi
-
 
 if [ "${CHRX_TARGET_DISK}" ]; then
   echo_info "Installing to target disk ${ANSI_WHT}${CHRX_TARGET_DISK}${ANSI_RST}"
@@ -172,29 +123,35 @@ fi
 ## intent was, but I'm leaving these harmless bits in for now.
 if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]
 then
-  target_rootfs="${CHRX_TARGET_DISK}p7"
+  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p7"
   target_kern="${CHRX_TARGET_DISK}p6"
 else
-  target_rootfs="${CHRX_TARGET_DISK}7"
+  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}7"
   target_kern="${CHRX_TARGET_DISK}6"
 fi
+#CHRX_ROOT_PARTITION=${target_rootfs}
 
 echo_info "\nInstallation partitions:"
 cat <<EOF
 
   kernel: ${target_kern}
-  root:   ${target_rootfs}
+  root:   ${CHRX_ROOT_PARTITION}
 
 EOF
 
-if [ "`mount | grep ${target_rootfs}`" ]; then
-  echo_fail "Install target ${target_rootfs} is already mounted!\n"
+## TODO: or, do this explicitly first...or after and then re-rest..
+#  umount -R ${CHRX_ROOT_PARTITION} 2>/dev/null
+
+umount -R ${CHRX_ROOT_PARTITION} 2>/dev/null
+umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null
+if [ "`mount | grep ${CHRX_ROOT_PARTITION}`" ]; then
+  echo_fail "Install target ${CHRX_ROOT_PARTITION} is already mounted!\n"
   echo_warn "Unmount manually (sudo umount -R ${CHRX_INSTALL_ROOT}) or reboot"
   echo_warn "to try again."
   exit 1
 fi
 
-mkfs.ext4 ${VERBOSITY_MKFS} ${target_rootfs}
+mkfs.ext4 ${VERBOSITY_MKFS} ${CHRX_ROOT_PARTITION}
 
 echo_info "Preparing installation root directory ${CHRX_INSTALL_ROOT}"
 rm -rf ${CHRX_INSTALL_ROOT}
@@ -204,7 +161,7 @@ if [ ! -d "${CHRX_INSTALL_ROOT}" ]; then
   exit 1
 fi
 
-mount -t ext4 ${target_rootfs} ${CHRX_INSTALL_ROOT}
+mount -t ext4 ${CHRX_ROOT_PARTITION} ${CHRX_INSTALL_ROOT}
 
 ## clear error variable, which is checked in the calling script
 SETUP_STORAGE_ERROR=""

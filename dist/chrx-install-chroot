@@ -5,113 +5,114 @@
 # This portion of the installation process is run in a chroot.
 #
 
+echo_title() { echo -e "\n${ANSI_GRN}${*}${ANSI_RST}"; }
+echo_title_yel() { echo -e "\n${ANSI_YEL}${*}${ANSI_RST}"; }
+echo_title_red() { echo -e "\n${ANSI_RED}${*}${ANSI_RST}"; }
 
-## Current Ubuntu LTS is 14.04.2, which delivers kernel version 3.14.1.
-## We need a minumum kernel version of 3.17 for important cyapa trackpad
-## patches, so we will update the kernel to the latest 3.17 if necessary.
+debug_shell()
+{
+  echo_title_red "debug shell ($@), exit to continue."
+  /bin/bash -i
+}
 
-## TODO: keep these updated, though we do check before installing!
-NEW_KERNEL_BASE="http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17.1-utopic"
-NEW_KERNEL_REV="3.17.1-031701_3.17.1-031701.201410150735"
-NEW_KERNEL_GREV="3.17.1-031701-generic_3.17.1-031701.201410150735"
-NEW_KV_MAJ=3
-NEW_KV_MIN=17
-NEW_KV_PAT=1
+apt_get_update()
+{
+  echo_title "Reloading repository manifests."
+  apt-get -y ${VERBOSITY_APTGET} update
+  #debug_shell apt_get_update
 
+  APT_DB_NEEDS_UPDATE=
+}
 
-export DEBIAN_FRONTEND=noninteractive
+apt_get_update_if_needed()
+{
+  [ "${APT_DB_NEEDS_UPDATE}" ] && apt_get_update
+}
 
-echo -e "\n${ANSI_GRN}Upgrading Ubuntu core image files.${ANSI_RST}"
-echo ${CHRX_TZ} > /etc/timezone
+ubuntu_update_core_image()
+{
+  echo_title "Upgrading Ubuntu core image."
+  apt_get_update_if_needed
+  apt-get -y ${VERBOSITY_APTGET} dist-upgrade
+  apt-get -y ${VERBOSITY_APTGET} install ubuntu-minimal
+  apt-get -y ${VERBOSITY_APTGET} install software-properties-common
+}
 
-apt-get -y ${VERBOSITY_APTGET} update
-apt-get -y ${VERBOSITY_APTGET} dist-upgrade
-apt-get -y ${VERBOSITY_APTGET} install ubuntu-minimal
-apt-get -y ${VERBOSITY_APTGET} install curl
-apt-get -y ${VERBOSITY_APTGET} install software-properties-common
+install_curl()
+{
+  apt_get_update_if_needed
+  apt-get -y ${VERBOSITY_APTGET} install curl
+}
 
-echo -e "\n${ANSI_GRN}Adding software respositories.${ANSI_RST}"
-add-apt-repository main
-add-apt-repository universe
-add-apt-repository restricted
-add-apt-repository multiverse 
-# for google chrome
-curl -O ${VERBOSITY_CURL} https://dl-ssl.google.com/linux/linux_signing_key.pub
-sudo apt-key add linux_signing_key.pub
-add-apt-repository "deb http://dl.google.com/linux/chrome/deb/ stable main"
-apt-get -y ${VERBOSITY_APTGET} update
+install_utilities()
+{
+  apt_get_update_if_needed
+  apt-get -y ${VERBOSITY_APTGET} install zram-config
+  apt-get -y ${VERBOSITY_APTGET} install grub-pc
+}
 
-## set TZ
-echo -e "\n${ANSI_GRN}Setting timezone to \"${CHRX_TZ}\".${ANSI_RST}"
-dpkg-reconfigure tzdata
+ubuntu_add_repos()
+{
+  echo_title "Adding Ubuntu software respositories."
+  add-apt-repository main
+  add-apt-repository universe
+  add-apt-repository restricted
+  add-apt-repository multiverse
+  APT_DB_NEEDS_UPDATE=1
+}
 
-if [ "${CHRX_OS_METAPKG}" != "ubuntu-minimal" ]; then
-  echo -e "\n${ANSI_GRN}Installing Ubuntu metapackage \"${CHRX_OS_METAPKG}\".${ANSI_RST}"
-  apt-get -y ${VERBOSITY_APTGET} install ${CHRX_OS_METAPKG}
-fi
+galliumos_add_repos()
+{
+  echo_title "Adding GalliumOS software respositories."
+  curl -O ${VERBOSITY_CURL} http://apt.galliumos.org/galliumos.gpg
+  apt-key add galliumos.gpg
+  add-apt-repository 'deb http://apt.galliumos.org/ vivid-galliumos main'
+  APT_DB_NEEDS_UPDATE=1
+}
 
-echo -e "\n${ANSI_GRN}Installing language support.${ANSI_RST}"
-apt-get -y ${VERBOSITY_APTGET} install language-pack-en language-pack-gnome-en firefox-locale-en wbritish hunspell-en-ca
+galliumos_install_base()
+{
+  apt_get_update_if_needed
+  echo_title "Installing GalliumOS base pkgs."
+  apt-get -y ${VERBOSITY_APTGET} install galliumos-base
+}
 
-echo -e "\n${ANSI_GRN}Setting locale to \"${CHRX_LOCALE}\".${ANSI_RST}"
-update-locale LANG=${CHRX_LOCALE} LC_MESSAGES=${CHRX_LOCALE}
+galliumos_install_hwspecific()
+{
+  echo_title "Installing GalliumOS hardware compatibility pkgs."
+  apt_get_update_if_needed
+  ## TODO: install proper hwspec pkg
+  apt-get -y ${VERBOSITY_APTGET} install galliumos-haswell
+  apt-get -y ${VERBOSITY_APTGET} install galliumos-laptop
+}
 
-## install google chrome iff we have X.
-if [ -x /usr/bin/X ]; then
-  echo -e "\n${ANSI_GRN}Installing Google Chrome.${ANSI_RST}"
-  apt-get -y ${VERBOSITY_APTGET} install google-chrome-stable
-fi
+install_distenv()
+{
+  apt_get_update_if_needed
+  echo_title "Installing \"${CHRX_OS_DISTENV}\"."
+  apt-get -y ${VERBOSITY_APTGET} install "${CHRX_OS_DISTENV}"
+}
 
+chrome_add_repos()
+{
+  echo_title "Adding Google Chrome software respositories."
+  curl -O ${VERBOSITY_CURL} https://dl-ssl.google.com/linux/linux_signing_key.pub
+  sudo apt-key add linux_signing_key.pub
+  add-apt-repository "deb http://dl.google.com/linux/chrome/deb/ stable main"
+  APT_DB_NEEDS_UPDATE=1
+}
 
-## install base kernel
-echo -e "\n${ANSI_GRN}Installing Linux kernel and boot environment${ANSI_RST}"
-apt-get -y ${VERBOSITY_APTGET} install linux-image-generic
-apt-get -y ${VERBOSITY_APTGET} install linux-headers-generic
+add_first_user()
+{
+  echo_title "Adding user \"${CHRX_USERNAME}\"."
+  useradd -m ${CHRX_USERNAME} -s /bin/bash
+  echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
+  adduser ${CHRX_USERNAME} adm
+  adduser ${CHRX_USERNAME} sudo
+}
 
-
-## install newest-released kernel, iff installed kernel is older
-KV=`dpkg -s linux-image-generic|grep "^Version:"|cut -d\  -f2|cut -d\. -f1-3`
-KV_MAJ=`echo ${KV} | cut -d\. -f1`
-KV_MIN=`echo ${KV} | cut -d\. -f2`
-KV_PAT=`echo ${KV} | cut -d\. -f3`
-
-echo -e "\n${ANSI_GRN}Installed kernel is version ${KV_MAJ}.${KV_MIN}.${KV_PAT}${ANSI_RST}"
-
-new_is_newer=""
-if [ "${NEW_KV_MAJ}" -gt "${KV_MAJ}" ]; then
-  new_is_newer="yes"
-elif [ "${NEW_KV_MAJ}" -eq "${KV_MAJ}" ]; then
-  if [ "${NEW_KV_MIN}" -gt "${KV_MIN}" ]; then
-    new_is_newer="yes"
-  elif [ "${NEW_KV_MIN}" -eq "${KV_MIN}" ]; then
-    if [ "${NEW_KV_PAT}" -gt "${KV_PAT}" ]; then
-      new_is_newer="yes"
-    fi
-  fi
-fi
-
-if [ "${new_is_newer}" ]; then
-  echo "Newer kernel available (${NEW_KERNEL_REV} > ${KV})"
-  echo -e "\n${ANSI_GRN}Installing updated Linux kernel (version ${NEW_KERNEL_REV})${ANSI_RST}"
-  rm -f linux-*.deb
-  curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-image-${NEW_KERNEL_GREV}_amd64.deb
-  curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_GREV}_amd64.deb
-  curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_REV}_all.deb
-  dpkg -i linux-*.deb
-  rm -f linux-*.deb
-else
-  echo "Installed kernel is newest-known (${KV} >= ${NEW_KERNEL_REV})"
-fi
-
-apt-get -y ${VERBOSITY_APTGET} install grub-pc
-
-
-## GRUB: modify boot settings
-## unfortunately, we have to do this in the chroot. 
-
-if [ "${CHRX_SKIP_CUSTOMIZATION}" ]; then
-  echo -e "\n${ANSI_YEL}(skipping chrx grub config)${ANSI_RST}"
-else
+configure_grub()
+{
   ## comment old settings
   sed -i~ 's/^\(GRUB_HIDDEN_TIMEOUT\)/#\1/g' /etc/default/grub
   sed -i~ 's/^\(GRUB_TIMEOUT\)/#\1/g' /etc/default/grub
@@ -123,8 +124,8 @@ else
 ##
 ## GRUB_TIMEOUT        delay before boot (ESC for menu), in seconds
 ## GRUB_TIMEOUT_STYLE  UI for delay (menu|countdown|hidden)
-GRUB_TIMEOUT=3
-GRUB_TIMEOUT_STYLE=countdown
+GRUB_TIMEOUT=10
+GRUB_TIMEOUT_STYLE=menu
 
 ## kernel parameters
 ##
@@ -150,37 +151,197 @@ GRUB_TIMEOUT_STYLE=countdown
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash boot=local acpi_osi=Linux acpi_backlight=vendor add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic elevator=noop resume=/dev/sda5"
 
 EO_GRUB
+}
+
+set_timezone()
+{
+  echo_title "Setting timezone to \"${CHRX_TZ}\"."
+  dpkg-reconfigure tzdata
+}
+
+install_language_support()
+{
+  echo_title "Installing language support."
+  apt-get -y ${VERBOSITY_APTGET} install language-pack-en language-pack-gnome-en firefox-locale-en wbritish hunspell-en-ca
+}
+
+set_locale()
+{
+  echo_title "Setting locale to \"${CHRX_LOCALE}\"."
+  update-locale LANG=${CHRX_LOCALE} LC_MESSAGES=${CHRX_LOCALE}
+}
+
+install_google_chrome()
+{
+  [ ! -x /usr/bin/X ] && return ## only if we have X
+
+  apt_get_update_if_needed
+  echo_title "Installing Google Chrome."
+  apt-get -y ${VERBOSITY_APTGET} install google-chrome-stable
+}
+
+install_desktop_support()
+{
+  [ ! -x /usr/bin/X ] && return ## only if we have X
+
+  echo_title "Installing desktop compatibility pkgs."
+  apt-get -y ${VERBOSITY_APTGET} install xbindkeys xdotool xbacklight pulseaudio-utils xvkbd
+}
+
+install_kernel()
+{
+  echo_title "Installing Linux kernel and boot environment."
+  apt-get -y ${VERBOSITY_APTGET} install linux-image-generic
+  apt-get -y ${VERBOSITY_APTGET} install linux-headers-generic
+}
+
+install_kernel_newer_than_min()
+{
+  ## Current Ubuntu LTS is 14.04.3, which delivers kernel version 3.14.1.
+  ## We need a minumum kernel version of 3.17 for important cyapa trackpad
+  ## patches, so we will update the kernel to the latest 3.17 if necessary.
+
+  ## TODO: keep these updated, though we do check before installing!
+  NEW_KERNEL_BASE="http://kernel.ubuntu.com/~kernel-ppa/mainline/v3.17.1-utopic"
+  NEW_KERNEL_REV="3.17.1-031701_3.17.1-031701.201410150735"
+  NEW_KERNEL_GREV="3.17.1-031701-generic_3.17.1-031701.201410150735"
+  NEW_KV_MAJ=3
+  NEW_KV_MIN=17
+  NEW_KV_PAT=1
+
+  ## install newest-released kernel, iff installed kernel is older
+  KV=`dpkg -s linux-image-generic|grep "^Version:"|cut -d\  -f2|cut -d\. -f1-3`
+  KV_MAJ=`echo ${KV} | cut -d\. -f1`
+  KV_MIN=`echo ${KV} | cut -d\. -f2`
+  KV_PAT=`echo ${KV} | cut -d\. -f3`
+
+  echo_title "Installed kernel is version ${KV_MAJ}.${KV_MIN}.${KV_PAT}"
+
+  new_is_newer=""
+  if [ "${NEW_KV_MAJ}" -gt "${KV_MAJ}" ]; then
+    new_is_newer="yes"
+  elif [ "${NEW_KV_MAJ}" -eq "${KV_MAJ}" ]; then
+    if [ "${NEW_KV_MIN}" -gt "${KV_MIN}" ]; then
+      new_is_newer="yes"
+    elif [ "${NEW_KV_MIN}" -eq "${KV_MIN}" ]; then
+      if [ "${NEW_KV_PAT}" -gt "${KV_PAT}" ]; then
+        new_is_newer="yes"
+      fi
+    fi
+  fi
+
+  if [ "${new_is_newer}" ]; then
+    echo "Newer kernel available (${NEW_KERNEL_REV} > ${KV})"
+    echo_title "Installing updated Linux kernel (version ${NEW_KERNEL_REV})"
+    rm -f linux-*.deb
+    curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-image-${NEW_KERNEL_GREV}_amd64.deb
+    curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_GREV}_amd64.deb
+    curl -O ${VERBOSITY_CURL} ${NEW_KERNEL_BASE}/linux-headers-${NEW_KERNEL_REV}_all.deb
+    dpkg -i linux-*.deb
+    rm -f linux-*.deb
+  else
+    echo "Installed kernel is newest-known (${KV} >= ${NEW_KERNEL_REV})"
+  fi
+}
+
+galliumos_update_core_image()
+{
+  apt_get_update
+  echo_title "Upgrading GalliumOS core image."
+  apt-get -y ${VERBOSITY_APTGET} dist-upgrade
+}
+
+write_default_fstab()
+{
+  ## FIXME be smarter here
+  if [ -z "${CHRX_ROOT_PARTITION}" ]; then
+    echo_title_red "Unable to configure default fstab, CHRX_ROOT_PARTITION is unset!"
+    return
+  fi
+  echo "${CHRX_ROOT_PARTITION} / ext4 defaults,discard,relatime 1 1" >> /etc/fstab
+}
+
+## begin
+export DEBIAN_FRONTEND=noninteractive
+echo ${CHRX_TZ} > /etc/timezone
+
+apt_get_update
+
+#echo debug ; bash
+
+case "${CHRX_OS_DISTRO}" in
+  *ubuntu)
+    #apt_get_update
+    ubuntu_update_core_image
+    install_curl
+    ubuntu_add_repos
+    install_utilities
+    #ubuntu_install
+    install_distenv
+
+    set_timezone
+
+    #if [ "${CHRX_OS_DISTENV}" != "ubuntu-minimal" ]; then
+    #  install_distenv
+    #fi
+
+    install_language_support ## TODO: ubuntu-only? req for set_locale?
+    set_locale
+
+    install_desktop_support ## TODO: ubuntu-only?
+    chrome_add_repos
+    install_google_chrome ## TODO: ubuntu-only?
+
+    install_kernel
+    install_kernel_newer_than_min
+    ## EO "ubuntu-only?"
+
+    write_default_fstab
+    ;;
+#  galliumos_apt)
+#    ubuntu_update_core_image
+#    install_curl
+#    ubuntu_add_repos
+#    install_utilities
+#    galliumos_add_repos
+#    galliumos_install_base
+#    install_distenv
+#    galliumos_install_hwspecific
+#    ;;
+  galliumos)
+    apt-get -y ${VERBOSITY_APTGET} install software-properties-common
+    install_curl
+    set_timezone
+    set_locale
+    #galliumos_add_repos ## not needed, core image is preconfigured
+    galliumos_update_core_image
+    #galliumos_install_hwspecific ## not needed, we're using hwspecific core
+    write_default_fstab
+    ;;
+esac
+
+#apt-get -y ${VERBOSITY_APTGET} install grub-pc
+
+## GRUB: modify boot settings
+## unfortunately, we have to do this in the chroot.
+if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
+  if [ -z "${CHRX_CUSTOMIZATION_SKIPPED}" ]; then
+    configure_grub
+  else
+    echo_title_yel "(skipping chrx grub config)"
+  fi
 fi
 
 grub-mkconfig -o /boot/grub/grub.cfg
 grub-install ${CHRX_TARGET_DISK} --force
 
-echo -e "\n${ANSI_GRN}Adding user \"${CHRX_USERNAME}\".${ANSI_RST}"
-useradd -m ${CHRX_USERNAME} -s /bin/bash
-#echo ${CHRX_USERNAME} | echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
-echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
-#passwd -e ${CHRX_USERNAME}
-adduser ${CHRX_USERNAME} adm
-adduser ${CHRX_USERNAME} sudo
-
 #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
 #apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
 #apt-get -y ${VERBOSITY_APTGET} autoremove
 
-## add desktop bits, iff we have X
-if [ -x /usr/bin/X ]; then
-  echo -e "\n${ANSI_GRN}Installing desktop compatibility pkgs.${ANSI_RST}"
-  apt-get -y ${VERBOSITY_APTGET} install xbindkeys xdotool xbacklight pulseaudio-utils xvkbd zram-config
-fi
-
-if [ "${CHRX_DO_INSTALL_UPSTART}" ]; then
-  echo -e "\n${ANSI_GRN}Installing Upstart boot manager.${ANSI_RST}"
-  apt-get -y ${VERBOSITY_APTGET} install upstart-sysv
-  ## add systemd option to GRUB boot menu
-  update-initramfs -u
-fi
-
 apt-get -y ${VERBOSITY_APTGET} clean
 
-apt list --installed > ${CHRX_CACHE_DIR}/apt-list-installed
+dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
+
+add_first_user
 

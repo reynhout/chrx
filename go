@@ -19,7 +19,9 @@ cd ${CHRX_CACHE0_DIR}
 (
 export CHRX_WEB_ROOT CHRX_CACHE0_DIR
 curl -Os ${CHRX_WEB_ROOT}/chrx-install && sudo -E bash ./chrx-install $*
-) | tee -a ${CHRX_CACHE0_DIR}/chrx-install.log
+) 2>&1 | tee -a ${CHRX_CACHE0_DIR}/chrx-install.log
 
 ## logfile will be copied to chroot by install-chrx.
 ## can't copy here -- partition is unmounted when we get back.
+
+## get stderr into tee: bash: `|& tee`;  sh: `2>&1 | tee`

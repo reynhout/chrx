@@ -1,66 +1,52 @@
 # chrx
 
+Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum flexibility.
+
+
+| | |
+| ------------ | ---------- |
+|**works on**|Compatible Chromebook models. See [chromebooks](#chromebooks).|
+|**installs**|Several Linux distributions. See [operating systems](#operating systems) and [recommendations](#recommendations).|
+
+
+
 **[chrx.org](https://chrx.org/)**
 <br />
 **[github.com/reynhout/chrx](https://github.com/reynhout/chrx)**
 
-Use **chrx** to install Linux onto your Chromebook. Presently, this
-means Ubuntu (or a variant) onto your Acer C720 (or a few similar
-models -- see "status", below).
-
-**chrx** installs OS components from the net. By default, package files
-are downloaded from vendor sites, and several configuration tweaks are
-downloaded from a secure mirror of this repository.
-
-**chrx** is run directly from your Chromebook's
-[Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices) shell on VT2 (see below).
-
 ## status
 
-20151021: Version 1.1.3. See "changelog", below.
+**Version 2.0** (20151025) Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
 
-status| chromebook | hwid | unix | notes
-:----:| ---------- | ---- | ---- | -----
-:white_check_mark:|Acer C720|PEPPY|Ubuntu Linux (15.04, 14.10, 14.04, LTS, development)|I use `lubuntu-desktop`
-:white_check_mark:|Acer C720P|PEPTO|Ubuntu Linux|
-:white_check_mark:|Google Pixel|LINK|Ubuntu Linux|
-:white_check_mark:|Google Pixel 2|SAMUS|Ubuntu Linux|
-:white_check_mark:|Toshiba CB30/CB35 Chromebook|LEON|Ubuntu Linux|
-:question:|Acer Chromebook 11 C740|PAINE|Ubuntu Linux|Untested but likely
-:question:|Acer Chromebook 15 C910|YUNA|Ubuntu Linux|Untested but likely
-:question:|Acer Chromebook 15 CB5-571|YUNA|Ubuntu Linux|Untested but likely
-:question:|HP Chromebook 11|SPRING, SKATE|Ubuntu Linux|Untested but likely
-:question:|HP Chromebook 14|FALCO|Ubuntu Linux|Untested but likely
-:question:|Dell 11|WOLF|Ubuntu Linux|Untested but likely
-:question:|Other Haswell Chromebooks||Ubuntu Linux|These should work but might require other config tweaks
-:question:|Other Intel Chromebooks||Ubuntu Linux|Depends on SeaBIOS Legacy Boot availability
-:x:|(any of the above)||Other Unix or Linux distributions|Hopes are high
-:x:|ARM Chromebooks|(any)||ARM support is unlikely
 
-**Best-tested:** Lubuntu 15.04 and 14.10 on Acer C720
-
+<a name="usage"></a>
 ## usage
 
-**Be sure to back up any valuable data in ChromeOS or Linux before
-running chrx!**
+Installing Linux via **chrx** onto a new (or freshly recovered) Chromebook
+is a two-phase process:
+
+- The first phase reserves space on your SSD or other storage device for
+the new operating system, **and then reboots**.
+- The second phase installs your chosen distribution, and configures the
+new system according to your selected options.
+
+If you reinstall later, or switch to a another distribution, **chrx** will
+skip directly to phase two.
+
 
 ### step-by-step
 
 1. Enable [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices) (process is model-specific; for Acer C720, press `ESC+F3(Refresh)+Power`), then reboot
 1. Load ChromeOS by pressing `CTRL+D` at the white "OS verification is OFF" screen
 1. Configure your Wi-Fi network, if necessary
-1. Switch to virtual terminal 2 (VT2) by pressing `CTRL+ALT+F2(top row right arrow)`
+1. Switch to Virtual Terminal (VT) 2 by pressing `CTRL+ALT+F2(top row right arrow)`
 1. Log in as user `chronos` (no password) to enter `chronos@localhost` shell
-1. Run **chrx**: `curl -Os https://chrx.org/go && sh go` (see below for options)
+1. Run **chrx**: `curl -Os https://chrx.org/go && sh go` (see [options](#options))
 1. Follow on-screen instructions to prepare your Chromebook for installation
 1. Reboot, then repeat steps 2-7 to install and configure your new system
 
-When installing onto the internal SSD of a clean Chromebook, **chrx**
-will repartition the drive to allocate space for the new operating system,
-and will reboot after this first step. After reboot, run **chrx** again
-(with the same command line) to perform the installation.
-Subsequent installs will not require repartitioning or rebooting.
 
+<a name="options"></a>
 ### options
 
 **chrx** can accept several command-line options:
@@ -69,21 +55,19 @@ Subsequent installs will not require repartitioning or rebooting.
 Usage: chrx [ option ... ]
 
 Options
-   -m METAPACKAGE  OS-specific metapackage to install [ubuntu-desktop]
-                   (ubuntu-desktop, ubuntu-minimal, ubuntu-standard,
-                   lubuntu-desktop, kubuntu-desktop, xubuntu-desktop,
-                   edubuntu-desktop, edubuntu-server)
+   -d DISTRIBUTION OS-specific distribution to install [lubuntu]
+                   (galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu)
+   -e ENVIRONMENT  distribution-specific environment [desktop]
+                   (desktop, minimal, standard, server)
+   -r RELEASE      distribution release number or name []
+                   (lts, latest, dev, 15.04, 15.10, vivid, wily, etc)
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
-   -i IMAGE        OS-specific image name (lts, dev, latest) [latest]
-   -r RELEASE      OS-specific release number or name []
-                   (14.10, 15.04, 15.10, utopic, vivid, wily, etc)
-                   RELEASE takes precedence over IMAGE
-   -U USERNAME     username of first created user [chrx]
    -H HOSTNAME     hostname for new system [chrx]
+   -U USERNAME     username of first created user [chrx]
    -L LOCALE       locale for new system [en_US.UTF-8]
-   -Z TIMEZONE     timezone for new system [America/New_York]
-                   (America/San_Francisco, Etc/UTC, etc)
+   -Z TIMEZONE     timezone for new system, Eggert convention [America/New_York]
+                   (America/San_Francisco, Europe/Amsterdam, Etc/UTC, etc)
    -n              disable success/failure notifications
    -s              skip all customization, install stock OS only
    -y              run non-interactively, take defaults and do not confirm
@@ -98,13 +82,19 @@ Options
 
 ### examples
 
-Ubuntu 15.04, system name `hal`, first user `dave`:
+[Lubuntu](http://lubuntu.net/) Desktop (latest):
 
-`curl -Os https://chrx.org/go && sh go -r 15.04 -H hal -U dave`
+`curl -Os https://chrx.org/go && sh go`
 
-Lubuntu (latest), verbosely:
+[GalliumOS](https://galliumos.org/) Desktop (latest), verbosely:
 
-`curl -Os https://chrx.org/go && sh go -v -m lubuntu-desktop`
+`curl -Os https://chrx.org/go && sh go -d galliumos -v`
+
+[Ubuntu](https://ubuntu.com/) Standard (good for servers), version 15.04, system name `hal`, first user `dave`:
+
+`curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 15.04 -H hal -U dave`
+
+
 
 ### advanced usage
 
@@ -118,8 +108,76 @@ environment variable before running the `go` script, like this:
 
 ```
 export CHRX_WEB_ROOT="http://myserver/chrx"
-curl -O http://myserver/chrx/go && sh go
+curl -O $CHRX_WEB_ROOT/go && sh go
 ```
+
+<a name="compatibility"></a>
+## compatibility
+
+
+<a name="chromebooks"></a>
+### chromebooks
+status            |chromebook                |hwid   |notes
+:----------------:|--------------------------|-------|------------------
+:white_check_mark:|Acer C720                 |PEPPY  |Best-tested
+:white_check_mark:|Acer C720P                |PEPTO  |
+:white_check_mark:|Google Pixel              |LINK   |
+:white_check_mark:|Google Pixel 2            |SAMUS  |
+:white_check_mark:|Toshiba CB30/CB35 Chromebook|LEON |
+:question:        |Acer Chromebook 11 C740   |PAINE  |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
+:question:        |Acer Chromebook 15 C910   |YUNA   |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
+:question:        |Acer Chromebook 15 CB5-571|YUNA   |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
+:question:        |Dell 11                   |WOLF   |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
+:question:        |HP Chromebook 11          |SPRING, SKATE|Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
+:question:        |HP Chromebook 14          |FALCO  |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
+:question:        |Other Haswell Chromebooks |       |Should work but might require additional config tweaks
+:question:        |Other Broadwell Chromebooks|      |Depends on SeaBIOS Legacy Boot availability
+:question:        |Other Intel Chromebooks   |       |Depends on SeaBIOS Legacy Boot availability
+:x:               |ARM Chromebooks           |       |ARM support is very unlikely
+
+
+<a name="operating systems"></a>
+### operating systems
+
+status| OS  | distribution | notes
+:----:| --- | ------------ | -----
+:white_check_mark:|Linux|[GalliumOS](https://galliumos.org/)|Derived from Xubuntu, developed specifically for compatibility and optimized performance on Chromebook hardware.
+:white_check_mark:|Linux|[Lubuntu](http://lubuntu.net/)|A light-weight variant of Ubuntu, with the LXDE desktop environment.
+:white_check_mark:|Linux|[Xubuntu](http://xubuntu.org/)|A light-weight variant of Ubuntu, with the Xfce desktop environment.
+:white_check_mark:|Linux|[Kubuntu](http://kubuntu.org/)|Ubuntu with the KDE desktop environment.
+:white_check_mark:|Linux|[Edubuntu](http://edubuntu.org/)|Full Ubuntu plus application bundles used in educational settings.
+:white_check_mark:|Linux|[Ubuntu](https://ubuntu.com/)|The standard full Ubuntu distro.
+:x:|FreeBSD||Work in progress!
+
+
+<a name="recommendations"></a>
+### recommendations
+
+Chromebooks perform best with lighter-weight operating systems and desktop environments, and they often require updated kernel drivers to support their new and tightly integrated hardware.
+
+Selecting a distribution which meets these needs is therefore an important part of Linux-on-Chromebook happiness. While any updated distro will work for ordinary tasks, there are a few that stand out:
+
+- **GalliumOS** is optimized specifically for Chromebooks. It scores well on all metrics, looks great, and installs quickly. Some memory-hungry applications (e.g. Steam games) perform *best* on GalliumOS thanks to careful optimizations. GalliumOS is in BETA but is available for testing now.
+- **Lubuntu** also scores and performs well. It installs slightly smaller and uses significantly less RAM than other distros. Lubuntu is currently the default distro installed by **chrx**.
+- **Xubuntu** is another good choice. It's a bit heavier-weight than Lubuntu, but still performs very well.
+- I would not choose standard, full, Ubuntu for a Chromebook. It is perfectly usable, bit it's heavier and suffers in performance, without offering any important benefits. Memory use starts higher and increases much more quickly as you use the desktop apps (not reflected in measurements below). If your Chromebook model has 4GB of RAM, the performance differences are reduced but not eliminated.
+
+
+#### sample measurements
+
+distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | version | recommended? |
+--------- | ----- | ----- | ------- | -------- |:---:|
+GalliumOS | 2.9GB | 311MB | 9 mins  | 1.0 BETA | :white_check_mark: |
+Lubuntu   | 2.7GB | 227MB | 18 mins | 15.10    | :white_check_mark: |
+Xubuntu   | 3.0GB | 360MB | 22 mins | 15.04    | :white_check_mark: |
+Ubuntu    | 3.5GB | 440MB | 28 mins | 15.04    | :x: |
+Kubuntu   | 4.2GB | 613MB |         | 15.10    | :x: |
+
+
+1. All distributions were installed with the `desktop` environment option.
+1. Disk space can be reduced by removing unwanted packages. The number shown reflects the default install for the desktop environment.
+1. RAM use is measured after graphical login, connecting to Wi-Fi, and opening one window of the default Terminal program to run `/usr/bin/free` after a couple minutes for the system to stabilize. The number shown is an average of several tests, and variance is very low (2-3%).
+1. Installation time will vary greatly depending on your Internet connection, but the ratios should be representative.
 
 
 ## test suite
@@ -156,7 +214,7 @@ disk partitioning bits).
 
 ### chrx present
 
-**chrx** has been used to install Linux on hundreds of Chromebooks.
+**chrx** has been used to install Linux on thousands of Chromebooks.
 Users and discussion can be found on [/r/chrubuntu](https://www.reddit.com/r/chrubuntu).
 
 
@@ -165,8 +223,7 @@ Users and discussion can be found on [/r/chrubuntu](https://www.reddit.com/r/chr
 I'd like to test on a wider variety of hardware, and to install other
 Linux distributions.
 
-I'd dearly love to install FreeBSD, but my reading of the lists suggests
-that driver support is not imminent.
+Support for FreeBSD is coming. See http://blog.grem.de/pages/c720.html if you can't wait.
 
 
 ## alternatives
@@ -182,12 +239,17 @@ Consider these alternatives:
 updated ISOs (for Ubuntu and many other Linux distros!), which can be
 installed from USB/SD flash RAM. This method completely removes ChromeOS
 from your Chromebook, and devotes your entire SSD to Linux.
+  - See also John Lewis's [Alternate Firmware](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) options for Chromebooks that do not support SeaBIOS Legacy Boot
+with stock firmware.
 - [Crouton](https://github.com/dnschneid/crouton) allows you to run ChromeOS
 and Linux simultaneously, instead of dual-booting like **chrx** or ChrUbuntu.
 This arrangement has a few drawbacks, but if you spend most of your time in
 ChromeOS and your Linux needs are limited, it should serve well.
-- The original [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html) has been tested on a wide variety of hardware. Unfortunately, it hasn't been updated in a while, and requires quite a bit of additional configuration after installation. No longer recommended for Acer C720s,
-but if your hardware is not supported by **chrx**, it's worth a try.
+- The original [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html) has been tested on a wide variety of hardware. Unfortunately, it is now significantly outdated, and fails to install Ubuntu
+15.04 and newer properly. 14.10 and older should install successfully via
+ChrUbuntu, but they will require significant additional configuration to work
+well. If your Chromebook is older and unsupported by **chrx**, give ChrUbuntu
+a try.
 
 
 ## notes on security and privacy
@@ -201,13 +263,11 @@ be fully eliminated.
 
 If these are concerns of yours, you can mitigate your risks by auditing
 all of the code involved, comparing checksums of downloaded packages, and
-hosting local caches of everything. Almost no one actually does this, but
-I don't want to contribute to the problem by ignoring it. See "advanced
-usage", above.
+hosting local caches (see [advanced usage](#advanced usage)).
 
-Also, pre-release versions of **chrx** "ping home" on every install to
-report success or failure. This ping includes **no personal information**,
-only data that might be useful for investigating failures.
+Also, **chrx** "pings home" on every install to report success or failure.
+This ping includes **no personal information**, only data that might be
+useful for investigating failures.
 
 Log entries created by these pings look like this:
 
@@ -216,7 +276,8 @@ Log entries created by these pings look like this:
   "chrx/1.1.1 hw=PEPPY_C6A-V7C-A2C sw=linux,ubuntu,latest,-,15.04,amd64,ubuntu-minimal" "-"
 ```
 
-`hw` is a hardware ID that corresponds to your model of Chromebook.
+`hw` is a hardware ID that corresponds to your model of Chromebook
+(**not** a serial number).
 
 `sw` combines a few of the command-line settings (or defaults) that you
 used to run **chrx**.
@@ -235,11 +296,11 @@ can be disabled with the `-n` switch.
 To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html), to [/r/chrubuntu](https://www.reddit.com/r/chrubuntu) for assembling links to tons of helpful resources, and to the dozens of people who found answers and solved problems before I even started looking.
 
 
+<a name="changelog"></a>
 ## changelog
 
 - **1.0** (20141223)
 - **1.1** (20150504): add support for Ubuntu 15.04
-  - **1.1.1** (20150508): add "-r RELEASE" switch; validate some input
+  - **1.1.1** (20150508): add "-r RELEASE" option; validate some input
   - **1.1.2** (20151005): update Ubuntu "trusty" to 14.04.3; add recognized HWIDs (PEPTO, LINK, SAMUS, LEON, PAINE, YUNA, SPRING, SKATE, FALCO, WOLF); always verify chrx.org certificates
-  - **1.1.3** (20151021): temporarily set default RELEASE to 15.04 until 15.10 is fully tested (override with "-r 15.10")
-
+- **2.0** (20151025): add GalliumOS support; add support for Ubuntu 15.10; add detection and installation prognosis for all known ChromeOS devices; add "-d DISTRIBUTION" and "-e ENVIRONMENT" options; remove "-m METAPACKAGE" option; remove "-i IMAGE" option, make RELEASE smarter; work around `systemd` conflict; refactor code into functions to facilitate multiple distros and future operating systems
