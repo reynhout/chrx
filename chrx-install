@@ -256,8 +256,9 @@ determine_osv_galliumos() {
   #versions_file="`curl -s ${versions_file_url}`"
 
   ## no versioning in apt repo yet, so override settings
-  CHRX_OS_RELEASE="nightly"
-  CHRX_OS_VERSION="1.0beta"
+  ## FIXME need to add chromebox differentiation as well
+  CHRX_OS_RELEASE="beta"
+  CHRX_OS_VERSION="1.0beta1"
   msg_os_release="${ANSI_YEL}(overridden)${ANSI_RST}"
   msg_os_version="${ANSI_YEL}(NOTE: beta version)${ANSI_RST}"
   CHRX_CUSTOMIZATION_ENABLED=
@@ -270,7 +271,7 @@ determine_osv_galliumos() {
     *)                    cpu_fam="generic" ;;
   esac
 
-  CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/builds/alt/galliumos-${cpu_fam}-coreimage-latest.tgz"
+  CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/builds/alt/galliumos-${cpu_fam}-coreimage-${CHRX_OS_VERSION}.tgz"
 }
 
 
