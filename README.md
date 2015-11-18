@@ -117,23 +117,27 @@ curl -O $CHRX_WEB_ROOT/go && sh go
 
 <a name="chromebooks"></a>
 ### chromebooks
-status            |chromebook                |hwid   |notes
-:----------------:|--------------------------|-------|------------------
-:white_check_mark:|Acer C720                 |PEPPY  |Best-tested
-:white_check_mark:|Acer C720P                |PEPTO  |
-:white_check_mark:|Google Pixel              |LINK   |
-:white_check_mark:|Google Pixel 2            |SAMUS  |
-:white_check_mark:|Toshiba CB30/CB35 Chromebook|LEON |
-:question:        |Acer Chromebook 11 C740   |PAINE  |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
-:question:        |Acer Chromebook 15 C910   |YUNA   |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
-:question:        |Acer Chromebook 15 CB5-571|YUNA   |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
-:question:        |Dell 11                   |WOLF   |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
-:question:        |HP Chromebook 11          |SPRING, SKATE|Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
-:question:        |HP Chromebook 14          |FALCO  |Untested but hopeful, [feedback](https://reddit.com/r/chrubuntu) requested!
-:question:        |Other Haswell Chromebooks |       |Should work but might require additional config tweaks
-:question:        |Other Broadwell Chromebooks|      |Depends on SeaBIOS Legacy Boot availability
-:question:        |Other Intel Chromebooks   |       |Depends on SeaBIOS Legacy Boot availability
-:x:               |ARM Chromebooks           |       |ARM support is very unlikely
+status            |chromebook                           |hwid   |notes
+:----------------:|-------------------------------------|-------|------------------
+:white_check_mark:|Acer C720                            |PEPPY  |Best-tested
+:white_check_mark:|Acer C720P                           |PEPPY  |
+:white_check_mark:|Acer Chromebook 11 C740              |PAINE  |
+:white_check_mark:|Acer Chromebook 15 C910              |YUNA   |
+:white_check_mark:|Acer Chromebook 15 CB5-571           |YUNA   |
+:white_check_mark:|Dell Chromebook 11                   |WOLF   |
+:white_check_mark:|Dell Chromebook 13                   |LULU   |Requires [firmware feature update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/)
+:white_check_mark:|Google Pixel (2013)                  |LINK   |
+:white_check_mark:|Google Pixel (2015)                  |SAMUS  |
+:white_check_mark:|HP Chromebook 14                     |FALCO  |
+:white_check_mark:|Toshiba CB30/CB35 Chromebook (2014)  |LEON   |
+:white_check_mark:|Toshiba CB30/CB35 Chromebook 2 (2015)|GANDOF |Requires [firmware feature update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/)
+:white_check_mark:|Other Haswell Chromebooks            |       |Expected to work, but untested
+:white_check_mark:|Other Broadwell Chromebooks          |       |Expected to work, some models will require [firmware feature update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/)
+:question:        |Other Sandy/Ivy Bridge Chromebooks   |       |Requires SeaBIOS with Legacy Boot capability
+:question:        |Other Intel Chromebooks              |       |Requires SeaBIOS with Legacy Boot capability
+:x:               |Bay Trail Chromebooks                |       |Requires compatible firmware, presently unavailable
+:x:               |ARM Chromebooks                      |       |ARM support is very unlikely
+:x:               |HP Chromebook 11                     |SPRING, SKATE|(previously erroneously marked possible)
 
 
 <a name="operating systems"></a>
