@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.0"
+CHRX_VERSION="2.0.2"
 
 CHRX_OS_DISTRO="lubuntu"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -118,10 +118,7 @@ identify_hardware()
   local _x
 
   case "$_hwid" in
-    #TBD*)           _x='UN|...|2014|HEXA Pi' ;;
     #TBD*)           _x='UN|...|2015|Dell 11P' ;;
-    #TBD*)           _x='EF|RCP|2015|CTL J2' ;;
-    #TBD*)           _x='EF|IBR|2015|Toshiba Chromebook 2' ;;
     ALEX*)          _x='UN|IAT|2011|Samsung Series 5' ;;
     BANJO*)         _x='UN|IBA|2015|Acer Chromebook 15 (CB3-531)' ;;
     BIG*)           _x='EF|ARM|2014|Acer Chromebook 13 (CB5-311)' ;;
@@ -129,33 +126,40 @@ identify_hardware()
     BUTTERFLY*)     _x='UN|ISB|2013|HP Pavilion' ;;
     CANDY*)         _x='UN|IBA|2015|Dell 11' ;;
     CLAPPER*)       _x='UN|IBA|2014|Lenovo N20/P' ;;
-    ENGUARDE*)      _x='EF|IBA|2014|CTL NL6 / Lenovo N21 / Senkatel Edu' ;;
-    _ENGUARDE*)     _x='EF|IBA|2014|CTL NL6' ;;
-    _ENGUARDE*)     _x='EF|IBA|2015|Lenovo N21' ;;
-    _ENGUARDE*)     _x='EF|IBA|2014|Senkatel Edu' ;;
+    ENGUARDE*)      _x='UN|IBA|2014|CTL NL6 / Lenovo N21 / Senkatel Edu' ;;
+    _ENGUARDE*)     _x='UN|IBA|2014|CTL NL6' ;;
+    _ENGUARDE*)     _x='UN|IBA|2015|Lenovo N21' ;;
+    _ENGUARDE*)     _x='UN|IBA|2014|Senkatel Edu' ;;
+    EXPRESSO*)      _x='EF|ARM|2014|HEXA Chromebook Pi' ;;
     FALCO*)         _x='RS|IHS|2013|HP Chromebook 14' ;;
+    GANDOF*)        _x='RS|IBR|2015|Toshiba Chromebook 2 CB30/CB35' ;;
     GLIMMER*)       _x='UN|IBA|2014|Lenovo ThinkPad 11e / Yoga' ;;
     _GLIMMER*)      _x='UN|IBA|2014|Lenovo ThinkPad Yoga' ;;
     _GLIMMER*)      _x='UN|IBA|2015|Lenovo Thinkpad 11e' ;;
     GNAWTY*)        _x='UN|IBA|2014|Acer Chromebook 11 (CB3-111) / C730' ;;
-    GUADO*)         _x='UN|IBR|2015|ASUS Chromebox CN62' ;;
+    GUADO*)         _x='ES|IBR|2015|ASUS Chromebox CN62' ;;
+    JAQ*)           _x='EF|ARM|2015|Haier Chromebook 11' ;;
+    JERRY*)         _x='EF|ARM|2015|Hisense Chromebook 11 / CTL J2/J4' ;;
+    _JERRY*)        _x='EF|ARM|2015|CTL J2/J4 Chromebook for Edcation' ;;
     KIP*)           _x='UN|IBA|2014|HP Chromebook 11 G3' ;;
     LEON*)          _x='RS|IHS|2014|Toshiba CB30/CB35 Chromebook' ;;
     LINK*)          _x='RS|IIB|2013|Google Chromebook Pixel' ;;
-    LULU*)          _x='UN|IBR|2015|Dell Chromebook 13' ;;
+    LULU*)          _x='ES|IBR|2015|Dell Chromebook 13' ;;
     LUMPY*)         _x='UN|ISB|2012|Samsung Series 5 550' ;;
     MARIO*)         _x='UN|IAT|2011|Google Cr-48' ;;
     MCCLOUD*)       _x='ES|IHS|2014|Acer Chromebox CXI' ;;
+    MIGHTY*)        _x='EF|ARM|2015|Haier Chromebook 11 (edu)' ;;
+    MINNIE*)        _x='EF|ARM|2015|ASUS Flip C100' ;;
     MONROE*)        _x='ES|IHS|2014|LG Chromebase' ;;
     PAINE*)         _x='RS|IBR|2014|Acer Chromebook 11 C740' ;;
     PANTHER*)       _x='ES|IHS|2014|ASUS Chromebox' ;;
     PARROT*)        _x='UN|ISB|2012|Acer C7 / C710' ;;
-    PEACH_PIT*)     _x='EF|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
-    PEACH_PI*)      _x='EF|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
     PEPPY*)         _x='OK|IHS|2013|Acer C720' ;;
     PEPTO*)         _x='OK|IHS|2013|Acer C720P' ;;
+    PIT*)           _x='EF|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
+    PI*)            _x='EF|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
     QUAWKS*)        _x='UN|IBA|2014|ASUS C300' ;;
-    RIKKU*)         _x='UN|IBR|2015|Acer Chromebox CXI2' ;;
+    RIKKU*)         _x='ES|IBR|2015|Acer Chromebox CXI2' ;;
     SAMUS*)         _x='RS|IBR|2015|Google Chromebook Pixel' ;;
     SKATE*)         _x='EF|ARM|2013|HP Chromebook 11 (v2)' ;;
     SNOW*)          _x='EF|ARM|2012|Samsung ARM Chromebook' ;;
@@ -163,14 +167,10 @@ identify_hardware()
     SQUAWKS*)       _x='UN|IBA|2014|ASUS C200' ;;
     STOUT*)         _x='UN|IIB|2013|Lenovo X131e' ;;
     STUMPY*)        _x='UN|ISB|2012|Samsung Series 3 Chromebox' ;;
-    SWANKY*)        _x='UN|IBA|2014|Toshiba CB30/CB35 Chromebook 2' ;;
-    TIDUS*)         _x='UN|IBR|2015|Lenovo ThinkCentre Chromebox' ;;
+    SWANKY*)        _x='UN|IBA|2014|Toshiba Chromebook 2 CB30/CB35' ;;
+    TIDUS*)         _x='ES|IBR|2015|Lenovo ThinkCentre Chromebox' ;;
     TRICKY*)        _x='ES|IHS|2014|Dell Chromebox' ;;
-    VEYRON_JAQ*)    _x='EF|ARM|2015|Haier Chromebook 11' ;;
-    VEYRON_JERRY*)  _x='EF|ARM|2015|Hisense Chromebook 11' ;;
-    VEYRON_MIGHTY*) _x='EF|ARM|2015|Haier Chromebook 11 (edu)' ;;
-    VEYRON_MINNIE*) _x='EF|ARM|2015|ASUS Flip C100' ;;
-    VEYRON_SPEEDY*) _x='EF|ARM|2015|ASUS C201' ;;
+    SPEEDY*)        _x='EF|ARM|2015|ASUS C201' ;;
     WINKY*)         _x='UN|IBA|2014|Samsung Chromebook 2 (XE500C12)' ;;
     WOLF*)          _x='RS|IHS|2014|Dell 11' ;;
     YUNA*)          _x='RS|IBR|2014|Acer Chromebook 15 (CB5-571) / C910' ;;
