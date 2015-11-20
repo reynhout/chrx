@@ -8,6 +8,7 @@
 # It cannot be run directly from the commandline.
 #
 
+umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null ## be safe.
 
 if [ "${CHRX_TARGET_DISK}" ]; then
   echo_info "Installing to target disk ${ANSI_WHT}${CHRX_TARGET_DISK}${ANSI_RST}"
@@ -24,15 +25,22 @@ if [ "${CHRX_TARGET_DISK}" ]; then
   echo_info "Setting up target disk ${CHRX_TARGET_DISK}... \c"
   ext_size="`blockdev --getsz ${CHRX_TARGET_DISK}`"
   aroot_size=$((${ext_size} - 65600 - 33))
-  parted --script ${CHRX_TARGET_DISK} "mktable gpt"
+
+  ## Create GPT and add two partitions
   cgpt create ${CHRX_TARGET_DISK} 
   cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l GRUB-BOOT -t "reserved" ${CHRX_TARGET_DISK}
   cgpt add -i 7 -b 65600 -s ${aroot_size} -l ROOT-A -t "rootfs" ${CHRX_TARGET_DISK}
   sync
+
+  ## Execute BLKRRPART ioctl to cause kernel to reread partition table
+  ## Redundant? Perhaps. Anything worth doing, is worth doing to excess.
   blockdev --rereadpt ${CHRX_TARGET_DISK}
-  partprobe ${CHRX_TARGET_DISK}
+  sfdisk --re-read ${CHRX_TARGET_DISK}
+
+  ## Mark partiton 6 bootable
+  cgpt boot -i 6 ${CHRX_TARGET_DISK}
+
   crossystem dev_boot_usb=1
-  parted ${CHRX_TARGET_DISK} set 6 bios_grub on
   echo_info "OK"
 else
   CHRX_TARGET_DISK="`rootdev -d -s`"
@@ -139,11 +147,7 @@ cat <<EOF
 
 EOF
 
-## TODO: or, do this explicitly first...or after and then re-rest..
-#  umount -R ${CHRX_ROOT_PARTITION} 2>/dev/null
-
 umount -R ${CHRX_ROOT_PARTITION} 2>/dev/null
-umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null
 if [ "`mount | grep ${CHRX_ROOT_PARTITION}`" ]; then
   echo_fail "Install target ${CHRX_ROOT_PARTITION} is already mounted!\n"
   echo_warn "Unmount manually (sudo umount -R ${CHRX_INSTALL_ROOT}) or reboot"

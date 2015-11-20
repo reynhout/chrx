@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.0.2"
+CHRX_VERSION="2.0.3"
 
 CHRX_OS_DISTRO="lubuntu"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -19,7 +19,7 @@ CHRX_LOCALE="en_US.UTF-8"
 CHRX_TZ="America/New_York"
 
 CHRX_CACHE_DIR="/var/cache/chrx"
-CHRX_INSTALL_ROOT="/tmp/urfs"
+CHRX_INSTALL_ROOT="/tmp/chrxroot"
 
 VERBOSITY=""
 VERBOSITY_APTGET="-q"
@@ -713,5 +713,6 @@ main()
   reboot
 }
 
+#set -e
 main "$@"
 
