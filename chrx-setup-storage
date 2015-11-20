@@ -8,7 +8,7 @@
 # It cannot be run directly from the commandline.
 #
 
-umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null ## be safe.
+eval_try umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null ## be safe.
 
 if [ "${CHRX_TARGET_DISK}" ]; then
   echo_info "Installing to target disk ${ANSI_WHT}${CHRX_TARGET_DISK}${ANSI_RST}"
@@ -147,7 +147,8 @@ cat <<EOF
 
 EOF
 
-umount -R ${CHRX_ROOT_PARTITION} 2>/dev/null
+eval_try umount -R ${CHRX_ROOT_PARTITION} 2>/dev/null
+eval_try umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null
 if [ "`mount | grep ${CHRX_ROOT_PARTITION}`" ]; then
   echo_fail "Install target ${CHRX_ROOT_PARTITION} is already mounted!\n"
   echo_warn "Unmount manually (sudo umount -R ${CHRX_INSTALL_ROOT}) or reboot"
@@ -155,7 +156,7 @@ if [ "`mount | grep ${CHRX_ROOT_PARTITION}`" ]; then
   exit 1
 fi
 
-mkfs.ext4 ${VERBOSITY_MKFS} ${CHRX_ROOT_PARTITION}
+eval_crit mkfs.ext4 ${VERBOSITY_MKFS} ${CHRX_ROOT_PARTITION}
 
 echo_info "Preparing installation root directory ${CHRX_INSTALL_ROOT}"
 rm -rf ${CHRX_INSTALL_ROOT}

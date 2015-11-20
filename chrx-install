@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.0.3"
+CHRX_VERSION="2.0.4"
 
 CHRX_OS_DISTRO="lubuntu"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -70,6 +70,7 @@ ANSI_BLU=$'\033[1;36m'
 ANSI_WHT=$'\033[1;37m'
 ANSI_RST=$'\033[0m'
 
+echo_cmd()    { echo -e "${ANSI_BLU}${1}${ANSI_RST}"; }
 echo_note()   { echo -e "${ANSI_YEL}${1}${ANSI_RST}"; }
 echo_info()   { echo -e "${ANSI_GRN}${1}${ANSI_RST}"; }
 echo_prompt() { echo -e "${ANSI_WHT}${1}${ANSI_RST}"; }
@@ -78,6 +79,32 @@ echo_debug()  { echo -e "${ANSI_VIO}${1}${ANSI_RST}"; }
 echo_fail()   { echo -e "${ANSI_RED}${1}${ANSI_RST}"; }
 
 usage() { echo "${USAGE}"; exit; }
+
+eval_try() {
+  #set +e
+  local _cmd=$@
+
+  [ "$VERBOSE" ] && echo_cmd "$_cmd"
+
+  eval $_cmd
+  #set -e
+}
+
+eval_crit() {
+  #set +e
+  local _cmd=$@
+
+  [ "$VERBOSE" ] && echo_cmd "$_cmd"
+
+  eval $_cmd
+  rc=$?
+
+  if [ "$rc" -ne 0 ]; then
+    echo_fail "fatal: return code ${rc} from command \"${_cmd}\""
+    exit $rc
+  fi
+  #set -e
+}
 
 prompt_if_interactive()
 {
@@ -202,7 +229,7 @@ identify_hardware()
   eval $_outvar_prognosis=\$_prognosis
 }
 
-get_core_image_url_dev_ubuntu() {
+get_os_version_and_core_url_dev_ubuntu() {
   release_log_fn="meta-release-development"
   release_log_url="http://changelogs.ubuntu.com/${release_log_fn}"
   release_log="`curl -s ${release_log_url}`"
@@ -211,14 +238,13 @@ get_core_image_url_dev_ubuntu() {
   CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-core/daily/current/${codename}-core-${CHRX_OS_ARCH}.tar.gz"
 }
 
-get_core_image_url_ubuntu() {
+get_os_version_ubuntu() {
   tag=$1
   release_log_fn="meta-release"
   release_log_url="http://changelogs.ubuntu.com/${release_log_fn}"
   version_list="`curl -s ${release_log_url} | grep '^Version: '`"
   [ "$tag" = "lts" ] && version_list=`echo "${version_list}" | grep "LTS"`
   CHRX_OS_VERSION=`echo "${version_list}" | tail -1 | awk '{print $2}'`
-  CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-core/releases/${CHRX_OS_VERSION}/release/ubuntu-core-${CHRX_OS_VERSION}-core-${CHRX_OS_ARCH}.tar.gz"
 }
 
 determine_osv_ubuntu() {
@@ -227,11 +253,16 @@ determine_osv_ubuntu() {
     utopic) CHRX_OS_VERSION="14.10" ;;
     vivid)  CHRX_OS_VERSION="15.04" ;;
     wily)   CHRX_OS_VERSION="15.10" ;;
-    dev)    get_core_image_url_dev_ubuntu $CHRX_OS_RELEASE ;;
-    lts)    get_core_image_url_ubuntu $CHRX_OS_RELEASE ;;
-    latest) get_core_image_url_ubuntu $CHRX_OS_RELEASE ;;
+    xenial) CHRX_OS_VERSION="16.04" ;;
+    dev)    get_os_version_and_core_url_dev_ubuntu $CHRX_OS_RELEASE ;;
+    lts)    get_os_version_ubuntu $CHRX_OS_RELEASE ;;
+    latest) get_os_version_ubuntu $CHRX_OS_RELEASE ;;
     *)      CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
   esac
+
+  if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
+    CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-core/releases/${CHRX_OS_VERSION}/release/ubuntu-core-${CHRX_OS_VERSION}-core-${CHRX_OS_ARCH}.tar.gz"
+  fi
 
   case "${CHRX_OS_VERSION}" in
     '14.04'|14.04.*)
@@ -557,15 +588,25 @@ do_install()
   start_date=`date`
   start_secs=`date +%s`
 
+  if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
+    echo_fail "fatal: cannot determine core image URL from options specified. This might be a bug!"
+    exit 1
+  fi
+
   echo_info "\nFetching ${CHRX_OS_DISTRO_DISPLAYNAME} core image file..."
+  echo_info "HTTP GET ${CHRX_OS_CORE_IMAGE_URL}"
 
   curl ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xzp -C ${CHRX_INSTALL_ROOT}
+  if [ ${PIPESTATUS[0]} -ne 0 -o ${PIPESTATUS[1]} -ne 0 ]; then
+    echo_fail "fatal: unable to download and extract core image file."
+    exit 1
+  fi
 
-  mount -o bind /proc    ${CHRX_INSTALL_ROOT}/proc
-  mount -o bind /dev     ${CHRX_INSTALL_ROOT}/dev
-  mount -o bind /dev/pts ${CHRX_INSTALL_ROOT}/dev/pts
-  mount -o bind /sys     ${CHRX_INSTALL_ROOT}/sys
-  mount -o bind /run     ${CHRX_INSTALL_ROOT}/run
+  eval_crit mount -o bind /proc    ${CHRX_INSTALL_ROOT}/proc
+  eval_crit mount -o bind /dev     ${CHRX_INSTALL_ROOT}/dev
+  eval_crit mount -o bind /dev/pts ${CHRX_INSTALL_ROOT}/dev/pts
+  eval_crit mount -o bind /sys     ${CHRX_INSTALL_ROOT}/sys
+  eval_crit mount -o bind /run     ${CHRX_INSTALL_ROOT}/run
 
   if [ -f /usr/bin/old_bins/cgpt ]; then
     cp /usr/bin/old_bins/cgpt ${CHRX_INSTALL_ROOT}/usr/bin/
