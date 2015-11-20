@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.0** (20151025) Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
+**Version 2.0.3** (20151119) Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -310,3 +310,4 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **2.0** (20151025): add GalliumOS support; add support for Ubuntu 15.10; add detection and installation prognosis for all known ChromeOS devices; add "-d DISTRIBUTION" and "-e ENVIRONMENT" options; remove "-m METAPACKAGE" option; remove "-i IMAGE" option, make RELEASE smarter; work around `systemd` conflict; refactor code into functions to facilitate multiple distros and future operating systems
   - **2.0.1** (20151113): update core image pathname for GalliumOS
   - **2.0.2** (20151118): update some HWIDs
+  - **2.0.3** (20151119): bugfix: issue #4, parted and partprobe removed from ChromeOS
