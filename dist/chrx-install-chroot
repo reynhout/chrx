@@ -81,9 +81,22 @@ galliumos_install_hwspecific()
 {
   echo_title "Installing GalliumOS hardware compatibility pkgs."
   apt_get_update_if_needed
-  ## TODO: install proper hwspec pkg
-  apt-get -y ${VERBOSITY_APTGET} install galliumos-haswell
-  apt-get -y ${VERBOSITY_APTGET} install galliumos-laptop
+
+  ## install proper hwspec pkg
+  ## Bay Trail devices can't dual-boot, included for completeness.
+  case "$CHRX_HWCPUF" in
+    "Intel Sandy Bridge") hwspec_pkgs="galliumos-sandy" ;;
+    "Intel Ivy Bridge")   hwspec_pkgs="galliumos-sandy" ;;
+    "Intel Haswell")      hwspec_pkgs="galliumos-haswell" ;;
+    "Intel Broadwell")    hwspec_pkgs="galliumos-broadwell" ;;
+    "Intel Bay Trail")    hwspec_pkgs="galliumos-baytrail" ;;
+    "Intel Braswell")     hwspec_pkgs="galliumos-braswell" ;;
+  esac
+
+  if [ "$hwspec_pkgs" ]; then
+    apt-get -y ${VERBOSITY_APTGET} install ${hwspec_pkgs}
+    apt-get -y ${VERBOSITY_APTGET} install galliumos-laptop
+  fi
 }
 
 install_distenv()
@@ -109,6 +122,11 @@ add_first_user()
   echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
   adduser ${CHRX_USERNAME} adm
   adduser ${CHRX_USERNAME} sudo
+  adduser ${CHRX_USERNAME} cdrom
+  adduser ${CHRX_USERNAME} dip
+  adduser ${CHRX_USERNAME} plugdev
+  adduser ${CHRX_USERNAME} lpadmin
+  #adduser ${CHRX_USERNAME} sambashare
 }
 
 configure_grub()
@@ -315,7 +333,7 @@ case "${CHRX_OS_DISTRO}" in
     set_locale
     #galliumos_add_repos ## not needed, core image is preconfigured
     galliumos_update_core_image
-    #galliumos_install_hwspecific ## not needed, we're using hwspecific core
+    galliumos_install_hwspecific
     write_default_fstab
     ;;
 esac
@@ -324,12 +342,10 @@ esac
 
 ## GRUB: modify boot settings
 ## unfortunately, we have to do this in the chroot.
-if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
-  if [ -z "${CHRX_CUSTOMIZATION_SKIPPED}" ]; then
-    configure_grub
-  else
-    echo_title_yel "(skipping chrx grub config)"
-  fi
+if [ "${CHRX_CONFIGURE_GRUB_ENABLED}" ]; then
+  configure_grub
+else
+  echo_title_yel "(skipping chrx grub config)"
 fi
 
 grub-mkconfig -o /boot/grub/grub.cfg

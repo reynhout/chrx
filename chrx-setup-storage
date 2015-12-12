@@ -166,7 +166,7 @@ if [ ! -d "${CHRX_INSTALL_ROOT}" ]; then
   exit 1
 fi
 
-mount -t ext4 ${CHRX_ROOT_PARTITION} ${CHRX_INSTALL_ROOT}
+eval_crit mount -t ext4 ${CHRX_ROOT_PARTITION} ${CHRX_INSTALL_ROOT}
 
 ## clear error variable, which is checked in the calling script
 SETUP_STORAGE_ERROR=""
