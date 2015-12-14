@@ -267,6 +267,7 @@ galliumos_update_core_image()
   apt_get_update
   echo_title "Upgrading GalliumOS core image."
   apt-get -y ${VERBOSITY_APTGET} dist-upgrade
+  APT_DB_NEEDS_UPDATE=1
 }
 
 write_default_fstab()
