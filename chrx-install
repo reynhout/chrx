@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.0.5"
+CHRX_VERSION="2.0.7"
 
 CHRX_OS_DISTRO="lubuntu"
 CHRX_OS_ENVIRONMENT="desktop"
