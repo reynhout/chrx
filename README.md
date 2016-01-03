@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.0.7** Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
+**Version 2.0.8** Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -315,3 +315,4 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.0.5** (20151212): add first user to important groups; use generic coreimage for GalliumOS
   - **2.0.6** (20151214): bugfix: issue #7, add GalliumOS hwspecific pkgs properly
   - **2.0.7** (20151214): update detection for all known ChromeOS devices; improve prognosis descriptions
+  - **2.0.8** (20160102): add CHRX_NO_REBOOT env var for use with https://github.com/MattDevo/scripts
