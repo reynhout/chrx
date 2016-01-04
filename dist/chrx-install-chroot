@@ -87,8 +87,7 @@ install_steam()
 
 install_minecraft()
 {
-  ## FIXME: java?
-  #apt_get_install default-jdk ## openjdk already installed?
+  apt_get_install default-jre
   curl -o /usr/local/bin/Minecraft.jar \
     https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
   curl -o /usr/share/pixmaps/minecraft.png https://chrx.org/minecraft.png
