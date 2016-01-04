@@ -34,30 +34,92 @@ ubuntu_update_core_image()
   echo_title "Upgrading Ubuntu core image."
   apt_get_update_if_needed
   apt-get -y ${VERBOSITY_APTGET} dist-upgrade
-  apt-get -y ${VERBOSITY_APTGET} install ubuntu-minimal
-  apt-get -y ${VERBOSITY_APTGET} install software-properties-common
+  apt_get_install ubuntu-minimal
+  apt_get_install software-properties-common
 }
 
 install_curl()
 {
   apt_get_update_if_needed
-  apt-get -y ${VERBOSITY_APTGET} install curl
+  apt_get_install curl
 }
 
 install_utilities()
 {
   apt_get_update_if_needed
-  apt-get -y ${VERBOSITY_APTGET} install zram-config
-  apt-get -y ${VERBOSITY_APTGET} install grub-pc
+  apt_get_install zram-config grub-pc
+}
+
+apt_get_install()
+{
+  apt-get -y ${VERBOSITY_APTGET} install $*
+}
+
+install_additional_packages()
+{
+  for pkg in ${CHRX_ADD_PKGS}; do
+    echo_title "Installing additional package \"${pkg}\"."
+    case $pkg in
+      kodi)       install_kodi ;;
+      admin-misc) apt_get_install vim tmux ssh rsync ;;
+      dev-misc)   apt_get_install arduino geany geany-plugins ruby ;;
+      minecraft)  install_minecraft ;;
+      steam)      install_steam ;;
+      simplescreenrecorder) install_simplescreenrecorder ;;
+      *)           apt_get_install $pkg ;;
+    esac
+  done
+}
+
+install_simplescreenrecorder()
+{
+  add-apt-repository -y ppa:maarten-baert/simplescreenrecorder
+  apt_get_update
+  apt_get_install simplescreenrecorder
+}
+
+install_steam()
+{
+  curl -o /tmp/steam_latest.deb \
+    http://repo.steampowered.com/steam/archive/precise/steam_latest.deb
+  dpkg -i /tmp/steam_latest.deb
+}
+
+install_minecraft()
+{
+  ## FIXME: java?
+  #apt_get_install default-jdk ## openjdk already installed?
+  curl -o /usr/local/bin/Minecraft.jar \
+    https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+  curl -o /usr/share/pixmaps/minecraft.png https://chrx.org/minecraft.png
+  mkdir -p /usr/local/share/applications
+  cat > /usr/local/share/applications/minecraft.desktop <<-EOF
+	[Desktop Entry]
+	Type=Application
+	Name=Minecraft
+	Comment=Minecraft
+	Exec=java -jar /usr/local/bin/Minecraft.jar
+	Icon=/usr/share/pixmaps/minecraft.png
+	Categories=Game;
+	EOF
+}
+
+install_kodi()
+{
+  apt_get_install python-software-properties pkg-config
+  apt_get_install software-properties-common
+  add-apt-repository -y ppa:team-xbmc/ppa
+  apt_get_update
+  apt_get_install kodi
 }
 
 ubuntu_add_repos()
 {
   echo_title "Adding Ubuntu software respositories."
-  add-apt-repository main
-  add-apt-repository universe
-  add-apt-repository restricted
-  add-apt-repository multiverse
+  add-apt-repository -y main
+  add-apt-repository -y universe
+  add-apt-repository -y restricted
+  add-apt-repository -y multiverse
   APT_DB_NEEDS_UPDATE=1
 }
 
@@ -66,7 +128,7 @@ galliumos_add_repos()
   echo_title "Adding GalliumOS software respositories."
   curl -O ${VERBOSITY_CURL} http://apt.galliumos.org/galliumos.gpg
   apt-key add galliumos.gpg
-  add-apt-repository 'deb http://apt.galliumos.org/ vivid-galliumos main'
+  add-apt-repository -y 'deb http://apt.galliumos.org/ vivid-galliumos main'
   APT_DB_NEEDS_UPDATE=1
 }
 
@@ -74,7 +136,7 @@ galliumos_install_base()
 {
   apt_get_update_if_needed
   echo_title "Installing GalliumOS base pkgs."
-  apt-get -y ${VERBOSITY_APTGET} install galliumos-base
+  apt_get_install galliumos-base
 }
 
 galliumos_install_hwspecific()
@@ -94,8 +156,7 @@ galliumos_install_hwspecific()
   esac
 
   if [ "$hwspec_pkgs" ]; then
-    apt-get -y ${VERBOSITY_APTGET} install ${hwspec_pkgs}
-    apt-get -y ${VERBOSITY_APTGET} install galliumos-laptop
+    apt_get_install ${hwspec_pkgs} galliumos-laptop
   fi
 }
 
@@ -103,7 +164,7 @@ install_distenv()
 {
   apt_get_update_if_needed
   echo_title "Installing \"${CHRX_OS_DISTENV}\"."
-  apt-get -y ${VERBOSITY_APTGET} install "${CHRX_OS_DISTENV}"
+  apt_get_install "${CHRX_OS_DISTENV}"
 }
 
 chrome_add_repos()
@@ -111,7 +172,7 @@ chrome_add_repos()
   echo_title "Adding Google Chrome software respositories."
   curl -O ${VERBOSITY_CURL} https://dl-ssl.google.com/linux/linux_signing_key.pub
   sudo apt-key add linux_signing_key.pub
-  add-apt-repository "deb http://dl.google.com/linux/chrome/deb/ stable main"
+  add-apt-repository -y "deb http://dl.google.com/linux/chrome/deb/ stable main"
   APT_DB_NEEDS_UPDATE=1
 }
 
@@ -180,7 +241,7 @@ set_timezone()
 install_language_support()
 {
   echo_title "Installing language support."
-  apt-get -y ${VERBOSITY_APTGET} install language-pack-en language-pack-gnome-en firefox-locale-en wbritish hunspell-en-ca
+  apt_get_install language-pack-en language-pack-gnome-en firefox-locale-en wbritish hunspell-en-ca
 }
 
 set_locale()
@@ -195,7 +256,7 @@ install_google_chrome()
 
   apt_get_update_if_needed
   echo_title "Installing Google Chrome."
-  apt-get -y ${VERBOSITY_APTGET} install google-chrome-stable
+  apt_get_install google-chrome-stable
 }
 
 install_desktop_support()
@@ -203,14 +264,14 @@ install_desktop_support()
   [ ! -x /usr/bin/X ] && return ## only if we have X
 
   echo_title "Installing desktop compatibility pkgs."
-  apt-get -y ${VERBOSITY_APTGET} install xbindkeys xdotool xbacklight pulseaudio-utils xvkbd
+  apt_get_install xbindkeys xdotool xbacklight pulseaudio-utils xvkbd
 }
 
 install_kernel()
 {
   echo_title "Installing Linux kernel and boot environment."
-  apt-get -y ${VERBOSITY_APTGET} install linux-image-generic
-  apt-get -y ${VERBOSITY_APTGET} install linux-headers-generic
+  apt_get_install linux-image-generic
+  apt_get_install linux-headers-generic
 }
 
 install_kernel_newer_than_min()
@@ -266,7 +327,8 @@ galliumos_update_core_image()
 {
   apt_get_update
   echo_title "Upgrading GalliumOS core image."
-  apt-get -y ${VERBOSITY_APTGET} dist-upgrade
+  ## FIXME: need --force-yes until GalliumOS pkg versioning is fixed
+  apt-get -y --force-yes ${VERBOSITY_APTGET} dist-upgrade
   APT_DB_NEEDS_UPDATE=1
 }
 
@@ -280,10 +342,23 @@ write_default_fstab()
   echo "${CHRX_ROOT_PARTITION} / ext4 defaults,discard,relatime 1 1" >> /etc/fstab
 }
 
+create_fakebins()
+{
+  ## create fake bins to stymie ubuntu's poor autostart hygiene
+  local _bins="initctl invoke-rc.d restart start stop start-stop-daemon service"
+  rm -rf /tmp/fakebin
+  mkdir -p /tmp/fakebin
+  for bin in $_bins; do
+    ln -s /bin/true /tmp/fakebin/${bin}
+  done
+  export PATH=/tmp/fakebin:$PATH
+}
+
 ## begin
 export DEBIAN_FRONTEND=noninteractive
 echo ${CHRX_TZ} > /etc/timezone
 
+create_fakebins
 apt_get_update
 
 #echo debug ; bash
@@ -314,7 +389,19 @@ case "${CHRX_OS_DISTRO}" in
     install_kernel
     install_kernel_newer_than_min
     ## EO "ubuntu-only?"
+    install_additional_packages
 
+    write_default_fstab
+    ;;
+  galliumos)
+    apt_get_install software-properties-common
+    install_curl
+    set_timezone
+    set_locale
+    #galliumos_add_repos ## not needed, core image is preconfigured
+    galliumos_update_core_image
+    galliumos_install_hwspecific
+    install_additional_packages
     write_default_fstab
     ;;
 #  galliumos_apt)
@@ -327,19 +414,9 @@ case "${CHRX_OS_DISTRO}" in
 #    install_distenv
 #    galliumos_install_hwspecific
 #    ;;
-  galliumos)
-    apt-get -y ${VERBOSITY_APTGET} install software-properties-common
-    install_curl
-    set_timezone
-    set_locale
-    #galliumos_add_repos ## not needed, core image is preconfigured
-    galliumos_update_core_image
-    galliumos_install_hwspecific
-    write_default_fstab
-    ;;
 esac
 
-#apt-get -y ${VERBOSITY_APTGET} install grub-pc
+#apt_get_install grub-pc
 
 ## GRUB: modify boot settings
 ## unfortunately, we have to do this in the chroot.

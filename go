@@ -18,10 +18,27 @@ cd ${CHRX_CACHE0_DIR}
 ## need sudo -E to keep exported environment vars
 (
 export CHRX_WEB_ROOT CHRX_CACHE0_DIR
-curl -Os ${CHRX_WEB_ROOT}/chrx-install && sudo -E bash ./chrx-install $*
+curl -Os ${CHRX_WEB_ROOT}/chrx-install && sudo -E bash ./chrx-install "$@"
 ) 2>&1 | tee -a ${CHRX_CACHE0_DIR}/chrx-install.log
 
 ## logfile will be copied to chroot by install-chrx.
 ## can't copy here -- partition is unmounted when we get back.
 
 ## get stderr into tee: bash: `|& tee`;  sh: `2>&1 | tee`
+
+#   
+
+   ##################################################################
+   ##                                                              ##
+   ##        IF YOU ARE SEEING THIS MESSAGE UNEXPECTEDLY...        ##
+   ##                                                              ##
+   ##  You probably ran the 'curl' command with '-0' (dash-zero)   ##
+   ##  instead of '-O' (dash-capital-O).                           ##
+   ##                                                              ##
+   ##  No harm done, just run the command again with a capital-O,  ##
+   ##  and all will be right with the world.                       ##
+   ##                                                              ##
+   ##  See https://chrx.org/ for full chrx documentation.          ##
+   ##                                                              ##
+   ##################################################################
+

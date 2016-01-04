@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.0.8** Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
+**Version 2.1** Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -63,6 +63,8 @@ Options
                    (lts, latest, dev, 15.04, 15.10, vivid, wily, etc)
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
+   -p PACKAGE      additional packages, quote or repeat for multiple []
+                   (kodi, minecraft, steam, etc)
    -H HOSTNAME     hostname for new system [chrx]
    -U USERNAME     username of first created user [chrx]
    -L LOCALE       locale for new system [en_US.UTF-8]
@@ -80,6 +82,27 @@ Options
 
 ```
 
+<a name="packages"></a>
+### packages
+
+**chrx** can install additional software packages after installing
+your new operating system, using the `-p PACKAGE` option.
+
+You can install any package in the Ubuntu repositories via this
+method, plus a few non-Ubuntu packages for which **chrx** has
+special handling, and some aliases for convenience:
+
+- `minecraft` installs [Minecraft](https://minecraft.net/)
+- `steam` installs [Steam](http://store.steampowered.com/about/)
+- `kodi` installs [Kodi Media Center](http://kodi.tv/about/)
+- `admin-misc` is an alias for `"ssh tmux rsync vim"`
+- `dev-misc` is an alias for `"arduino geany geany-plugins ruby"`
+
+To install multiple packages from the **chrx** command line, you
+can repeat the `-p PACKAGE` option as many times as you need, or
+you can quote the argument, e.g.: `-p "gimp blender inkscape"`.
+
+
 ### examples
 
 [Lubuntu](http://lubuntu.net/) Desktop (latest):
@@ -90,10 +113,13 @@ Options
 
 `curl -Os https://chrx.org/go && sh go -d galliumos -v`
 
-[Ubuntu](https://ubuntu.com/) Standard (good for servers), version 15.04, system name `hal`, first user `dave`:
+[GalliumOS](https://galliumos.org/) Desktop (latest), plus packages:
 
-`curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 15.04 -H hal -U dave`
+`curl -Os https://chrx.org/go && sh go -d galliumos -p "minecraft steam kodi"`
 
+[Ubuntu](https://ubuntu.com/) Standard (good for servers), version 15.04, system name `hal`, first user `dave`, including some administrative tools:
+
+`curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 15.04 -H hal -U dave -p admin-misc`
 
 
 ### advanced usage
@@ -316,3 +342,4 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.0.6** (20151214): bugfix: issue #7, add GalliumOS hwspecific pkgs properly
   - **2.0.7** (20151214): update detection for all known ChromeOS devices; improve prognosis descriptions
   - **2.0.8** (20160102): add CHRX_NO_REBOOT env var for use with https://github.com/MattDevo/scripts
+- **2.1** (20150102): add support for "-p PACKAGE" to install additional package(s)
