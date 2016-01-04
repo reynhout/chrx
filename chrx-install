@@ -196,7 +196,7 @@ identify_hardware()
     LINK*)          _x='RS|IIB|2013|Google Chromebook Pixel' ;;
     LULU*)          _x='FS|IBR|2015|Dell Chromebook 13 7310' ;;
     LUMPY*)         _x='UN|ISB|2012|Samsung Chromebook Series 5 550' ;;
-    MCCLOUD*)       _x='ES|IHS|2014|Acer Chromebox CXI' ;;
+    MCCLOUD*)       _x='RS|IHS|2014|Acer Chromebox CXI' ;;
     MICKEY*)        _x='NG|ARM|2015|ASUS Chromebit CS10' ;;
     MIGHTY_???-???-???-A*) _x='NG|ARM|2015|Haier Chromebook 11e' ;;
     MIGHTY_???-???-???-B*) _x='NG|ARM|2015|Nexian Chromebook' ;;
@@ -209,7 +209,7 @@ identify_hardware()
     NINJA*)         _x='EF|IBA|2015|AOpen Chromebox Commercial' ;;
     ORCO*)          _x='EF|IBA|2015|Lenovo Ideapad 100S Chromebook' ;;
     PAINE*)         _x='RS|IBR|2014|Acer Chromebook 11 C740' ;;
-    PANTHER*)       _x='ES|IHS|2014|ASUS Chromebox CN60' ;;
+    PANTHER*)       _x='RS|IHS|2014|ASUS Chromebox CN60' ;;
     PARROT*)        _x='UN|ISB|2012|Acer C7 / C710 Chromebook' ;;
     PEPPY*)         _x='OK|IHS|2013|Acer C720/P Chromebook' ;;
     PIT*)           _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
@@ -228,12 +228,12 @@ identify_hardware()
     SUMO*)          _x='EF|IBA|2015|AOpen Chromebase Commercial' ;;
     SWANKY*)        _x='EF|IBA|2014|Toshiba Chromebook 2 CB30/CB35' ;;
     TIDUS*)         _x='ES|IBR|2015|Lenovo ThinkCentre Chromebox' ;;
-    TRICKY*)        _x='ES|IHS|2014|Dell Chromebox' ;;
+    TRICKY*)        _x='RS|IHS|2014|Dell Chromebox' ;;
     WHIRLWIND*)     _x='NG|ARM|2015|TP-Link OnHub TGR1900 Router' ;;
     WINKY*)         _x='EF|IBA|2014|Samsung Chromebook 2 (XE500C12)' ;;
     WOLF*)          _x='RS|IHS|2014|Dell Chromebook 11' ;;
     YUNA*)          _x='RS|IBR|2014|Acer Chromebook 15 (CB5-571) / C910' ;;
-    ZAKO*)          _x='ES|IHS|2014|HP Chromebox CB1/G1/for Meetings' ;;
+    ZAKO*)          _x='RS|IHS|2014|HP Chromebox CB1/G1/for Meetings' ;;
     #*)              _='|||' ;;
   esac
 
@@ -488,7 +488,7 @@ setup_and_validate_environment()
   echo -e "    Prognosis:   \c"
 
   case "${CHRX_HWSTATUS}" in
-    OK) echo_info "success likely, device is well-tested" ;;
+    OK) echo_info "success likely, model is well-tested" ;;
     RS) echo_info "success likely, per field reports" ;;
     FS) echo_warn "success likely, ONLY IF FIRMWARE HAS BEEN UPDATED!" ;;
     ES) echo_warn "success likely, but unverified" ;;
@@ -496,7 +496,7 @@ setup_and_validate_environment()
     EF) echo_fail "failure likely, but unverified" ;;
     RF) echo_fail "failure likely, per field reports" ;;
     NG) echo_fail "FAILURE! cannot possibly succeed" ;;
-    *)  echo_warn "UNKNOWN, device is unrecognized and untested" ;;
+    *)  echo_warn "UNKNOWN, model is unrecognized and untested" ;;
   esac
   echo
 
