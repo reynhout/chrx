@@ -18,7 +18,7 @@ debug_shell()
 apt_get_update()
 {
   echo_title "Reloading repository manifests."
-  apt-get -y ${VERBOSITY_APTGET} update
+  apt-get -y -qq update
   #debug_shell apt_get_update
 
   APT_DB_NEEDS_UPDATE=
@@ -395,6 +395,7 @@ case "${CHRX_OS_DISTRO}" in
   galliumos)
     apt_get_install software-properties-common
     install_curl
+    install_utilities
     set_timezone
     set_locale
     #galliumos_add_repos ## not needed, core image is preconfigured
