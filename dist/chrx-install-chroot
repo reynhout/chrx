@@ -154,6 +154,7 @@ galliumos_install_hwspecific()
     "Intel Braswell")     hwspec_pkgs="galliumos-braswell" ;;
   esac
 
+  ## TODO: add galliumos-cbox instead of galliumos-laptop for Chromeboxes
   if [ "$hwspec_pkgs" ]; then
     apt_get_install ${hwspec_pkgs} galliumos-laptop
   fi
@@ -180,13 +181,8 @@ add_first_user()
   echo_title "Adding user \"${CHRX_USERNAME}\"."
   useradd -m ${CHRX_USERNAME} -s /bin/bash
   echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
-  adduser ${CHRX_USERNAME} adm
-  adduser ${CHRX_USERNAME} sudo
-  adduser ${CHRX_USERNAME} cdrom
-  adduser ${CHRX_USERNAME} dip
-  adduser ${CHRX_USERNAME} plugdev
-  adduser ${CHRX_USERNAME} lpadmin
-  #adduser ${CHRX_USERNAME} sambashare
+  usermod -a -G adm,sudo,cdrom,dip,plugdev,lpadmin ${CHRX_USERNAME}
+  #sambashare
 }
 
 configure_grub()

@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.1.1"
+CHRX_VERSION="2.1.2"
 
 CHRX_OS_DISTRO="lubuntu"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -324,12 +324,22 @@ determine_osv_galliumos()
 
   ## no versioning in apt repo yet, so override settings
   ## FIXME need to add chromebox differentiation as well
-  CHRX_OS_RELEASE="beta"
-  CHRX_OS_VERSION="1.0beta1"
-  msg_os_release="${ANSI_YEL}(overridden)${ANSI_RST}"
-  msg_os_version="${ANSI_YEL}(NOTE: beta version)${ANSI_RST}"
 
-  CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/builds/alt/${CHRX_OS_VERSION}/galliumos-generic-coreimage-${CHRX_OS_VERSION}.tgz"
+  case "${CHRX_OS_RELEASE}" in
+    nightly)
+      CHRX_OS_VERSION="nightly"
+      msg_os_version="${ANSI_YEL}(NOTE: nightly build!)${ANSI_RST}"
+      CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/builds/alt/galliumos-generic-coreimage-latest.tgz"
+      ;;
+    *)
+      CHRX_OS_RELEASE="beta"
+      CHRX_OS_VERSION="1.0beta1"
+      msg_os_release="${ANSI_YEL}(overridden)${ANSI_RST}"
+      msg_os_version="${ANSI_YEL}(NOTE: beta version!)${ANSI_RST}"
+      CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/builds/alt/${CHRX_OS_VERSION}/galliumos-generic-coreimage-${CHRX_OS_VERSION}.tgz"
+      ;;
+  esac
+
 }
 
 set_customizations_ubuntu()
