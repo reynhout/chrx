@@ -171,7 +171,7 @@ chrome_add_repos()
 {
   echo_title "Adding Google Chrome software respositories."
   curl -O ${VERBOSITY_CURL} https://dl-ssl.google.com/linux/linux_signing_key.pub
-  sudo apt-key add linux_signing_key.pub
+  apt-key add linux_signing_key.pub
   add-apt-repository -y "deb http://dl.google.com/linux/chrome/deb/ stable main"
   APT_DB_NEEDS_UPDATE=1
 }
