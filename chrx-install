@@ -329,16 +329,15 @@ determine_osv_galliumos()
     nightly)
       CHRX_OS_VERSION="nightly"
       msg_os_version="${ANSI_YEL}(NOTE: nightly build!)${ANSI_RST}"
-      #CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/builds/alt/galliumos-generic-coreimage-latest.tgz"
-      CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/nightly/galliumos-generic-coreimage-latest.tgz"
+      CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/releases/nightly/galliumos-generic-coreimage-latest.tgz"
       ;;
     *)
       CHRX_OS_RELEASE="beta"
-      CHRX_OS_VERSION="1.0beta1"
+      CHRX_OS_VERSION="1.0beta2"
       msg_os_release="${ANSI_YEL}(overridden)${ANSI_RST}"
       msg_os_version="${ANSI_YEL}(NOTE: beta version!)${ANSI_RST}"
-      #CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/builds/alt/${CHRX_OS_VERSION}/galliumos-generic-coreimage-${CHRX_OS_VERSION}.tgz"
-      CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/nightly/galliumos-generic-coreimage-20160204T024205Z.tgz"
+      #CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/releases/1.0beta2/galliumos-generic-coreimage-1.0beta2.tgz"
+      CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
       ;;
   esac
 
