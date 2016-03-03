@@ -34,6 +34,7 @@ If you reinstall later, or switch to a another distribution, **chrx** will
 skip directly to phase two.
 
 
+<a name="step-by-step"></a>
 ### step-by-step
 
 1. Enable [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices) (process is model-specific; for Acer C720, press `ESC+F3(Refresh)+Power`), then reboot
