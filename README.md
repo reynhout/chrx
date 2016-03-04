@@ -106,17 +106,17 @@ you can quote the argument, e.g.: `-p "gimp blender inkscape"`.
 
 ### examples
 
-[Lubuntu](http://lubuntu.net/) Desktop (latest):
-
-`curl -Os https://chrx.org/go && sh go`
-
 [GalliumOS](https://galliumos.org/) Desktop (latest), verbosely:
 
-`curl -Os https://chrx.org/go && sh go -d galliumos -v`
+`curl -Os https://chrx.org/go && sh go -v`
 
 [GalliumOS](https://galliumos.org/) Desktop (latest), plus packages:
 
-`curl -Os https://chrx.org/go && sh go -d galliumos -p "minecraft steam kodi"`
+`curl -Os https://chrx.org/go && sh go -p "minecraft steam kodi"`
+
+[Lubuntu](http://lubuntu.net/) Desktop (latest):
+
+`curl -Os https://chrx.org/go && sh go -d lubuntu`
 
 [Ubuntu](https://ubuntu.com/) Standard (good for servers), version 15.04, system name `hal`, first user `dave`, including some administrative tools:
 
@@ -198,7 +198,7 @@ Selecting a distribution which meets these needs is therefore an important part 
 
 distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | version | recommended? |
 --------- | ----- | ----- | ------- | -------- |:---:|
-GalliumOS | 2.7GB | 311MB | 9 mins  | 1.0      | :white_check_mark: |
+GalliumOS | 2.8GB | 293MB | 9 mins  | 1.0      | :white_check_mark: |
 Lubuntu   | 2.7GB | 227MB | 18 mins | 15.10    | :white_check_mark: |
 Xubuntu   | 3.0GB | 360MB | 22 mins | 15.04    | :white_check_mark: |
 Ubuntu    | 3.5GB | 440MB | 28 mins | 15.04    | :x: |
@@ -346,4 +346,4 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **2.1** (20160103): add "-p PACKAGE" option to install additional packages
   - **2.1.1** (20160120): update URL for GalliumOS coreimage; make sure util pkgs are added
   - **2.1.2** (20160130): add parsing for "-r nightly" (GalliumOS only, installs nightly build); log chrx command line for debugging; add first user to groups more quietly
-- **2.2** (20160304): default to GalliumOS for new installs.
+- **2.2** (20160304): switch default distribution to GalliumOS
