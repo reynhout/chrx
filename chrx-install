@@ -158,7 +158,9 @@ identify_hardware()
     BLAZE*)         _x='NG|ARM|2014|HP Chromebook 14 G3' ;;
     BUTTERFLY*)     _x='UN|ISB|2013|HP Pavilion Chromebook 14' ;;
     CANDY*)         _x='EF|IBA|2015|Dell Chromebook 11' ;;
+    CELES*)         _x='UN|IBS|2016|Samsung Chromebook 3' ;;
     CLAPPER*)       _x='EF|IBA|2014|Lenovo N20/N20P Chromebook' ;;
+    CYAN*)          _x='UN|IBS|2015|Acer Chromebook R11' ;;
     ENGUARDE_???-???-??A)   _x='EF|IBA|2014|CTL N6 Education Chromebook' ;;
     ENGUARDE_???-???-??B)   _x='EF|IBA|2014|M&A Chromebook' ;;
     ENGUARDE_???-???-??C)   _x='EF|IBA|2014|Senkatel C1101 Chromebook' ;;
@@ -203,6 +205,9 @@ identify_hardware()
     MIGHTY_???-???-???-D*) _x='NG|ARM|2015|eduGear Chromebook M Series' ;;
     MIGHTY_???-???-???-E*) _x='NG|ARM|2015|Sector 5 E1 Rugged Chromebook' ;;
     MIGHTY_???-???-???-F*) _x='NG|ARM|2015|Viglen Chromebook 11' ;;
+    MIGHTY_???-???-???-G*) _x='NG|ARM|2016|PCmerge Chromebook PCM-116E' ;;
+    MIGHTY_???-???-???-H*) _x='NG|ARM|2016|Lumos Education Chromebook' ;;
+    MIGHTY_???-???-???-I*) _x='NG|ARM|2016|MEDION Chromebook S2015' ;;
     MIGHTY*)               _x='NG|ARM|2015|(unknown MIGHTY)' ;;
     MINNIE*)        _x='NG|ARM|2015|ASUS Chromebook Flip C100PA' ;;
     MONROE*)        _x='ES|IHS|2014|LG Chromebase' ;;
@@ -251,6 +256,7 @@ identify_hardware()
     IHS) _cpuf="Intel Haswell" ;;
     IBA) _cpuf="Intel Bay Trail" ;;
     IBR) _cpuf="Intel Broadwell" ;;
+    IBS) _cpuf="Intel Braswell" ;;
     #*)   _cpuf="(unrecognized)" ;;
   esac
 
