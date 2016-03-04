@@ -5,9 +5,9 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.1.2"
+CHRX_VERSION="2.2"
 
-CHRX_OS_DISTRO="lubuntu"
+CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
 CHRX_OS_RELEASE="latest"
 CHRX_OS_ARCH="amd64"
@@ -338,10 +338,9 @@ determine_osv_galliumos()
       CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/nightly/galliumos-generic-coreimage-latest.tgz"
       ;;
     *)
-      CHRX_OS_RELEASE="beta"
-      CHRX_OS_VERSION="1.0beta2"
-      msg_os_release="${ANSI_YEL}(overridden)${ANSI_RST}"
-      msg_os_version="${ANSI_YEL}(NOTE: beta version!)${ANSI_RST}"
+      CHRX_OS_VERSION="1.0"
+      #msg_os_release="${ANSI_YEL}(overridden)${ANSI_RST}"
+      #msg_os_version="${ANSI_YEL}(NOTE: beta version!)${ANSI_RST}"
       #CHRX_OS_CORE_IMAGE_URL="https://ci.galliumos.org/releases/1.0beta2/galliumos-generic-coreimage-1.0beta2.tgz"
       CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
       ;;

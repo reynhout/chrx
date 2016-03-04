@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.1.2** Updated for GalliumOS and Ubuntu 15.10. See [changelog](#changelog).
+**Version 2.2** GalliumOS is now the default distro! See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -56,7 +56,7 @@ skip directly to phase two.
 Usage: chrx [ option ... ]
 
 Options
-   -d DISTRIBUTION OS-specific distribution to install [lubuntu]
+   -d DISTRIBUTION OS-specific distribution to install [galliumos]
                    (galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu)
    -e ENVIRONMENT  distribution-specific environment [desktop]
                    (desktop, minimal, standard, server)
@@ -188,8 +188,8 @@ Chromebooks perform best with lighter-weight operating systems and desktop envir
 
 Selecting a distribution which meets these needs is therefore an important part of Linux-on-Chromebook happiness. While any updated distro will work for ordinary tasks, there are a few that stand out:
 
-- **GalliumOS** is optimized specifically for Chromebooks. It scores well on all metrics, looks great, and installs quickly. Some memory-hungry applications (e.g. Steam games) perform *best* on GalliumOS thanks to careful optimizations. GalliumOS is in BETA but is available for testing now.
-- **Lubuntu** also scores and performs well. It installs slightly smaller and uses significantly less RAM than other distros. Lubuntu is currently the default distro installed by **chrx**.
+- **GalliumOS** is optimized specifically for Chromebooks. It scores well on all metrics, looks great, and installs quickly. Some memory-hungry applications (e.g. Steam games) perform *best* on GalliumOS thanks to careful optimizations. GalliumOS is the default distro installed by **chrx**.
+- **Lubuntu** also scores and performs well. It installs slightly smaller and uses significantly less RAM than other distros.
 - **Xubuntu** is another good choice. It's a bit heavier-weight than Lubuntu, but still performs very well.
 - I would not choose standard, full, Ubuntu for a Chromebook. It is perfectly usable, bit it's heavier and suffers in performance, without offering any important benefits. Memory use starts higher and increases much more quickly as you use the desktop apps (not reflected in measurements below). If your Chromebook model has 4GB of RAM, the performance differences are reduced but not eliminated.
 
@@ -198,7 +198,7 @@ Selecting a distribution which meets these needs is therefore an important part 
 
 distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | version | recommended? |
 --------- | ----- | ----- | ------- | -------- |:---:|
-GalliumOS | 2.7GB | 311MB | 9 mins  | 1.0beta2 | :white_check_mark: |
+GalliumOS | 2.7GB | 311MB | 9 mins  | 1.0      | :white_check_mark: |
 Lubuntu   | 2.7GB | 227MB | 18 mins | 15.10    | :white_check_mark: |
 Xubuntu   | 3.0GB | 360MB | 22 mins | 15.04    | :white_check_mark: |
 Ubuntu    | 3.5GB | 440MB | 28 mins | 15.04    | :x: |
@@ -346,3 +346,4 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **2.1** (20160103): add "-p PACKAGE" option to install additional packages
   - **2.1.1** (20160120): update URL for GalliumOS coreimage; make sure util pkgs are added
   - **2.1.2** (20160130): add parsing for "-r nightly" (GalliumOS only, installs nightly build); log chrx command line for debugging; add first user to groups more quietly
+- **2.2** (20160304): default to GalliumOS for new installs.
