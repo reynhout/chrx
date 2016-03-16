@@ -5,7 +5,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 | | |
 | ------------ | ---------- |
-|**works on**|Compatible Chromebook models. See [chromebooks](#chromebooks).|
+|**works on**|Most Chromebook models. See [chromebooks](#chromebooks).|
 |**installs**|Several Linux distributions. See [operating systems](#operating systems) and [recommendations](#recommendations).|
 
 
@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.2** GalliumOS is now the default distro! See [changelog](#changelog).
+**Version 2.2** GalliumOS has released 1.0, and is now the default installation for **chrx**. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -42,9 +42,10 @@ skip directly to phase two.
 1. Configure your Wi-Fi network, if necessary
 1. Switch to Virtual Terminal (VT) 2 by pressing `CTRL+ALT+F2(top row right arrow)`
 1. Log in as user `chronos` (no password) to enter `chronos@localhost` shell
+1. Update firmware, if necessary (*required* for Bay Trail models, *recommended* for Broadwell models, *optional* for Haswell models -- see [chromebooks](#chromebooks))
 1. Run **chrx**: `curl -Os https://chrx.org/go && sh go` (see [options](#options))
 1. Follow on-screen instructions to prepare your Chromebook for installation
-1. Reboot, then repeat steps 2-7 to install and configure your new system
+1. Reboot, then repeat steps 2-5 and 7 to install and configure your new system
 
 
 <a name="options"></a>
@@ -148,23 +149,55 @@ status            |chromebook                           |hwid   |notes
 :----------------:|-------------------------------------|-------|------------------
 :white_check_mark:|Acer C720                            |PEPPY  |Best-tested
 :white_check_mark:|Acer C720P                           |PEPPY  |
-:white_check_mark:|Acer Chromebook 11 C740              |PAINE  |
-:white_check_mark:|Acer Chromebook 15 C910              |YUNA   |
-:white_check_mark:|Acer Chromebook 15 CB5-571           |YUNA   |
+:white_check_mark:|Acer C730                            |GNAWTY |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Acer Chromebook 11 (CB3-111)         |GNAWTY |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Acer Chromebook 11 (CB3-131)         |GNAWTY |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Acer Chromebook 11 C740              |PAINE  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Acer Chromebook 15 (CB3-531)         |BANJO  |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Acer Chromebook 15 (CB5-571)         |YUNA   | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Acer Chromebook 15 C910              |YUNA   | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Acer Chromebox CXI                   |MCCLOUD|
+:white_check_mark:|Acer Chromebox CXI2                  |RIKKU  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|ASUS C200                            |SQUAWKS|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|ASUS C300                            |QUAWKS |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|ASUS Chromebox                       |PANTHER|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|ASUS Chromebox CN62                  |GUADO  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|CTL NL6 Education Chromebook         |ENGUARDE|[Firmware update](https://github.com/MattDevo/scripts) **required**
 :white_check_mark:|Dell Chromebook 11                   |WOLF   |
-:white_check_mark:|Dell Chromebook 13                   |LULU   |Requires [firmware feature update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/)
+:white_check_mark:|Dell Chromebook 11 (3120)            |CANDY  |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Dell Chromebook 13                   |LULU   | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Dell Chromebox                       |TRICKY |
 :white_check_mark:|Google Pixel (2013)                  |LINK   |
 :white_check_mark:|Google Pixel (2015)                  |SAMUS  |
+:white_check_mark:|Haier Chromebook 11 G2               |HELI   |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|HP Chromebook 11 G3                  |KIP    |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|HP Chromebook 11 G4                  |KIP    |[Firmware update](https://github.com/MattDevo/scripts) **required**
 :white_check_mark:|HP Chromebook 14                     |FALCO  |
-:white_check_mark:|Toshiba CB30/CB35 Chromebook (2014)  |LEON   |
-:white_check_mark:|Toshiba CB30/CB35 Chromebook 2 (2015)|GANDOF |Requires [firmware feature update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/)
-:white_check_mark:|Other Haswell Chromebooks            |       |Expected to work, but untested
-:white_check_mark:|Other Broadwell Chromebooks          |       |Expected to work, some models will require [firmware feature update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/)
-:question:        |Other Sandy/Ivy Bridge Chromebooks   |       |Requires SeaBIOS with Legacy Boot capability
-:question:        |Other Intel Chromebooks              |       |Requires SeaBIOS with Legacy Boot capability
-:x:               |Bay Trail Chromebooks                |       |Requires compatible firmware, presently unavailable
+:white_check_mark:|HP Chromebook 14 G4                  |KIP    |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|HP Chromebox                         |ZAKO   |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Lenovo 100S Chromebook               |ORCO   |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Lenovo N20 Chromebook                |CLAPPER|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Lenovo N20P Chromebook               |CLAPPER|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Lenovo N21 Chromebook                |ENGUARDE|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Lenovo ThinkCentre Chromebox         |TIDUS  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Lenovo ThinkPad Yoga                 |GLIMMER|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Lenovo ThinkPad 11e Chromebook       |GLIMMER|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Samsung Chromebook 2 (XE500C12)      |WINKY  |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Senkatel Edu                         |ENGUARDE|[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Toshiba Chromebook CB30              |LEON   |
+:white_check_mark:|Toshiba Chromebook CB35              |LEON   |
+:white_check_mark:|Toshiba Chromebook 2 CB30            |SWANKY |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Toshiba Chromebook 2 CB35            |SWANKY |[Firmware update](https://github.com/MattDevo/scripts) **required**
+:white_check_mark:|Toshiba Chromebook 2 CB30 (2015)     |GANDOF | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Toshiba Chromebook 2 CB35 (2015)     |GANDOF | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Other Intel Haswell Chromebooks      |       |
+:white_check_mark:|Other Intel Broadwell Chromebooks    |       |Expected to work, [firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
+:white_check_mark:|Other Intel Bay Trail Chromebooks    |       |Expected to work, [firmware update](https://github.com/MattDevo/scripts) **required**
+:question:        |Intel Sandy/Ivy Bridge Chromebooks   |       |Requires SeaBIOS with Legacy Boot capability
+:question:        |Intel Braswell Chromebooks           |       |Requires compatible firmware, presently unavailable
+:question:        |LG Chromebase                        |MONROE |
 :x:               |ARM Chromebooks                      |       |ARM support is very unlikely
-:x:               |HP Chromebook 11                     |SPRING, SKATE|(previously erroneously marked possible)
+:x:               |HP Chromebook 11 (ARM)               |SPRING, SKATE|(previously erroneously marked possible)
 
 
 <a name="operating systems"></a>
