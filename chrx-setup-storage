@@ -22,25 +22,20 @@ if [ "${CHRX_TARGET_DISK}" ]; then
   echo_warn "Press [enter] to continue or CTRL-C to quit: \c"
   prompt_if_interactive
 
-  echo_info "Setting up target disk ${CHRX_TARGET_DISK}... \c"
-  ext_size="`blockdev --getsz ${CHRX_TARGET_DISK}`"
-  aroot_size=$((${ext_size} - 65600 - 33))
+  echo_info "Setting up target disk ${CHRX_TARGET_DISK}..."
 
-  ## Create GPT and add two partitions
-  cgpt create ${CHRX_TARGET_DISK} 
-  cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l GRUB-BOOT -t "reserved" ${CHRX_TARGET_DISK}
-  cgpt add -i 7 -b 65600 -s ${aroot_size} -l ROOT-A -t "rootfs" ${CHRX_TARGET_DISK}
-  sync
+  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}1"
+  if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
+    CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p1"
+  fi
 
-  ## Execute BLKRRPART ioctl to cause kernel to reread partition table
-  ## Redundant? Perhaps. Anything worth doing, is worth doing to excess.
-  blockdev --rereadpt ${CHRX_TARGET_DISK}
-  sfdisk --re-read ${CHRX_TARGET_DISK}
+  #dd if=/dev/zero of="${CHRX_ROOT_PARTITION}" bs=512 count=1
+  #printf ",,L,*\n" | sfdisk "${CHRX_TARGET_DISK}"
+  printf "g\nn\n\n\n\nw\n" | fdisk "${CHRX_TARGET_DISK}" > /dev/null
+  fdisk -l "${CHRX_TARGET_DISK}"
+  #echo debug ; read line
+  #blockdev --rereadpt "${CHRX_TARGET_DISK}"
 
-  ## Mark partiton 6 bootable
-  cgpt boot -i 6 ${CHRX_TARGET_DISK}
-
-  crossystem dev_boot_usb=1
   echo_info "OK"
 else
   CHRX_TARGET_DISK="`rootdev -d -s`"
@@ -126,26 +121,15 @@ else
   fi
 fi
 
-## find targets
-## target_kern isn't used anywhere, and I'm not sure what the original
-## intent was, but I'm leaving these harmless bits in for now.
-if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]
-then
-  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p7"
-  target_kern="${CHRX_TARGET_DISK}p6"
-else
+## set targets
+if [ -z "$CHRX_ROOT_PARTITION" ]; then
   CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}7"
-  target_kern="${CHRX_TARGET_DISK}6"
+  if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
+    CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p7"
+  fi
 fi
-#CHRX_ROOT_PARTITION=${target_rootfs}
 
-echo_info "\nInstallation partitions:"
-cat <<EOF
-
-  kernel: ${target_kern}
-  root:   ${CHRX_ROOT_PARTITION}
-
-EOF
+echo_info "\nInstalling to ${CHRX_ROOT_PARTITION}..."
 
 eval_try umount -R ${CHRX_ROOT_PARTITION} 2>/dev/null
 eval_try umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null
