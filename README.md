@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.2.1** GalliumOS 1.0 has been released, and is now the default installation option for **chrx**. See [changelog](#changelog).
+**Version 2.2.2** GalliumOS 1.0 has been released, and is now the default installation option for **chrx**. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -381,3 +381,4 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.1.2** (20160130): add parsing for "-r nightly" (GalliumOS only, installs nightly build); log chrx command line for debugging; add first user to groups more quietly
 - **2.2** (20160304): switch default distribution to GalliumOS
   - **2.2.1** (20160316): bugfix: issue #12, errors installing to external media
+  - **2.2.2** (20160420): retry/resume failed image downloads; add new HWIDs

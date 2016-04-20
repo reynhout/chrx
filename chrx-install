@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.2.1"
+CHRX_VERSION="2.2.2"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -176,6 +176,7 @@ identify_hardware()
     GLIMMER*)       _x='FS|IBA|2014|Lenovo ThinkPad 11e/Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|IBA|2014|Lenovo ThinkPad Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|IBA|2015|Lenovo Thinkpad 11e Chromebook' ;;
+    GNAWTY_D*)      _x='FS|IBA|2016|Acer Olay Chromebook' ;;
     GNAWTY*)        _x='FS|IBA|2014|Acer Chromebook 11 (CB3-111) / C730' ;;
     GUADO*)         _x='ES|IBR|2015|ASUS Chromebox CN62' ;;
     HELI*)          _x='FS|IBA|2015|Haier Chromebook G2' ;;
@@ -220,6 +221,7 @@ identify_hardware()
     PIT*)           _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
     PI*)            _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
     QUAWKS*)        _x='FS|IBA|2014|ASUS Chromebook C300' ;;
+    REKS*)          _x='UN|IBS|2016|Lenovo N22 Chromebook' ;;
     RIKKU*)         _x='ES|IBR|2015|Acer Chromebox CXI2' ;;
     SAMS_ALEX*)     _x='EF|IPV|2011|Samsung Chromebook Series 5' ;;
     SAMUS*)         _x='RS|IBR|2015|Google Chromebook Pixel' ;;
@@ -232,6 +234,8 @@ identify_hardware()
     STUMPY*)        _x='UN|ISB|2012|Samsung Chromebox Series 3' ;;
     SUMO*)          _x='FS|IBA|2015|AOpen Chromebase Commercial' ;;
     SWANKY*)        _x='FS|IBA|2014|Toshiba Chromebook 2 CB30/CB35' ;;
+    TERRA13*)       _x='UN|IBS|2016|ASUS Chromebook C300SA' ;;
+    TERRA*)         _x='UN|IBS|2016|ASUS Chromebook C202SA' ;;
     TIDUS*)         _x='ES|IBR|2015|Lenovo ThinkCentre Chromebox' ;;
     TRICKY*)        _x='RS|IHS|2014|Dell Chromebox' ;;
     WHIRLWIND*)     _x='NG|ARM|2015|TP-Link OnHub TGR1900 Router' ;;
@@ -666,7 +670,7 @@ do_install()
   echo_info "\nFetching ${CHRX_OS_DISTRO_DISPLAYNAME} core image file..."
   echo_info "HTTP GET ${CHRX_OS_CORE_IMAGE_URL}"
 
-  curl -o - ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xzp -C ${CHRX_INSTALL_ROOT}
+  curl --retry 8 --continue-at - -o - ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xzp -C ${CHRX_INSTALL_ROOT}
   if [ ${PIPESTATUS[0]} -ne 0 -o ${PIPESTATUS[1]} -ne 0 ]; then
     echo_fail "fatal: unable to download and extract core image file."
     exit 1
@@ -697,7 +701,7 @@ do_install()
   ## get customization files
   mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
   cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  curl -k ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
+  curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
 
   if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
     install_customizations
