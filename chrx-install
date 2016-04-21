@@ -160,7 +160,7 @@ identify_hardware()
     CANDY*)         _x='FS|IBA|2015|Dell Chromebook 11' ;;
     CELES*)         _x='UN|IBS|2016|Samsung Chromebook 3' ;;
     CLAPPER*)       _x='FS|IBA|2014|Lenovo N20/N20P Chromebook' ;;
-    CYAN*)          _x='UN|IBS|2015|Acer Chromebook R11' ;;
+    CYAN*)          _x='UN|IBS|2015|OriginsT / Acer Chromebook R11 (C738T)' ;;
     ENGUARDE_???-???-??A)   _x='FS|IBA|2014|CTL N6 Education Chromebook' ;;
     ENGUARDE_???-???-??B)   _x='FS|IBA|2014|M&A Chromebook' ;;
     ENGUARDE_???-???-??C)   _x='FS|IBA|2014|Senkatel C1101 Chromebook' ;;
@@ -176,8 +176,8 @@ identify_hardware()
     GLIMMER*)       _x='FS|IBA|2014|Lenovo ThinkPad 11e/Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|IBA|2014|Lenovo ThinkPad Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|IBA|2015|Lenovo Thinkpad 11e Chromebook' ;;
-    GNAWTY_D*)      _x='FS|IBA|2016|Acer Olay Chromebook' ;;
-    GNAWTY*)        _x='FS|IBA|2014|Acer Chromebook 11 (CB3-111) / C730' ;;
+    GNAWTY_D*)      _x='FS|IBA|2016|Acer Chromebook 11/Olay (C735)' ;;
+    GNAWTY*)        _x='FS|IBA|2014|Acer Chromebook 11 (CB3-111) / C730/E' ;;
     GUADO*)         _x='ES|IBR|2015|ASUS Chromebox CN62' ;;
     HELI*)          _x='FS|IBA|2015|Haier Chromebook G2' ;;
     #HELI*)          _x='FS|IBA|2015|Huaqin 11' ;;
@@ -190,6 +190,7 @@ identify_hardware()
     JERRY_???-???-??B*) _x='NG|ARM|2015|CTL J2/J4 Chromebook for Education' ;;
     JERRY_???-???-??C*) _x='NG|ARM|2015|Poin2 Chromebook 11' ;;
     JERRY_???-???-??D*) _x='NG|ARM|2015|eduGear Chromebook K Series' ;;
+    JERRY_???-???-??E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
     JERRY*)             _x='NG|ARM|2015|(unknown JERRY)' ;;
     KIP_[ABC]*)     _x='FS|IBA|2015|HP Chromebook 11 G3/G4' ;;
     KIP_[DE]*)      _x='FS|IBA|2015|HP Chromebook 14 G4' ;;
@@ -238,6 +239,7 @@ identify_hardware()
     TERRA*)         _x='UN|IBS|2016|ASUS Chromebook C202SA' ;;
     TIDUS*)         _x='ES|IBR|2015|Lenovo ThinkCentre Chromebox' ;;
     TRICKY*)        _x='RS|IHS|2014|Dell Chromebox' ;;
+    ULTIMA*)        _x='UN|IBS|2016|Lenovo ThinkPad 11e/Yoga Chromebook (G3)' ;;
     WHIRLWIND*)     _x='NG|ARM|2015|TP-Link OnHub TGR1900 Router' ;;
     WINKY*)         _x='FS|IBA|2014|Samsung Chromebook 2 (XE500C12)' ;;
     WOLF*)          _x='RS|IHS|2014|Dell Chromebook 11' ;;
