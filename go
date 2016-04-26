@@ -1,9 +1,9 @@
 #!/bin/sh
-#
-# chrx-go
-#
-# A wrapper for chrx-install
-#
+#                                                                          #
+# chrx-go                                                                   #
+#                                                                           #
+# A wrapper for chrx-install                                                #
+#                                                                          #
 
 : ${CHRX_WEB_ROOT:="https://chrx.org"}
 CHRX_CACHE0_DIR="/var/tmp/chrx"

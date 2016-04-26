@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.2.2** GalliumOS 1.0 has been released, and is now the default installation option for **chrx**. See [changelog](#changelog).
+**Version 2.2.3** Updated for Ubuntu 16.04; Installs GalliumOS by default. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -62,7 +62,7 @@ Options
    -e ENVIRONMENT  distribution-specific environment [desktop]
                    (desktop, minimal, standard, server)
    -r RELEASE      distribution release number or name []
-                   (lts, latest, dev, 15.04, 15.10, vivid, wily, etc)
+                   (lts, latest, dev, 15.10, 16.04, wily, xenial, etc)
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
    -p PACKAGE      additional packages, quote or repeat for multiple []
@@ -119,9 +119,9 @@ you can quote the argument, e.g.: `-p "gimp blender inkscape"`.
 
 `curl -Os https://chrx.org/go && sh go -d lubuntu`
 
-[Ubuntu](https://ubuntu.com/) Standard (good for servers), version 15.04, system name `hal`, first user `dave`, including some administrative tools:
+[Ubuntu](https://ubuntu.com/) Standard, version 16.04, system name `hal`, first user `dave`, including some administrative tools:
 
-`curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 15.04 -H hal -U dave -p admin-misc`
+`curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 16.04 -H hal -U dave -p admin-misc`
 
 
 ### advanced usage
@@ -336,8 +336,8 @@ useful for investigating failures.
 Log entries created by these pings look like this:
 
 ```
-17.x.x.x - - [01/Jun/2015:07:37:00 +0000] "GET /end_ok HTTP/1.1" 200 0 "-"
-  "chrx/1.1.1 hw=PEPPY_C6A-V7C-A2C sw=linux,ubuntu,latest,-,15.04,amd64,ubuntu-minimal" "-"
+17.x.x.x - - [01/May/2016:07:37:00 +0000] "GET /end_ok HTTP/1.1" 200 0 "-"
+  "chrx/2.2.3 hw=PEPPY_C6A-V7C-A2C sw=linux,galliumos-desktop,latest,2.0,amd64" "-"
 ```
 
 `hw` is a hardware ID that corresponds to your model of Chromebook
@@ -382,3 +382,4 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **2.2** (20160304): switch default distribution to GalliumOS
   - **2.2.1** (20160316): bugfix: issue #12, errors installing to external media
   - **2.2.2** (20160420): retry/resume failed image downloads; add new HWIDs
+  - **2.2.3** (20160426): do not drop to shell before reboot; do not retry coreimage downloads; update steam install for xenial; update docs for Ubuntu 16.04

@@ -116,7 +116,9 @@ else
     echo_warn "Press [enter] to continue: \c"
     prompt_if_interactive
 
+    ## reboot without dropping user to shell
     reboot
+    sleep 10
     exit
   fi
 fi

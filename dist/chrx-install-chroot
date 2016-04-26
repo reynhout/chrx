@@ -83,6 +83,9 @@ install_steam()
   curl -o /tmp/steam_latest.deb \
     http://repo.steampowered.com/steam/archive/precise/steam_latest.deb
   dpkg -i /tmp/steam_latest.deb
+  ## steam launcher requires python-apt in xenial
+  ## python-apt does not exist in vivid
+  apt-get -y -f install
 }
 
 install_minecraft()
