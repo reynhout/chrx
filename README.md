@@ -229,13 +229,15 @@ Selecting a distribution which meets these needs is therefore an important part 
 
 #### sample measurements
 
-distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | version | recommended? |
---------- | ----- | ----- | ------- | -------- |:---:|
-GalliumOS | 2.5GB | 291MB | 9 mins  | 1.0      | :white_check_mark: |
-Lubuntu   | 2.7GB | 227MB | 18 mins | 15.10    | :white_check_mark: |
-Xubuntu   | 3.0GB | 360MB | 22 mins | 15.04    | :white_check_mark: |
-Ubuntu    | 3.5GB | 440MB | 28 mins | 15.04    | :x: |
-Kubuntu   | 4.2GB | 613MB |         | 15.10    | :x: |
+distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | recommended? |
+------------------ | ----- | ----- | ------- |:---:|
+GalliumOS 2.0alpha | 2.5GB | 291MB | 9 mins  | :white_check_mark: |
+GalliumOS 1.0      | 2.8GB | 287MB | 10 mins | :white_check_mark: |
+Lubuntu 15.10      | 2.7GB | 227MB | 18 mins | :white_check_mark: |
+Lubuntu 16.04      | 3.1GB | 185MB | 19 mins | :white_check_mark: |
+Xubuntu 15.04      | 3.0GB | 360MB | 22 mins | :white_check_mark: |
+Ubuntu 15.04       | 3.5GB | 440MB | 28 mins | :x: |
+Kubuntu 15.10      | 4.2GB | 613MB |         | :x: |
 
 
 1. All distributions were installed with the `desktop` environment option.
