@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.2.3"
+CHRX_VERSION="2.2.4"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -159,6 +159,7 @@ identify_hardware()
     BUTTERFLY*)     _x='UN|ISB|2013|HP Pavilion Chromebook 14' ;;
     CANDY*)         _x='FS|IBA|2015|Dell Chromebook 11' ;;
     CELES*)         _x='UN|IBS|2016|Samsung Chromebook 3' ;;
+    CHELL*)         _x='UN|ISK|2016|HP Chromebook 13 G1' ;;
     CLAPPER*)       _x='FS|IBA|2014|Lenovo N20/N20P Chromebook' ;;
     CYAN*)          _x='UN|IBS|2015|OriginsT / Acer Chromebook R11 (C738T)' ;;
     ENGUARDE_???-???-??A)   _x='FS|IBA|2014|CTL N6 Education Chromebook' ;;
@@ -177,7 +178,7 @@ identify_hardware()
     _GLIMMER*)      _x='FS|IBA|2014|Lenovo ThinkPad Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|IBA|2015|Lenovo Thinkpad 11e Chromebook' ;;
     GNAWTY_D*)      _x='FS|IBA|2016|Acer Chromebook 11/Olay (C735)' ;;
-    GNAWTY*)        _x='FS|IBA|2014|Acer Chromebook 11 (CB3-111) / C730/E' ;;
+    GNAWTY*)        _x='FS|IBA|2014|Acer Chromebook 11 (CB3-111,C730,C730E)' ;;
     GUADO*)         _x='ES|IBR|2015|ASUS Chromebox CN62' ;;
     HELI*)          _x='FS|IBA|2015|Haier Chromebook G2' ;;
     #HELI*)          _x='FS|IBA|2015|Huaqin 11' ;;
@@ -185,13 +186,14 @@ identify_hardware()
     JAQ_???-???-???-A*) _x='NG|ARM|2015|Haier Chromebook 11' ;;
     JAQ_???-???-???-B*) _x='NG|ARM|2015|True IDC Chromebook 11' ;;
     JAQ_???-???-???-C*) _x='NG|ARM|2015|Xolo Chromebook' ;;
+    JAQ_???-???-???-D*) _x='NG|ARM|2016|Medion Akoya S2013 Chromebook' ;;
     JAQ*)               _x='NG|ARM|2015|(unknown JAQ)' ;;
-    JERRY_???-???-??A*) _x='NG|ARM|2015|HiSense Chromebook 11' ;;
-    JERRY_???-???-??B*) _x='NG|ARM|2015|CTL J2/J4 Chromebook for Education' ;;
-    JERRY_???-???-??C*) _x='NG|ARM|2015|Poin2 Chromebook 11' ;;
-    JERRY_???-???-??D*) _x='NG|ARM|2015|eduGear Chromebook K Series' ;;
-    JERRY_???-???-??E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
-    JERRY*)             _x='NG|ARM|2015|(unknown JERRY)' ;;
+    JERRY_???-???-???-A*) _x='NG|ARM|2015|HiSense Chromebook 11' ;;
+    JERRY_???-???-???-B*) _x='NG|ARM|2015|CTL J2/J4 Chromebook for Education' ;;
+    JERRY_???-???-???-C*) _x='NG|ARM|2015|Poin2 Chromebook 11' ;;
+    JERRY_???-???-???-D*) _x='NG|ARM|2015|eduGear Chromebook K Series' ;;
+    JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
+    JERRY*)               _x='NG|ARM|2015|(unknown JERRY)' ;;
     KIP_[ABC]*)     _x='FS|IBA|2015|HP Chromebook 11 G3/G4' ;;
     KIP_[DE]*)      _x='FS|IBA|2015|HP Chromebook 14 G4' ;;
     KIP*)           _x='FS|IBA|2014|(unknown KIP)' ;;
@@ -215,10 +217,10 @@ identify_hardware()
     MONROE*)        _x='ES|IHS|2014|LG Chromebase' ;;
     NINJA*)         _x='FS|IBA|2015|AOpen Chromebox Commercial' ;;
     ORCO*)          _x='FS|IBA|2015|Lenovo Ideapad 100S Chromebook' ;;
-    PAINE*)         _x='RS|IBR|2014|Acer Chromebook 11 C740' ;;
+    PAINE*)         _x='RS|IBR|2014|Acer Chromebook 11 (C740)' ;;
     PANTHER*)       _x='RS|IHS|2014|ASUS Chromebox CN60' ;;
     PARROT*)        _x='UN|ISB|2012|Acer C7 / C710 Chromebook' ;;
-    PEPPY*)         _x='OK|IHS|2013|Acer C720/P Chromebook' ;;
+    PEPPY*)         _x='OK|IHS|2013|Acer C720, C720P Chromebook' ;;
     PIT*)           _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
     PI*)            _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
     QUAWKS*)        _x='FS|IBA|2014|ASUS Chromebook C300' ;;
@@ -243,7 +245,7 @@ identify_hardware()
     WHIRLWIND*)     _x='NG|ARM|2015|TP-Link OnHub TGR1900 Router' ;;
     WINKY*)         _x='FS|IBA|2014|Samsung Chromebook 2 (XE500C12)' ;;
     WOLF*)          _x='RS|IHS|2014|Dell Chromebook 11' ;;
-    YUNA*)          _x='RS|IBR|2014|Acer Chromebook 15 (CB5-571) / C910' ;;
+    YUNA*)          _x='RS|IBR|2014|Acer Chromebook 15 (CB5-571, C910)' ;;
     ZAKO*)          _x='RS|IHS|2014|HP Chromebox CB1/G1/for Meetings' ;;
     #*)              _='|||' ;;
   esac
@@ -263,6 +265,7 @@ identify_hardware()
     IBA) _cpuf="Intel Bay Trail" ;;
     IBR) _cpuf="Intel Broadwell" ;;
     IBS) _cpuf="Intel Braswell" ;;
+    ISK) _cpuf="Intel Skylake" ;;
     #*)   _cpuf="(unrecognized)" ;;
   esac
 
