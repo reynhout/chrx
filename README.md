@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.2.3** Updated for Ubuntu 16.04; Installs GalliumOS by default. See [changelog](#changelog).
+**Version 2.2.4** Updated for Ubuntu 16.04; Installs GalliumOS by default. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -66,7 +66,7 @@ Options
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
    -p PACKAGE      additional packages, quote or repeat for multiple []
-                   (kodi, minecraft, steam, etc)
+                   (chrome, kodi, minecraft, steam, etc)
    -H HOSTNAME     hostname for new system [chrx]
    -U USERNAME     username of first created user [chrx]
    -L LOCALE       locale for new system [en_US.UTF-8]
@@ -97,6 +97,7 @@ special handling, and some aliases for convenience:
 - `minecraft` installs [Minecraft](https://minecraft.net/)
 - `steam` installs [Steam](http://store.steampowered.com/about/)
 - `kodi` installs [Kodi Media Center](http://kodi.tv/about/)
+- `chrome` installs Google Chrome
 - `admin-misc` is an alias for `"ssh tmux rsync vim"`
 - `dev-misc` is an alias for `"arduino geany geany-plugins ruby"`
 
@@ -385,3 +386,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.2.1** (20160316): bugfix: issue #12, errors installing to external media
   - **2.2.2** (20160420): retry/resume failed image downloads; add new HWIDs
   - **2.2.3** (20160426): do not drop to shell before reboot; do not retry coreimage downloads; update steam install for xenial; update docs for Ubuntu 16.04
+  - **2.2.4** (20160505): add Google Chrome to installable packages; add new HWIDs, update others
+
+<!-- don't forget to update the version number in chrx-install! -->
