@@ -66,7 +66,9 @@ install_additional_packages()
       minecraft)  install_minecraft ;;
       steam)      install_steam ;;
       simplescreenrecorder) install_simplescreenrecorder ;;
-      *)           apt_get_install $pkg ;;
+      chrome)     install_google_chrome_from_deb ;;
+      _hdr)       install_set_hdr ;;
+      *)          apt_get_install $pkg ;;
     esac
   done
 }
@@ -113,6 +115,23 @@ install_kodi()
   add-apt-repository -y ppa:team-xbmc/ppa
   apt_get_update
   apt_get_install kodi
+}
+
+install_google_chrome_from_deb()
+{
+  curl -O https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  dpkg -i google-chrome-stable_current_amd64.deb
+  apt-get -f -y install
+  rm -f google-chrome-stable_current_amd64.deb
+}
+
+install_set_hdr()
+{
+  apt_get_install vim tmux ssh rsync
+  apt_get_install arduino geany geany-plugins ruby
+  install_minecraft
+  install_steam
+  install_google_chrome_from_deb
 }
 
 ubuntu_add_repos()
