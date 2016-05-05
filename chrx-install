@@ -162,6 +162,7 @@ identify_hardware()
     CHELL*)         _x='UN|ISK|2016|HP Chromebook 13 G1' ;;
     CLAPPER*)       _x='FS|IBA|2014|Lenovo N20/N20P Chromebook' ;;
     CYAN*)          _x='UN|IBS|2015|OriginsT / Acer Chromebook R11 (C738T)' ;;
+    EDGAR*)         _x='UN|IBS|2016|Acer Chromebook 14' ;;
     ENGUARDE_???-???-??A)   _x='FS|IBA|2014|CTL N6 Education Chromebook' ;;
     ENGUARDE_???-???-??B)   _x='FS|IBA|2014|M&A Chromebook' ;;
     ENGUARDE_???-???-??C)   _x='FS|IBA|2014|Senkatel C1101 Chromebook' ;;
