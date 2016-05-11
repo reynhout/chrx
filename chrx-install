@@ -284,7 +284,7 @@ get_os_version_and_core_url_dev_ubuntu()
   release_log="`curl -s ${release_log_url}`"
   codename=`echo "${release_log}"|grep "^Dist: "|tail -1|awk '{print $2}'`
   CHRX_OS_VERSION=`echo "${release_log}"|grep "^Version: "|tail -1|awk '{print $2}'`
-  CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-core/daily/current/${codename}-core-${CHRX_OS_ARCH}.tar.gz"
+  CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-core/daily-preinstalled/current/${codename}-preinstalled-core-${CHRX_OS_ARCH}.tar.gz"
 }
 
 get_os_version_ubuntu()
@@ -312,7 +312,7 @@ determine_osv_ubuntu()
   esac
 
   if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
-    CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-core/releases/${CHRX_OS_VERSION}/release/ubuntu-core-${CHRX_OS_VERSION}-core-${CHRX_OS_ARCH}.tar.gz"
+    CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-core/${CHRX_OS_RELEASE}/daily-preinstalled/current/${CHRX_OS_RELEASE}-preinstalled-core-${CHRX_OS_ARCH}.tar.gz"
   fi
 
   case "${CHRX_OS_VERSION}" in
