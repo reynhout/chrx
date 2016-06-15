@@ -1,0 +1,8 @@
+## Hide ChromeOS etc partitions from Linux
+KERNEL=="mmcblk0p1", ENV{UDISKS_IGNORE}="1"
+KERNEL=="mmcblk0p2", ENV{UDISKS_IGNORE}="1"
+KERNEL=="mmcblk0p3", ENV{UDISKS_IGNORE}="1"
+KERNEL=="mmcblk0p4", ENV{UDISKS_IGNORE}="1"
+KERNEL=="mmcblk0p5", ENV{UDISKS_IGNORE}="1"
+KERNEL=="mmcblk0p6", ENV{UDISKS_IGNORE}="1"
+
