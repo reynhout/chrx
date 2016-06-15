@@ -382,7 +382,7 @@ set_customizations_ubuntu()
     etc/X11/xorg.conf.d/20-intel-graphics.conf
     etc/X11/xorg.conf.d/50-cyapa-touchpad.conf
   "
-  if (df / --output=source | grep mmcblk -q); then
+  if (readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk); then
     CONF_FILES+="
       etc/udev/rules.d/99-hide-disks-mmc.rules
     "
@@ -410,7 +410,7 @@ set_customizations_ubuntu()
 
 set_customizations_galliumos()
 {
-  if (df / --output=source | grep mmcblk -q); then
+  if (readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk); then
     CONF_FILES="
       etc/udev/rules.d/99-hide-disks-mmc.rules
     "
