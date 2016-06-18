@@ -378,11 +378,19 @@ set_customizations_ubuntu()
     etc/modprobe.d/ath9k.conf
     etc/modprobe.d/snd-hda-intel.conf
     etc/udev/rules.d/10-disable-ehci.rules
-    etc/udev/rules.d/99-hide-disks.rules
     etc/X11/xorg.conf
     etc/X11/xorg.conf.d/20-intel-graphics.conf
     etc/X11/xorg.conf.d/50-cyapa-touchpad.conf
   "
+  if (readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk); then
+    CONF_FILES+="
+      etc/udev/rules.d/99-hide-disks-mmc.rules
+    "
+  else
+    CONF_FILES+="
+      etc/udev/rules.d/99-hide-disks-sda.rules
+    "
+  fi
 
   EXEC_FILES="
     etc/rc.local
@@ -402,9 +410,15 @@ set_customizations_ubuntu()
 
 set_customizations_galliumos()
 {
-  CONF_FILES="
-    etc/udev/rules.d/99-hide-disks.rules
-  "
+  if (readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk); then
+    CONF_FILES="
+      etc/udev/rules.d/99-hide-disks-mmc.rules
+    "
+  else
+    CONF_FILES="
+      etc/udev/rules.d/99-hide-disks-sda.rules
+    "
+  fi
 
   CHRX_CONFIGURE_GRUB_ENABLED=
 }
