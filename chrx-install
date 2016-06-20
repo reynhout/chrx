@@ -142,12 +142,17 @@ identify_hardware()
   local _outvar_year=$3
   local _outvar_cpuf=$4
   local _outvar_prognosis=$5
-  local _hwid=`crossystem hwid | sed 's/ /_/g'`
+  local _hwid_raw
+  local _hwid
   local _prognosis
   local _desc
   local _cpuf
   local _year
   local _x
+
+  _hwid_raw=$(crossystem hwid 2>/dev/null)
+  [ "$_hwid_raw" ] || _hwid_raw=$(dmidecode -s system-product-name)
+  _hwid=$(echo "$_hwid_raw" | head -1 | tr a-z A-Z | sed 's/ /_/g')
 
   case "$_hwid" in
     #TBD*)           _x='UN|...|2015|Dell 11P' ;;
@@ -509,7 +514,7 @@ check_support_for_legacy_boot()
     echo_fail "ERROR"
     cat <<- EOMSG
       ${ANSI_RED}
-      Can't find /usr/bin/mosys. Make sure you are running the default
+      Can't find /usr/sbin/mosys. Make sure you are running the default
       developer mode Linux shell, logged in as chronos@localhost.
       ${ANSI_RST}
 	EOMSG
@@ -538,7 +543,7 @@ check_support_for_legacy_boot()
 setup_and_validate_environment()
 {
 
-  if [ "`initctl status powerd | grep running`" ]; then
+  if [ "`initctl status powerd | grep running 2>/dev/null`" ]; then
     initctl stop powerd > /dev/null 2>&1
   fi
   ## prevent screen blanking whilst installing
@@ -572,7 +577,12 @@ setup_and_validate_environment()
     report_unrecognized_device
   fi
 
-  check_support_for_legacy_boot
+  HOST_IS_CHROMEOS=$(grep "^CHROMEOS" /etc/lsb-release)
+  if [ "$HOST_IS_CHROMEOS" ]; then
+    check_support_for_legacy_boot
+  else
+    echo -e "Skipping legacy boot check, because this is not ChromeOS.\n"
+  fi
 }
 
 setup_storage()
@@ -789,9 +799,9 @@ do_install()
   #  flashrom -w -i RW_LEGACY:asus-chromebox-SeaBIOS-new.bin
   #fi
 
-
   ## set eeprom bits
-  crossystem dev_boot_legacy=1 dev_boot_signed_only=1
+  #crossystem dev_boot_legacy=1 dev_boot_signed_only=1
+  [ "$HOST_IS_CHROMEOS" ] && crossystem dev_boot_legacy=1
 
   ## wind up
   finish_date=`date`
