@@ -349,7 +349,7 @@ determine_osv_ubuntu()
 get_os_version_galliumos()
 {
   local _release=$1
-  CHRX_OS_VERSION="1.0"
+  CHRX_OS_VERSION="2.0"
 }
 
 determine_osv_galliumos()
@@ -362,29 +362,26 @@ determine_osv_galliumos()
 
   case "${CHRX_OS_RELEASE}" in
     vivid) CHRX_OS_VERSION="1.0" ;;
-    #xenon) CHRX_OS_VERSION="2.0" ;;
     xenon|alpha|beta|2|2.0|2.0alpha*|2.0beta*)
-      CHRX_OS_VERSION="2.0beta"
-      msg_os_version="${ANSI_YEL}(NOTE: beta release!)${ANSI_RST}"
-      #CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/2.0beta1/galliumos-generic-coreimage-xenon-beta1.tgz"
-      CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/2.0beta1/galliumos-generic-coreimage-xenon-beta1.tgz"
+      CHRX_OS_VERSION="2.0"
+      #CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/2.0/galliumos-generic-coreimage-2.0.tgz"
       ;;
     dev|nightly|2.0nightly)
-      CHRX_OS_VERSION="2.0nightly"
+      CHRX_OS_VERSION="nightly"
       msg_os_version="${ANSI_YEL}(NOTE: nightly build!)${ANSI_RST}"
-      CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/2.0nightly/galliumos-generic-coreimage-xenon-latest.tgz"
+      CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/nightly/galliumos-generic-coreimage-xenon-latest.tgz"
       ;;
     latest) get_os_version_galliumos $CHRX_OS_RELEASE ;;
     *)      CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
   esac
 
   if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
-    CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
+    CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
   fi
 
   case "${CHRX_OS_VERSION}" in
     '1.0')
-      #msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}"
+      msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}"
       ;;
     '2.0') ;;
   esac
