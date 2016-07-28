@@ -167,7 +167,7 @@ identify_hardware()
     CELES*)         _x='UN|BSW|2016|Samsung Chromebook 3' ;;
     CHELL*)         _x='UN|SKL|2016|HP Chromebook 13 G1' ;;
     CLAPPER*)       _x='FS|BYT|2014|Lenovo N20/N20P Chromebook' ;;
-    CYAN*)          _x='UN|BSW|2015|OriginsT / Acer Chromebook R11 (C738T)' ;;
+    CYAN*)          _x='UN|BSW|2015|Acer Chromebook R11 (C738T)' ;;
     EDGAR*)         _x='UN|BSW|2016|Acer Chromebook 14 (CB3-431)' ;;
     ENGUARDE_???-???-??A*)  _x='FS|BYT|2014|CTL N6 Education Chromebook' ;;
     ENGUARDE_???-???-??B*)  _x='FS|BYT|2014|M&A Chromebook' ;;
@@ -380,7 +380,8 @@ determine_osv_galliumos()
   esac
 
   if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
-    CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
+    #CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
+    CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
   fi
 
   case "${CHRX_OS_VERSION}" in
