@@ -165,7 +165,7 @@ identify_hardware()
     BUTTERFLY*)     _x='UN|SDB|2013|HP Pavilion Chromebook 14' ;;
     CANDY*)         _x='FS|BYT|2015|Dell Chromebook 11' ;;
     CELES*)         _x='UN|BSW|2016|Samsung Chromebook 3' ;;
-    CHELL*)         _x='UN|SKL|2016|HP Chromebook 13 G1' ;;
+    CHELL*)         _x='RS|SKL|2016|HP Chromebook 13 G1' ;;
     CLAPPER*)       _x='FS|BYT|2014|Lenovo N20/N20P Chromebook' ;;
     CYAN*)          _x='UN|BSW|2015|Acer Chromebook R11 (C738T)' ;;
     EDGAR*)         _x='UN|BSW|2016|Acer Chromebook 14 (CB3-431)' ;;
@@ -190,7 +190,7 @@ identify_hardware()
     GLIMMER*)       _x='FS|BYT|2014|Lenovo ThinkPad 11e/Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|BYT|2014|Lenovo ThinkPad Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|BYT|2015|Lenovo Thinkpad 11e Chromebook' ;;
-    GNAWTY_???-???-??B*) _x='FS|BYT|2016|Acer Chromebook 11/Olay (C735)' ;;
+    GNAWTY_???-???-??B*) _x='FS|BYT|2016|Acer Chromebook 11 (CB3-131,C735)' ;;
     GNAWTY_???-???-??A*) _x='FS|BYT|2014|Acer Chromebook 11 (CB3-111,C730,C730E)' ;;
     GNAWTY_???-???-???)  _x='FS|BYT|2014|Acer Chromebook 11 (CB3-111,C730,C730E)' ;;
     GUADO*)         _x='ES|BDW|2015|ASUS Chromebox CN62' ;;
@@ -212,7 +212,7 @@ identify_hardware()
     KIP_[DE]*)      _x='FS|BYT|2015|HP Chromebook 14 G4' ;;
     KIP*)           _x='FS|BYT|2014|(unknown KIP)' ;;
     KITTY*)         _x='NG|ARM|2015|Acer Chromebase' ;;
-    LARS*)          _x='UN|SKL|2016|Acer Chromebook 14 for Work' ;;
+    LARS*)          _x='RS|SKL|2016|Acer Chromebook 14 for Work' ;;
     LEON*)          _x='OK|HSW|2014|Toshiba CB30/CB35 Chromebook' ;;
     LINK*)          _x='RS|IVB|2013|Google Chromebook Pixel' ;;
     LULU*)          _x='FS|BDW|2015|Dell Chromebook 13 7310' ;;
@@ -244,7 +244,7 @@ identify_hardware()
     RIKKU*)         _x='ES|BDW|2015|Acer Chromebox CXI2' ;;
     SAMS_ALEX*)     _x='EF|PNV|2011|Samsung Chromebook Series 5' ;;
     SAMUS*)         _x='RS|BDW|2015|Google Chromebook Pixel' ;;
-    SENTRY*)        _x='UN|SKL|2016|Lenovo Thinkpad 13 Chromebook' ;;
+    SENTRY*)        _x='RS|SKL|2016|Lenovo Thinkpad 13 Chromebook' ;;
     SETZER*)        _x='UN|BSW|2016|HP Chromebook 11 G5/11-vxxx' ;;
     SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
     SNOW*)          _x='NG|ARM|2012|Samsung Chromebook' ;;
