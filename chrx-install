@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.2.6"
+CHRX_VERSION="2.2.7"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -317,28 +317,35 @@ get_os_version_ubuntu()
 determine_osv_ubuntu()
 {
   case "${CHRX_OS_RELEASE}" in
-    trusty) CHRX_OS_VERSION="14.04.3" ;;
+    trusty) CHRX_OS_VERSION="14.04.5" ;;
     utopic) CHRX_OS_VERSION="14.10" ;;
     vivid)  CHRX_OS_VERSION="15.04" ;;
     wily)   CHRX_OS_VERSION="15.10" ;;
-    xenial) CHRX_OS_VERSION="16.04" ;;
+    xenial) CHRX_OS_VERSION="16.04.1" ;;
     dev)    get_os_version_and_core_url_dev_ubuntu $CHRX_OS_RELEASE ;;
     lts)    get_os_version_ubuntu $CHRX_OS_RELEASE ;;
     latest) get_os_version_ubuntu $CHRX_OS_RELEASE ;;
     *)      CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
   esac
 
-  if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
-    CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-base/releases/${CHRX_OS_VERSION}/release/ubuntu-base-${CHRX_OS_VERSION}-core-${CHRX_OS_ARCH}.tar.gz"
-  fi
+  local _ubuntu_corebase='base'
 
   case "${CHRX_OS_VERSION}" in
-    '14.04'|14.04.*)
-      msg_os_version="${ANSI_YEL}(CAUTION: not well tested!)${ANSI_RST}" ;;
-    '14.10'|'15.04')
-      msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}" ;;
-    '15.10') ;;
-    '16.04') ;;
+    '14.04'|'14.04.1'|'14.04.2'|'14.04.3'|'14.04.4')
+      _ubuntu_corebase='core'
+      msg_os_version="${ANSI_YEL}(CAUTION: not well tested!)${ANSI_RST}"
+      ;;
+    "14.04.*")
+      msg_os_version="${ANSI_YEL}(CAUTION: not well tested!)${ANSI_RST}"
+      ;;
+    '14.10'|'15.04'|'15.10')
+      msg_os_version="${ANSI_YEL}(ERROR: no longer available!)${ANSI_RST}"
+      FAIL=1
+      ;;
+    '16.04')
+      _ubuntu_corebase='core'
+      ;;
+    "16.04.*") ;;
     *)
       if [ "`echo ${CHRX_OS_VERSION} | grep "^[0-9.][0-9.]*$"`" ]; then
         msg_os_version="${ANSI_YEL}(CAUTION: untested!)${ANSI_RST}"
@@ -348,6 +355,11 @@ determine_osv_ubuntu()
       fi
       ;;
   esac
+
+  if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
+    CHRX_OS_CORE_IMAGE_URL="http://cdimage.ubuntu.com/ubuntu-base/releases/${CHRX_OS_VERSION}/release/ubuntu-base-${CHRX_OS_VERSION}-${_ubuntu_corebase}-${CHRX_OS_ARCH}.tar.gz"
+  fi
+
 }
 
 get_os_version_galliumos()
