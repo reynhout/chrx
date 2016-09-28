@@ -396,8 +396,9 @@ determine_osv_galliumos()
   esac
 
   if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
-    #CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
     CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
+    #CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
+    #CHRX_OS_CORE_IMAGE_URL="https://rb1.fr.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
   fi
 
   case "${CHRX_OS_VERSION}" in
