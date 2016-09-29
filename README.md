@@ -146,60 +146,18 @@ curl -O $CHRX_WEB_ROOT/go && sh go
 
 <a name="chromebooks"></a>
 ### chromebooks
-status            |chromebook                           |hwid   |notes
-:----------------:|-------------------------------------|-------|------------------
-:white_check_mark:|Acer C720                            |PEPPY  |Best-tested
-:white_check_mark:|Acer C720P                           |PEPPY  |
-:white_check_mark:|Acer C730                            |GNAWTY |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Acer Chromebook 11 (CB3-111)         |GNAWTY |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Acer Chromebook 11 (CB3-131)         |GNAWTY |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Acer Chromebook 11 C740              |PAINE  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Acer Chromebook 15 (CB3-531)         |BANJO  |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Acer Chromebook 15 (CB5-571)         |YUNA   | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Acer Chromebook 15 C910              |YUNA   | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Acer Chromebox CXI                   |MCCLOUD|
-:white_check_mark:|Acer Chromebox CXI2                  |RIKKU  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|ASUS C200                            |SQUAWKS|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|ASUS C300                            |QUAWKS |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|ASUS Chromebox                       |PANTHER|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|ASUS Chromebox CN62                  |GUADO  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|CTL NL6 Education Chromebook         |ENGUARDE|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Dell Chromebook 11                   |WOLF   |
-:white_check_mark:|Dell Chromebook 11 (3120)            |CANDY  |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Dell Chromebook 13                   |LULU   | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Dell Chromebox                       |TRICKY |
-:white_check_mark:|Google Pixel (2013)                  |LINK   |
-:white_check_mark:|Google Pixel (2015)                  |SAMUS  |
-:white_check_mark:|Haier Chromebook 11 G2               |HELI   |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|HP Chromebook 11 G3                  |KIP    |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|HP Chromebook 11 G4                  |KIP    |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|HP Chromebook 14                     |FALCO  |
-:white_check_mark:|HP Chromebook 14 G4                  |KIP    |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|HP Chromebox                         |ZAKO   |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Lenovo 100S Chromebook               |ORCO   |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Lenovo N20 Chromebook                |CLAPPER|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Lenovo N20P Chromebook               |CLAPPER|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Lenovo N21 Chromebook                |ENGUARDE|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Lenovo ThinkCentre Chromebox         |TIDUS  | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Lenovo ThinkPad Yoga                 |GLIMMER|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Lenovo ThinkPad 11e Chromebook       |GLIMMER|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Samsung Chromebook 2 (XE500C12)      |WINKY  |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Senkatel Edu                         |ENGUARDE|[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Toshiba Chromebook CB30              |LEON   |
-:white_check_mark:|Toshiba Chromebook CB35              |LEON   |
-:white_check_mark:|Toshiba Chromebook 2 CB30            |SWANKY |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Toshiba Chromebook 2 CB35            |SWANKY |[Firmware update](https://github.com/MattDevo/scripts) **required**
-:white_check_mark:|Toshiba Chromebook 2 CB30 (2015)     |GANDOF | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Toshiba Chromebook 2 CB35 (2015)     |GANDOF | [Firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Other Intel Haswell Chromebooks      |       |
-:white_check_mark:|Other Intel Broadwell Chromebooks    |       |Expected to work, [firmware update](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) *recommended*
-:white_check_mark:|Other Intel Bay Trail Chromebooks    |       |Expected to work, [firmware update](https://github.com/MattDevo/scripts) **required**
-:question:        |Intel Sandy/Ivy Bridge Chromebooks   |       |Requires SeaBIOS with Legacy Boot capability
-:question:        |Intel Braswell Chromebooks           |       |Requires compatible firmware, presently unavailable
-:question:        |LG Chromebase                        |MONROE |
-:x:               |ARM Chromebooks                      |       |ARM support is very unlikely
-:x:               |HP Chromebook 11 (ARM)               |SPRING, SKATE|(previously erroneously marked possible)
+status            |CPU family                           |notes
+:----------------:|-------------------------------------|------------------
+:white_check_mark:|Intel Haswell                        |
+:white_check_mark:|Intel Broadwell                      |[Firmware update](https://mrchromebox.tech/static/fwscript.html) *recommended*
+:white_check_mark:|Intel Skylake                        |
+:white_check_mark:|Intel Bay Trail                      |[Firmware update](https://mrchromebox.tech/static/fwscript.html) **required**
+:white_check_mark:|Intel Braswell                       |[Firmware update](https://mrchromebox.tech/static/fwscript.html) **required**
+:question:        |Intel Sandy/Ivy Bridge               |Requires SeaBIOS with Legacy Boot capability
+:question:        |Intel Pineview                       |Requires SeaBIOS with Legacy Boot capability
+:x:               |ARM                                  |ARM support is very unlikely
 
+If you do now know the CPU in your device, check here: https://wiki.galliumos.org/Hardware_Compatibility
 
 <a name="operating systems"></a>
 ### operating systems
@@ -232,7 +190,7 @@ Selecting a distribution which meets these needs is therefore an important part 
 
 distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | recommended? |
 ------------------ | ----- | ----- | ------- |:---:|
-GalliumOS 2.0alpha | 2.5GB | 291MB | 9 mins  | :white_check_mark: |
+GalliumOS 2.0      | 2.5GB | 291MB | 9 mins  | :white_check_mark: |
 GalliumOS 1.0      | 2.8GB | 287MB | 10 mins | :white_check_mark: |
 Lubuntu 15.10      | 2.7GB | 227MB | 18 mins | :white_check_mark: |
 Lubuntu 16.04      | 3.1GB | 185MB | 19 mins | :white_check_mark: |
