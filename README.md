@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.2.7** Updated for Ubuntu 16.04; Installs GalliumOS by default. See [changelog](#changelog).
+**Version 2.2.8** Updated for Ubuntu 16.04; Installs GalliumOS by default. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -348,5 +348,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.2.5** (20160512): update Ubuntu base/core image URL (thanks arsfeld)
   - **2.2.6** (20160619): hide eMMC partitions properly (thanks gmykhailiuta); improve -r RELEASE handling for GalliumOS; add preliminary handling for running under non-ChromeOS
   - **2.2.7** (20160810): use version-dependent Ubuntu URL to match new Canonical schemes; update Ubuntu "trusty" to 14.04.5
+  - **2.2.8** (20161002): add support for new GalliumOS hardware-specific pkgs: braswell, skylake, samus
 
 <!-- don't forget to update the version number in chrx-install! -->
