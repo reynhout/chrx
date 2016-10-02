@@ -165,18 +165,19 @@ galliumos_install_hwspecific()
   echo_title "Installing GalliumOS hardware compatibility pkgs."
   apt_get_update_if_needed
 
-  ## install proper hwspec pkg
+  ## install proper hwspec pkgs
   case "$CHRX_HWCPUF" in
     "Intel Sandy Bridge") hwspec_pkgs="galliumos-sandy" ;;
     "Intel Ivy Bridge")   hwspec_pkgs="galliumos-sandy" ;;
     "Intel Haswell")      hwspec_pkgs="galliumos-haswell" ;;
     "Intel Broadwell")    hwspec_pkgs="galliumos-broadwell" ;;
     "Intel Bay Trail")    hwspec_pkgs="galliumos-baytrail" ;;
-    #"Intel Braswell")     hwspec_pkgs="galliumos-braswell" ;;
-    #"Intel Skylake")      hwspec_pkgs="galliumos-skylake" ;;
-    ## FIXME use most-similar pkg until proper pkg is available
-    "Intel Braswell")     hwspec_pkgs="galliumos-baytrail" ;;
-    "Intel Skylake")      hwspec_pkgs="galliumos-broadwell" ;;
+    "Intel Braswell")     hwspec_pkgs="galliumos-braswell" ;;
+    "Intel Skylake")      hwspec_pkgs="galliumos-skylake" ;;
+  esac
+
+  case "$CHRX_HWID" in
+    "SAMUS")              hwspec_pkgs="galliumos-samus" ;;
   esac
 
   ## TODO: add galliumos-cbox instead of galliumos-laptop for Chromeboxes
