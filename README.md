@@ -148,11 +148,11 @@ curl -O $CHRX_WEB_ROOT/go && sh go
 ### chromebooks
 status            |CPU family                           |notes
 :----------------:|-------------------------------------|------------------
-:white_check_mark:|Intel Haswell                        |
-:white_check_mark:|Intel Broadwell                      |[Firmware update](https://mrchromebox.tech/static/fwscript.html) *recommended*
-:white_check_mark:|Intel Skylake                        |
-:white_check_mark:|Intel Bay Trail                      |[Firmware update](https://mrchromebox.tech/static/fwscript.html) **required**
-:white_check_mark:|Intel Braswell                       |[Firmware update](https://mrchromebox.tech/static/fwscript.html) **required**
+:white_check_mark:|Intel Haswell                        |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
+:white_check_mark:|Intel Broadwell                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
+:white_check_mark:|Intel Skylake                        |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
+:white_check_mark:|Intel Bay Trail                      |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
+:white_check_mark:|Intel Braswell                       |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
 :question:        |Intel Sandy/Ivy Bridge               |Requires SeaBIOS with Legacy Boot capability
 :question:        |Intel Pineview                       |Requires SeaBIOS with Legacy Boot capability
 :x:               |ARM                                  |ARM support is very unlikely
