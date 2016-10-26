@@ -193,6 +193,44 @@ install_distenv()
   apt_get_install "${CHRX_OS_DISTENV}"
 }
 
+fedora_install_distenv()
+{
+  case "${CHRX_OS_DISTENV}" in
+    fedora-desktop)
+      CHRX_OS_DISTENV="Fedora Workstation"
+      ;;
+    fedora-kde)
+      CHRX_OS_DISTENV="KDE Plasma Workspaces"
+      ;;
+    fedora-xfce)
+      CHRX_OS_DISTENV="Xfce Desktop"
+      ;;
+    fedora-lxde)
+      CHRX_OS_DISTENV="LXDE Desktop"
+      ;;
+    fedora-lxqt)
+      CHRX_OS_DISTENV="LXQt Desktop"
+      ;;
+    fedora-cinnamon)
+      CHRX_OS_DISTENV="Cinnamon Desktop"
+      ;;
+    fedora-mate)
+      CHRX_OS_DISTENV="MATE Desktop"
+      ;;
+    fedora-sugar)
+      CHRX_OS_DISTENV="Sugar Desktop Environment"
+      ;;
+    fedora-minimal)
+      CHRX_OS_DISTENV="Minimal Install"
+      ;;
+    *)
+      CHRX_OS_DISTENV="Basic Desktop"
+    ;;
+  esac
+  echo_title "Installing \"${CHRX_OS_DISTENV}\"."
+  dnf -y group install "${CHRX_OS_DISTENV}"
+}
+
 chrome_add_repos()
 {
   echo_title "Adding Google Chrome software respositories."
@@ -207,8 +245,15 @@ add_first_user()
   echo_title "Adding user \"${CHRX_USERNAME}\"."
   useradd -m ${CHRX_USERNAME} -s /bin/bash
   echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
-  usermod -a -G adm,sudo,cdrom,dip,plugdev,lpadmin ${CHRX_USERNAME}
-  #sambashare
+  case "${CHRX_OS_DISTRO}" in
+    fedora)
+      usermod -a -G adm,wheel,cdrom ${CHRX_USERNAME}
+      ;;
+    *)
+      usermod -a -G adm,sudo,cdrom,dip,plugdev,lpadmin ${CHRX_USERNAME}
+      #sambashare
+      ;;
+    esac
 }
 
 configure_grub()
@@ -259,6 +304,16 @@ set_timezone()
   dpkg-reconfigure tzdata
 }
 
+
+fedora_set_timezone()
+{
+  echo_title "Setting timezone to \"${CHRX_TZ}\"."
+  rm -f /etc/localtime
+  ln -s /usr/share/zoneinfo/${CHRX_TZ} /etc/localtime
+}
+
+
+
 install_language_support()
 {
   echo_title "Installing language support."
@@ -270,6 +325,15 @@ set_locale()
   echo_title "Setting locale to \"${CHRX_LOCALE}\"."
   update-locale LANG=${CHRX_LOCALE} LC_MESSAGES=${CHRX_LOCALE}
 }
+
+
+fedora_set_locale()
+{
+  echo_title "Setting locale to \"${CHRX_LOCALE}\"."
+  echo "LANG=${CHRX_LOCALE}" > /etc/locale.conf
+}
+
+
 
 install_google_chrome()
 {
@@ -293,6 +357,12 @@ install_kernel()
   echo_title "Installing Linux kernel and boot environment."
   apt_get_install linux-image-generic
   apt_get_install linux-headers-generic
+}
+
+fedora_install_kernel()
+{
+  echo_title "Installing Linux kernel and boot environment."
+  dnf -y install kernel
 }
 
 install_kernel_newer_than_min()
@@ -375,17 +445,55 @@ create_fakebins()
   export PATH=/tmp/fakebin:$PATH
 }
 
+install_grub()
+{
+  #apt_get_install grub-pc
+  ## GRUB: modify boot settings
+  ## unfortunately, we have to do this in the chroot.
+  if [ "${CHRX_CONFIGURE_GRUB_ENABLED}" ]; then
+    configure_grub
+  else
+    echo_title_yel "(skipping chrx grub config)"
+  fi
+  
+  grub-mkconfig -o /boot/grub/grub.cfg
+  grub-install ${CHRX_TARGET_DISK} --force
+  
+  #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
+  #apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
+  #apt-get -y ${VERBOSITY_APTGET} autoremove
+}
+
+fedora_install_grub2()
+{
+  # fedora expects anaconda to set the defaults file
+  cat << EOF > /etc/default/grub
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
+GRUB_DEFAULT=saved
+GRUB_DISABLE_SUBMENU=true
+GRUB_TERMINAL_OUTPUT="console"
+GRUB_CMDLINE_LINUX="rhgb quiet add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic noresume noswap"
+GRUB_DISABLE_RECOVERY="true"
+EOF
+  dnf -y install grub2
+  grub2-mkconfig -o /boot/grub2/grub.cfg
+  grub2-install ${CHRX_TARGET_DISK} --force
+  touch /.autorelabel
+}
+
+
 ## begin
-export DEBIAN_FRONTEND=noninteractive
-echo ${CHRX_TZ} > /etc/timezone
-
-create_fakebins
-apt_get_update
-
 #echo debug ; bash
 
 case "${CHRX_OS_DISTRO}" in
   *ubuntu)
+    export DEBIAN_FRONTEND=noninteractive
+    echo ${CHRX_TZ} > /etc/timezone
+    
+    create_fakebins
+    apt_get_update
+
     #apt_get_update
     ubuntu_update_core_image
     install_curl
@@ -413,8 +521,17 @@ case "${CHRX_OS_DISTRO}" in
     install_additional_packages
 
     write_default_fstab
+    
+    apt-get -y ${VERBOSITY_APTGET} clean
+    dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
     ;;
   galliumos)
+    export DEBIAN_FRONTEND=noninteractive
+    echo ${CHRX_TZ} > /etc/timezone
+    
+    create_fakebins
+    apt_get_update
+
     apt_get_install software-properties-common
     install_curl
     install_utilities
@@ -425,6 +542,10 @@ case "${CHRX_OS_DISTRO}" in
     galliumos_install_hwspecific
     install_additional_packages
     write_default_fstab
+    
+    apt-get -y ${VERBOSITY_APTGET} clean
+    dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
+
     ;;
 #  galliumos_apt)
 #    ubuntu_update_core_image
@@ -436,28 +557,16 @@ case "${CHRX_OS_DISTRO}" in
 #    install_distenv
 #    galliumos_install_hwspecific
 #    ;;
+  fedora)
+    fedora_install_distenv
+    fedora_install_kernel
+    fedora_set_timezone
+    fedora_set_locale
+    write_default_fstab
+    fedora_install_grub2
+    ;;
 esac
 
-#apt_get_install grub-pc
-
-## GRUB: modify boot settings
-## unfortunately, we have to do this in the chroot.
-if [ "${CHRX_CONFIGURE_GRUB_ENABLED}" ]; then
-  configure_grub
-else
-  echo_title_yel "(skipping chrx grub config)"
-fi
-
-grub-mkconfig -o /boot/grub/grub.cfg
-grub-install ${CHRX_TARGET_DISK} --force
-
-#echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
-#apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
-#apt-get -y ${VERBOSITY_APTGET} autoremove
-
-apt-get -y ${VERBOSITY_APTGET} clean
-
-dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
 
 add_first_user
 
