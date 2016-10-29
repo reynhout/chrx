@@ -475,6 +475,7 @@ GRUB_DISABLE_SUBMENU=true
 GRUB_TERMINAL_OUTPUT="console"
 GRUB_CMDLINE_LINUX="rhgb quiet add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic noresume noswap"
 GRUB_DISABLE_RECOVERY="true"
+GRUB_DISABLE_LINUX_UUID="true"
 EOF
   dnf -y install grub2
   grub2-mkconfig -o /boot/grub2/grub.cfg
@@ -524,6 +525,7 @@ case "${CHRX_OS_DISTRO}" in
     
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
+    install_grub
     ;;
   galliumos)
     export DEBIAN_FRONTEND=noninteractive
@@ -545,7 +547,7 @@ case "${CHRX_OS_DISTRO}" in
     
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
-
+    install_grub
     ;;
 #  galliumos_apt)
 #    ubuntu_update_core_image
