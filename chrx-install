@@ -497,15 +497,16 @@ set_customizations_galliumos()
 
 set_customizations_fedora()
 {
-  # if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` ]; then
-  #   CONF_FILES="
-  #     etc/udev/rules.d/99-hide-disks-mmc.rules
-  #   "
-  # else
-  #   CONF_FILES="
-  #     etc/udev/rules.d/99-hide-disks-sda.rules
-  #   "
-  # fi
+  if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` ]; then
+    CONF_FILES="
+      etc/dracut.conf.d/mmc.conf
+      etc/udev/rules.d/99-hide-disks-mmc.rules
+    "
+  else
+    CONF_FILES="
+      etc/udev/rules.d/99-hide-disks-sda.rules
+    "
+  fi
   
   CHRX_CONFIGURE_GRUB_ENABLED=
 }
@@ -708,7 +709,7 @@ validate_config()
       CHRX_OS_DISTRO_DISPLAYNAME='Fedora'
       osv_method="fedora"
       customization_set="fedora"
-      valid_envs="desktop,kde,xfce,lxde,mate,cinnamon,sugar,minimal"
+      valid_envs="desktop,kde,xfce,lxde,mate,cinnamon,sugar,minimal,basic"
       ;;
     *)
       CHRX_OS_DISTRO_DISPLAYNAME='Unix/Linux'
@@ -871,9 +872,9 @@ do_install()
 
   ## get customization files
   mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
-  #cp -rf dist/* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  #cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  #curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
+  cp -rf dist/* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 
   if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
     install_customizations
