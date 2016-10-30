@@ -497,17 +497,47 @@ set_customizations_galliumos()
 
 set_customizations_fedora()
 {
+  SKEL_FILES="
+    etc/skel/.xbindkeysrc
+    etc/skel/.xsessionrc
+  "
+
+  CONF_FILES="
+    etc/X11/xorg.conf
+    etc/X11/xorg.conf.d/20-intel-graphics.conf
+    etc/X11/xorg.conf.d/50-cyapa-touchpad.conf
+  "
+
   if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` ]; then
-    CONF_FILES="
+    CONF_FILES+="
       etc/dracut.conf.d/mmc.conf
       etc/udev/rules.d/99-hide-disks-mmc.rules
     "
   else
-    CONF_FILES="
+    CONF_FILES+="
       etc/udev/rules.d/99-hide-disks-sda.rules
     "
   fi
-  
+
+  EXEC_FILES="
+    etc/rc.local
+    etc/initramfs-tools/scripts/init-top/unbind_ehci
+    etc/pm/sleep.d/50-audio-intel-driver
+    etc/pm/sleep.d/89-wifi-ath9k-module
+  "
+    #etc/init.d/chrx-firstboot
+
+  APPENDED_FILES="
+    etc/sysctl.conf
+    etc/systemd/logind.conf
+  "
+
+  POST_INSTALL_CONF_FILES="
+    etc/modprobe.d/ath9k.conf
+    etc/modprobe.d/snd-hda-intel.conf
+    etc/udev/rules.d/10-disable-ehci.rules
+  "
+
   CHRX_CONFIGURE_GRUB_ENABLED=
 }
 
@@ -533,6 +563,22 @@ install_customizations()
   done
   for fpath in ${APPENDED_FILES}; do
     cat ./dist/${fpath}-append >> ${CHRX_INSTALL_ROOT}/${fpath}
+  done
+}
+
+install_post_install_customizations()
+{
+  echo_info "\nInstalling post-install chrx customization files for ${CHRX_OS_DISTRO_DISPLAYNAME}."
+
+  for fpath in ${POST_INSTALL_CONF_FILES}; do
+    if [ ! -d "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`" ]; then
+      #echo mkdir -p "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`"
+      install ${VERBOSITY_INSTALL} -d "${CHRX_INSTALL_ROOT}/`dirname ${fpath}`"
+    fi
+  done
+
+  for fpath in ${POST_INSTALL_CONF_FILES}; do
+    install ${VERBOSITY_INSTALL} -m 644 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
   done
 }
 
@@ -872,9 +918,9 @@ do_install()
 
   ## get customization files
   mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  #cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  #curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
-  cp -rf dist/* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
+  #cp -rf dist/* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 
   if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
     install_customizations
@@ -900,6 +946,12 @@ do_install()
   # | tee -a ${CHRX_LOGFILE}
   echo "<< exiting chroot"
 
+
+  if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
+    install_post_install_customizations
+  else
+    echo_warn "\n(skipping post-install installation of chrx customization files)"
+  fi
 
   ## untested bits from ChrUbuntu ... TODO: test
   #if echo `crossystem hwid` | grep -q "^PANTHER "; then

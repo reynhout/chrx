@@ -222,6 +222,7 @@ fedora_install_distenv()
       ;;
     fedora-minimal)
       CHRX_OS_DISTENV="Minimal Install"
+      dnf -y install wpa_supplicant
       ;;
     *)
       CHRX_OS_DISTENV="Basic Desktop"
@@ -229,7 +230,6 @@ fedora_install_distenv()
   esac
   echo_title "Installing \"${CHRX_OS_DISTENV}\"."
   dnf -y group install "${CHRX_OS_DISTENV}"
-  dnf -y install wpa_supplicant
 }
 
 chrome_add_repos()
@@ -331,7 +331,19 @@ set_locale()
 fedora_set_locale()
 {
   echo_title "Setting locale to \"${CHRX_LOCALE}\"."
-  echo "LANG=${CHRX_LOCALE}" > /etc/locale.conf
+  echo "LANG=${CHRX_LOCALE,,.*}" > /etc/locale.conf
+  keymap=${CHRX_LOCALE:3:2}
+  keymap=${keycode,,}
+  if [ -e "/usr/share/locale/${keymap}"]; then
+    echo "KEYMAP=${keymap}" > /etc/vconsole.conf
+    cat << EOF > /etc/X11/xorg.conf.d/00-keyboard.conf
+Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "${keymap}"
+EndSection
+EOF
+  fi
 }
 
 
@@ -345,13 +357,30 @@ install_google_chrome()
   apt_get_install google-chrome-stable
 }
 
+fedora_install_google_chrome()
+{
+  [ ! -x /usr/bin/X ] && return ## only if we have X
+
+  echo_title "Installing Google Chrome."
+  dnf -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+}
+
 install_desktop_support()
 {
   [ ! -x /usr/bin/X ] && return ## only if we have X
 
   echo_title "Installing desktop compatibility pkgs."
-  apt_get_install xbindkeys xdotool xbacklight pulseaudio-utils xvkbd
+  apt_get_install xbindkeys xdotool xbacklight xvkbd
 }
+
+fedora_install_desktop_support()
+{
+  [ ! -x /usr/bin/X ] && return ## only if we have X
+
+  echo_title "Installing desktop compatibility pkgs."
+  dnf -y install xbindkeys xdotool xbacklight xvkbd
+}
+
 
 install_kernel()
 {
@@ -475,7 +504,7 @@ GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
 GRUB_DEFAULT=saved
 GRUB_DISABLE_SUBMENU=true
 GRUB_TERMINAL_OUTPUT="console"
-GRUB_CMDLINE_LINUX="rhgb quiet add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic"
+GRUB_CMDLINE_LINUX="rhgb quiet add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic elevator=noop noswap"
 GRUB_DISABLE_RECOVERY="true"
 GRUB_DISABLE_LINUX_UUID="true"
 EOF
@@ -563,6 +592,8 @@ case "${CHRX_OS_DISTRO}" in
 #    ;;
   fedora)
     fedora_install_distenv
+    fedora_install_desktop_support
+    fedora_install_google_chrome
     fedora_install_kernel
     fedora_set_timezone
     fedora_set_locale
