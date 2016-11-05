@@ -305,15 +305,12 @@ set_timezone()
   dpkg-reconfigure tzdata
 }
 
-
 fedora_set_timezone()
 {
   echo_title "Setting timezone to \"${CHRX_TZ}\"."
   rm -f /etc/localtime
   ln -s /usr/share/zoneinfo/${CHRX_TZ} /etc/localtime
 }
-
-
 
 install_language_support()
 {
@@ -327,26 +324,25 @@ set_locale()
   update-locale LANG=${CHRX_LOCALE} LC_MESSAGES=${CHRX_LOCALE}
 }
 
-
 fedora_set_locale()
 {
-  echo_title "Setting locale to \"${CHRX_LOCALE}\"."
-  echo "LANG=${CHRX_LOCALE,,.*}" > /etc/locale.conf
+  CHRX_LOCALE= ${CHRX_LOCALE/UTF/utf}
   keymap=${CHRX_LOCALE:3:2}
-  keymap=${keycode,,}
-  if [ -e "/usr/share/locale/${keymap}"]; then
-    echo "KEYMAP=${keymap}" > /etc/vconsole.conf
-    cat << EOF > /etc/X11/xorg.conf.d/00-keyboard.conf
+  keymap=${keymap,,}
+
+  echo_title "Setting locale to \"${CHRX_LOCALE}\"."
+  echo "LANG=${CHRX_LOCALE}" > /etc/locale.conf
+  
+  echo_title "Setting keyboard map to \"${keymap}\"."
+  echo "KEYMAP=${keymap}" > /etc/vconsole.conf
+  cat << EOF > /etc/X11/xorg.conf.d/00-keyboard.conf
 Section "InputClass"
         Identifier "system-keyboard"
         MatchIsKeyboard "on"
         Option "XkbLayout" "${keymap}"
 EndSection
 EOF
-  fi
 }
-
-
 
 install_google_chrome()
 {
@@ -380,7 +376,6 @@ fedora_install_desktop_support()
   echo_title "Installing desktop compatibility pkgs."
   dnf -y install xbindkeys xdotool xbacklight xvkbd
 }
-
 
 install_kernel()
 {
