@@ -212,6 +212,7 @@ identify_hardware()
     JERRY_???-???-???-C*) _x='NG|ARM|2015|Poin2 Chromebook 11' ;;
     JERRY_???-???-???-D*) _x='NG|ARM|2015|eduGear Chromebook K Series' ;;
     JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
+    JERRY_???-???-???-F*) _x='NG|ARM|2016|Epik Chromebook' ;;
     JERRY*)               _x='NG|ARM|201x|(unknown JERRY)' ;;
     KIP_[ABC]*)     _x='FS|BYT|2015|HP Chromebook 11 G3/G4' ;;
     KIP_[DE]*)      _x='FS|BYT|2015|HP Chromebook 14 G4' ;;
@@ -245,7 +246,8 @@ identify_hardware()
     PIT*)           _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
     PI*)            _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
     QUAWKS*)        _x='FS|BYT|2014|ASUS Chromebook C300' ;;
-    REKS*)          _x='FS|BSW|2016|Lenovo N22 Chromebook' ;;
+    REKS_???-???-???-B*) _x='FS|BSW|2016|Lenovo N42 Chromebook' ;;
+    REKS_???-???-???-*)  _x='FS|BSW|2016|Lenovo N22 Chromebook' ;;
     RELM_???-A*)    _x='FS|BSW|2016|CTL NL61 Chromebook' ;;
     RELM_???-B*)    _x='FS|BSW|2016|Edxis Education Chromebook' ;;
     RELM_???-C*)    _x='FS|BSW|2016|Quanta OEM Chromebook' ;;
