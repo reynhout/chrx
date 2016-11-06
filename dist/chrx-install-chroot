@@ -586,10 +586,10 @@ case "${CHRX_OS_DISTRO}" in
 #    galliumos_install_hwspecific
 #    ;;
   fedora)
+    fedora_install_kernel
     fedora_install_distenv
     fedora_install_desktop_support
     fedora_install_google_chrome
-    fedora_install_kernel
     fedora_set_timezone
     fedora_set_locale
     write_default_fstab
