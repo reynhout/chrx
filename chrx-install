@@ -512,6 +512,7 @@ set_customizations_fedora()
     etc/X11/xorg.conf.d/20-intel-graphics.conf
     etc/X11/xorg.conf.d/50-cyapa-touchpad.conf
     etc/X11/xorg.conf.d/70-synaptics.conf
+    etc/selinux/config
   "
 
   if `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk`; then
@@ -914,7 +915,7 @@ do_install()
 
 
   ## chroot
-  export CHRX_OS_DISTRO CHRX_OS_ENVIRONMENT CHRX_OS_DISTENV
+  export CHRX_OS_DISTRO CHRX_OS_ENVIRONMENT CHRX_OS_DISTENV CHRX_CUSTOMIZATION_ENABLED
   export CHRX_OS_DISTRO_DISPLAYNAME CHRX_HWCPUF
   export CHRX_TZ CHRX_LOCALE CHRX_USERNAME
   export CHRX_TARGET_DISK CHRX_ROOT_PARTITION CHRX_CACHE_DIR CHRX_INSTALL_ROOT
@@ -973,15 +974,6 @@ do_install()
 
 	EOMSG
 
-  if [ "${osv_method}" = "fedora" ]; then
-    cat <<- EOMSG
-    
-  	The first boot will take several minutes whilst SELinux is initialising.
-  	After the first boot, your PC will be rebooted automatically.
-	EOMSG
-    
-  fi
-  
   cp -r ${CHRX_CACHE0_DIR}/chrx-* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}/
 }
 

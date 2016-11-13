@@ -506,9 +506,14 @@ EOF
   dnf -y install grub2
   grub2-mkconfig -o /boot/grub2/grub.cfg
   grub2-install ${CHRX_TARGET_DISK} --force
-  touch /.autorelabel
 }
 
+fedora_set_selinux_autolabel()
+{
+  if [ -z "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
+    touch /.autorelabel
+  fi
+}
 
 ## begin
 #echo debug ; bash
@@ -594,6 +599,7 @@ case "${CHRX_OS_DISTRO}" in
     fedora_set_locale
     write_default_fstab
     fedora_install_grub2
+    fedora_set_selinux_autolabel
     ;;
 esac
 
