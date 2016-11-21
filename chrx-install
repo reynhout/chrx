@@ -40,11 +40,14 @@ Usage: $0 [ option ... ]
 
 Options
    -d DISTRIBUTION OS-specific distribution to install [${CHRX_OS_DISTRO}]
-                   (galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu)
+                   (galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu, fedora)
    -e ENVIRONMENT  distribution-specific environment [${CHRX_OS_ENVIRONMENT}]
                    (desktop, minimal, standard, server)
+                   For Fedora use desktop for standard Fedora Workstaion, or a spin
+                   (desktop, kde, xfce, lxde, mate, cinnamon, sugar)
    -r RELEASE      distribution release number or name [${CHRX_OS_RELEASE}]
                    (lts, latest, dev, 15.10, 16.04, wily, xenial, etc)
+                   For Fedora (23, 24, 25)
    -a ARCH         processor architecture (i386, amd64) [${CHRX_OS_ARCH}]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) [${CHRX_TARGET_DISK}]
    -p PACKAGE      additional packages to install, may repeat [${CHRX_ADD_PKGS}]
@@ -415,6 +418,26 @@ determine_osv_galliumos()
   esac
 }
 
+determine_osv_fedora()
+{
+  msg_os_version="${ANSI_YEL}(CAUTION: not well tested!)${ANSI_RST}"
+  case "${CHRX_OS_RELEASE}" in
+    latest)
+      CHRX_OS_VERSION=24
+      ;;
+    25)
+      msg_os_version="${ANSI_RED}(CAUTION: not tested!)${ANSI_RST}"
+      CHRX_OS_VERSION=${CHRX_OS_RELEASE}
+      ;;
+    *)
+      CHRX_OS_VERSION=${CHRX_OS_RELEASE}
+      ;;
+  esac
+  
+  CHRX_OS_CORE_IMAGE_URL='https://download.fedoraproject.org/pub/fedora/linux/releases/24/Docker/x86_64/images/Fedora-Docker-Base-24-1.2.x86_64.tar.xz'
+  
+}
+
 set_customizations_ubuntu()
 {
   SKEL_FILES="
@@ -433,7 +456,7 @@ set_customizations_ubuntu()
     etc/X11/xorg.conf.d/50-cyapa-touchpad.conf
   "
 
-  if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` ]; then
+  if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` -eq 0 ]; then
     CONF_FILES+="
       etc/udev/rules.d/99-hide-disks-mmc.rules
     "
@@ -461,7 +484,7 @@ set_customizations_ubuntu()
 
 set_customizations_galliumos()
 {
-  if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` ]; then
+  if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` -eq 0 ]; then
     CONF_FILES="
       etc/udev/rules.d/99-hide-disks-mmc.rules
     "
@@ -470,6 +493,51 @@ set_customizations_galliumos()
       etc/udev/rules.d/99-hide-disks-sda.rules
     "
   fi
+
+  CHRX_CONFIGURE_GRUB_ENABLED=
+}
+
+set_customizations_fedora()
+{
+  SKEL_FILES="
+    etc/skel/.xbindkeysrc
+    etc/skel/.config/autostart/xbindkeys.desktop
+    etc/skel/.config/autostart/chrx_touchpad_support.desktop
+  "
+
+  CONF_FILES="
+    etc/modprobe.d/ath9k.conf
+    etc/modprobe.d/snd-hda-intel.conf
+    etc/udev/rules.d/10-disable-ehci.rules
+    etc/X11/xorg.conf.d/20-intel-graphics.conf
+    etc/X11/xorg.conf.d/50-cyapa-touchpad.conf
+    etc/X11/xorg.conf.d/70-synaptics.conf
+    etc/selinux/config
+  "
+
+  if `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk`; then
+    CONF_FILES+="
+      etc/dracut.conf.d/mmc.conf
+      etc/udev/rules.d/99-hide-disks-mmc.rules
+    "
+  else
+    CONF_FILES+="
+      etc/udev/rules.d/99-hide-disks-sda.rules
+    "
+  fi
+
+  EXEC_FILES="
+    etc/rc.local
+    etc/initramfs-tools/scripts/init-top/unbind_ehci
+    etc/pm/sleep.d/50-audio-intel-driver
+    etc/pm/sleep.d/89-wifi-ath9k-module
+    etc/skel/.local/bin/chrx_touchpad_support.sh
+  "
+
+  APPENDED_FILES="
+    etc/sysctl.conf
+    etc/systemd/logind.conf
+  "
 
   CHRX_CONFIGURE_GRUB_ENABLED=
 }
@@ -668,6 +736,12 @@ validate_config()
       customization_set="galliumos"
       valid_envs="desktop"
       ;;
+    fedora)
+      CHRX_OS_DISTRO_DISPLAYNAME='Fedora'
+      osv_method="fedora"
+      customization_set="fedora"
+      valid_envs="desktop,kde,xfce,lxde,mate,cinnamon,sugar,minimal,basic"
+      ;;
     *)
       CHRX_OS_DISTRO_DISPLAYNAME='Unix/Linux'
       msg_os_dist="${ANSI_RED}invalid${ANSI_RST}"
@@ -684,11 +758,14 @@ validate_config()
   case "${osv_method}" in
     ubuntu)    determine_osv_ubuntu ;;
     galliumos) determine_osv_galliumos ;;
+    fedora) determine_osv_fedora ;;
+
   esac
 
   case "${customization_set}" in
     ubuntu)    set_customizations_ubuntu ;;
     galliumos) set_customizations_galliumos ;;
+    fedora)    set_customizations_fedora ;;
   esac
 
   case "${CHRX_OS_ARCH}" in
@@ -757,11 +834,50 @@ do_install()
   ## "--retry 8 --continue-at -" opts won't help when piped to tar, and
   ## /tmp is only 1GB on some devices, so we have no good options here.
   ## TODO: add opts to other (non-piped) curl calls.
-  curl -o - ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xzp -C ${CHRX_INSTALL_ROOT}
-  if [ ${PIPESTATUS[0]} -ne 0 -o ${PIPESTATUS[1]} -ne 0 ]; then
-    echo_fail "fatal: unable to download and extract core image file."
-    exit 1
-  fi
+  case "${osv_method}" in
+  fedora)
+    ## There is no good source of images for all versions of fedora, so
+    ## pull in a docker image and use this to install a core version
+    ## of fedora
+    mkdir -p ${CHRX_INSTALL_ROOT}/fedora
+    curl -L -o - ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xJp -C ${CHRX_INSTALL_ROOT}/fedora
+    if [ ${PIPESTATUS[0]} -ne 0 -o ${PIPESTATUS[1]} -ne 0 ]; then
+      echo_fail "fatal: unable to download and extract core image file."
+      exit 1
+    fi
+    tar xfp  ${CHRX_INSTALL_ROOT}/fedora/*/layer.tar -C ${CHRX_INSTALL_ROOT}/fedora
+    cat /etc/resolv.conf > ${CHRX_INSTALL_ROOT}/fedora/etc/resolv.conf
+   
+    eval_crit mount -o bind /proc    ${CHRX_INSTALL_ROOT}/fedora/proc
+    eval_crit mount -o bind /dev     ${CHRX_INSTALL_ROOT}/fedora/dev
+    eval_crit mount -o bind /dev/pts ${CHRX_INSTALL_ROOT}/fedora/dev/pts
+    eval_crit mount -o bind /sys     ${CHRX_INSTALL_ROOT}/fedora/sys
+    eval_crit mount -o bind /run     ${CHRX_INSTALL_ROOT}/fedora/run
+
+    eval_crit mount -o bind ${CHRX_INSTALL_ROOT}     ${CHRX_INSTALL_ROOT}/fedora/mnt
+    
+    echo ">> entering installation chroot"
+    chroot ${CHRX_INSTALL_ROOT}/fedora /bin/bash -c "dnf -y --nogpgcheck --releasever=${CHRX_OS_VERSION} --installroot=/mnt/ group install core"
+    echo "<< exiting installation chroot"
+
+    umount ${CHRX_INSTALL_ROOT}/fedora/mnt
+    umount ${CHRX_INSTALL_ROOT}/fedora/proc
+    umount ${CHRX_INSTALL_ROOT}/fedora/dev/pts
+    umount ${CHRX_INSTALL_ROOT}/fedora/dev
+    umount ${CHRX_INSTALL_ROOT}/fedora/sys
+    umount ${CHRX_INSTALL_ROOT}/fedora/run
+
+    rm -rf ${CHRX_INSTALL_ROOT}/fedora
+    ;;
+  ubuntu)
+    ;&
+  galliumos)
+    curl -o - ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xzp -C ${CHRX_INSTALL_ROOT}
+    if [ ${PIPESTATUS[0]} -ne 0 -o ${PIPESTATUS[1]} -ne 0 ]; then
+      echo_fail "fatal: unable to download and extract core image file."
+      exit 1
+    fi
+  esac
 
   eval_crit mount -o bind /proc    ${CHRX_INSTALL_ROOT}/proc
   eval_crit mount -o bind /dev     ${CHRX_INSTALL_ROOT}/dev
@@ -789,6 +905,7 @@ do_install()
   mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
   cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
   curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
+  #cp -rf dist/* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 
   if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
     install_customizations
@@ -798,7 +915,7 @@ do_install()
 
 
   ## chroot
-  export CHRX_OS_DISTRO CHRX_OS_ENVIRONMENT CHRX_OS_DISTENV
+  export CHRX_OS_DISTRO CHRX_OS_ENVIRONMENT CHRX_OS_DISTENV CHRX_CUSTOMIZATION_ENABLED
   export CHRX_OS_DISTRO_DISPLAYNAME CHRX_HWCPUF
   export CHRX_TZ CHRX_LOCALE CHRX_USERNAME
   export CHRX_TARGET_DISK CHRX_ROOT_PARTITION CHRX_CACHE_DIR CHRX_INSTALL_ROOT
@@ -813,7 +930,6 @@ do_install()
   chroot ${CHRX_INSTALL_ROOT} /bin/bash -c ${CHRX_CACHE_DIR}/chrx-install-chroot
   # | tee -a ${CHRX_LOGFILE}
   echo "<< exiting chroot"
-
 
   ## untested bits from ChrUbuntu ... TODO: test
   #if echo `crossystem hwid` | grep -q "^PANTHER "; then
@@ -834,6 +950,7 @@ do_install()
   elapsed_time=$(( (${finish_secs}-${start_secs})/60 ))m$(( (${finish_secs}-${start_secs})%60 ))s
 
   cat <<- EOMSG
+
 
   ${ANSI_YEL}chrx installer is finished!${ANSI_RST}
 

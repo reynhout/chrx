@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Chrx Touchpad Customizations
+Exec=chrx_touchpad_support.sh
+StartupNotify=false
+NoDisplay=true
+X-GNOME-Autostart-Phase=Initialization
+X-KDE-autostart-phase=1
