@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.2.8"
+CHRX_VERSION="2.3"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -26,6 +26,7 @@ VERBOSITY=""
 VERBOSITY_APTGET="-q"
 VERBOSITY_MKFS="-q"
 VERBOSITY_CURL="-#"
+VERBOSITY_DNF=""
 VERBOSITY_INSTALL=""
 
 CHRX_PROMPT_ENABLED=1
@@ -40,23 +41,27 @@ Usage: $0 [ option ... ]
 
 Options
    -d DISTRIBUTION OS-specific distribution to install [${CHRX_OS_DISTRO}]
-                   (galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu, fedora)
+                     galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu,
+                     fedora
    -e ENVIRONMENT  distribution-specific environment [${CHRX_OS_ENVIRONMENT}]
-                   (desktop, minimal, standard, server)
-                   For Fedora use desktop for standard Fedora Workstaion, or a spin
-                   (desktop, kde, xfce, lxde, mate, cinnamon, sugar)
+                     galliumos: desktop
+                     ubuntu etc: desktop, minimal, standard, server
+                     fedora: desktop, workstation, kde, xfce, lxde, mate,
+                       cinnamon, sugar
    -r RELEASE      distribution release number or name [${CHRX_OS_RELEASE}]
-                   (lts, latest, dev, 15.10, 16.04, wily, xenial, etc)
-                   For Fedora (23, 24, 25)
+                     galliumos: latest, 2.0, xenon, nightly
+                     ubuntu etc: latest, lts, dev, 16.04, 16.10, xenial, etc
+                     fedora: latest, 23, 24, 25
    -a ARCH         processor architecture (i386, amd64) [${CHRX_OS_ARCH}]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) [${CHRX_TARGET_DISK}]
    -p PACKAGE      additional packages to install, may repeat [${CHRX_ADD_PKGS}]
-                   (kodi, minecraft, steam, etc, see chrx.org for more)
+                     kodi, minecraft, steam, etc, see chrx.org for more
+                     (not yet supported on fedora)
    -H HOSTNAME     hostname for new system [${CHRX_HOSTNAME}]
    -U USERNAME     username of first created user [${CHRX_USERNAME}]
    -L LOCALE       locale for new system [${CHRX_LOCALE}]
    -Z TIMEZONE     timezone for new system, Eggert convention [${CHRX_TZ}]
-                   (America/San_Francisco, Europe/Amsterdam, Etc/UTC, etc)
+                     America/San_Francisco, Europe/Amsterdam, Etc/UTC, etc
    -n              disable success/failure notifications
    -s              skip all customization, install stock OS only
    -y              run non-interactively, take defaults and do not confirm
@@ -335,6 +340,7 @@ determine_osv_ubuntu()
     vivid)  CHRX_OS_VERSION="15.04" ;;
     wily)   CHRX_OS_VERSION="15.10" ;;
     xenial) CHRX_OS_VERSION="16.04.1" ;;
+    zesty)  CHRX_OS_VERSION="16.10" ;;
     dev)    get_os_version_and_core_url_dev_ubuntu $CHRX_OS_RELEASE ;;
     lts)    get_os_version_ubuntu $CHRX_OS_RELEASE ;;
     latest) get_os_version_ubuntu $CHRX_OS_RELEASE ;;
@@ -346,10 +352,10 @@ determine_osv_ubuntu()
   case "${CHRX_OS_VERSION}" in
     '14.04'|'14.04.1'|'14.04.2'|'14.04.3'|'14.04.4')
       _ubuntu_corebase='core'
-      msg_os_version="${ANSI_YEL}(CAUTION: not well tested!)${ANSI_RST}"
+      msg_os_version="${ANSI_YEL}(CAUTION: not well-tested!)${ANSI_RST}"
       ;;
     "14.04.*")
-      msg_os_version="${ANSI_YEL}(CAUTION: not well tested!)${ANSI_RST}"
+      msg_os_version="${ANSI_YEL}(CAUTION: not well-tested!)${ANSI_RST}"
       ;;
     '14.10'|'15.04'|'15.10')
       msg_os_version="${ANSI_YEL}(ERROR: no longer available!)${ANSI_RST}"
@@ -359,6 +365,7 @@ determine_osv_ubuntu()
       _ubuntu_corebase='core'
       ;;
     "16.04.*") ;;
+    '16.10') ;;
     *)
       if [ "`echo ${CHRX_OS_VERSION} | grep "^[0-9.][0-9.]*$"`" ]; then
         msg_os_version="${ANSI_YEL}(CAUTION: untested!)${ANSI_RST}"
@@ -420,17 +427,21 @@ determine_osv_galliumos()
 
 determine_osv_fedora()
 {
-  msg_os_version="${ANSI_YEL}(CAUTION: not well tested!)${ANSI_RST}"
+  msg_os_version="${ANSI_YEL}(CAUTION: chrx support is beta!)${ANSI_RST}"
   case "${CHRX_OS_RELEASE}" in
     latest)
       CHRX_OS_VERSION=24
+      ;;
+    22,23,24)
+      CHRX_OS_VERSION=${CHRX_OS_RELEASE}
       ;;
     25)
       msg_os_version="${ANSI_RED}(CAUTION: not tested!)${ANSI_RST}"
       CHRX_OS_VERSION=${CHRX_OS_RELEASE}
       ;;
     *)
-      CHRX_OS_VERSION=${CHRX_OS_RELEASE}
+      msg_os_version="${ANSI_RED}(invalid!)${ANSI_RST}"
+      FAIL=1
       ;;
   esac
   
@@ -740,7 +751,7 @@ validate_config()
       CHRX_OS_DISTRO_DISPLAYNAME='Fedora'
       osv_method="fedora"
       customization_set="fedora"
-      valid_envs="desktop,kde,xfce,lxde,mate,cinnamon,sugar,minimal,basic"
+      valid_envs="desktop,workstation,kde,xfce,lxde,mate,cinnamon,sugar,minimal,basic"
       ;;
     *)
       CHRX_OS_DISTRO_DISPLAYNAME='Unix/Linux'
@@ -772,6 +783,15 @@ validate_config()
     i386|amd64) ;;
     *) msg_os_arch="${ANSI_RED}invalid${ANSI_RST}" ; FAIL=1 ;;
   esac
+
+  if [ "$CHRX_ADD_PKGS" ]; then
+    case "${CHRX_OS_DISTRO}" in
+      fedora)
+        msg_os_pkgs="${ANSI_YEL}NOTE: not yet supported on ${CHRX_OS_DISTRO_DISPLAYNAME}${ANSI_RST}"
+        CHRX_ADD_PKGS=
+        ;;
+    esac
+  fi
 }
 
 confirm_config()
@@ -788,7 +808,7 @@ confirm_config()
         version:          ${CHRX_OS_VERSION} ${msg_os_version}
       architecture (-a):  ${CHRX_OS_ARCH} ${msg_os_arch}
       target_disk (-t):   ${CHRX_TARGET_DISK}
-      packages (-p):      ${CHRX_ADD_PKGS}
+      packages (-p):      ${CHRX_ADD_PKGS}${msg_os_pkgs}
 
     System Configuration
       hostname (-H):      ${CHRX_HOSTNAME}
@@ -835,6 +855,13 @@ do_install()
   ## /tmp is only 1GB on some devices, so we have no good options here.
   ## TODO: add opts to other (non-piped) curl calls.
   case "${osv_method}" in
+  galliumos|ubuntu)
+    curl -o - ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xzp -C ${CHRX_INSTALL_ROOT}
+    if [ ${PIPESTATUS[0]} -ne 0 -o ${PIPESTATUS[1]} -ne 0 ]; then
+      echo_fail "fatal: unable to download and extract core image file."
+      exit 1
+    fi
+    ;;
   fedora)
     ## There is no good source of images for all versions of fedora, so
     ## pull in a docker image and use this to install a core version
@@ -856,9 +883,8 @@ do_install()
 
     eval_crit mount -o bind ${CHRX_INSTALL_ROOT}     ${CHRX_INSTALL_ROOT}/fedora/mnt
     
-    echo ">> entering installation chroot"
-    chroot ${CHRX_INSTALL_ROOT}/fedora /bin/bash -c "dnf -y --nogpgcheck --releasever=${CHRX_OS_VERSION} --installroot=/mnt/ group install core"
-    echo "<< exiting installation chroot"
+    echo_info "\nInstalling Fedora core packages..."
+    chroot ${CHRX_INSTALL_ROOT}/fedora /bin/bash -c "dnf ${VERBOSITY_DNF} -y --nogpgcheck --releasever=${CHRX_OS_VERSION} --installroot=/mnt/ group install core"
 
     umount ${CHRX_INSTALL_ROOT}/fedora/mnt
     umount ${CHRX_INSTALL_ROOT}/fedora/proc
@@ -869,14 +895,6 @@ do_install()
 
     rm -rf ${CHRX_INSTALL_ROOT}/fedora
     ;;
-  ubuntu)
-    ;&
-  galliumos)
-    curl -o - ${VERBOSITY_CURL} ${CHRX_OS_CORE_IMAGE_URL} | tar xzp -C ${CHRX_INSTALL_ROOT}
-    if [ ${PIPESTATUS[0]} -ne 0 -o ${PIPESTATUS[1]} -ne 0 ]; then
-      echo_fail "fatal: unable to download and extract core image file."
-      exit 1
-    fi
   esac
 
   eval_crit mount -o bind /proc    ${CHRX_INSTALL_ROOT}/proc
@@ -920,7 +938,7 @@ do_install()
   export CHRX_TZ CHRX_LOCALE CHRX_USERNAME
   export CHRX_TARGET_DISK CHRX_ROOT_PARTITION CHRX_CACHE_DIR CHRX_INSTALL_ROOT
   export CHRX_OS_RELEASE CHRX_ADD_PKGS CHRX_CONFIGURE_GRUB_ENABLED
-  export VERBOSITY VERBOSITY_APTGET VERBOSITY_CURL
+  export VERBOSITY VERBOSITY_APTGET VERBOSITY_CURL VERBOSITY_DNF
   export ANSI_RED ANSI_YEL ANSI_GRN ANSI_VIO ANSI_BLU ANSI_WHT ANSI_RST
   export -f echo_info ## this does not reach the chroot
 
@@ -1001,6 +1019,7 @@ parse_opts()
          VERBOSITY_APTGET=""
          VERBOSITY_MKFS=""
          VERBOSITY_CURL=""
+         VERBOSITY_DNF="-v"
          VERBOSITY_INSTALL="-v"
          ;;
       h) usage ;;

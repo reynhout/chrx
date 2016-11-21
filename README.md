@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.2.8** Updated for Ubuntu 16.04; Installs GalliumOS by default. See [changelog](#changelog).
+**Version 2.3** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -58,26 +58,33 @@ Usage: chrx [ option ... ]
 
 Options
    -d DISTRIBUTION OS-specific distribution to install [galliumos]
-                   (galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu)
+                     galliumos, ubuntu, lubuntu, xubuntu, kubuntu, edubuntu,
+                     fedora
    -e ENVIRONMENT  distribution-specific environment [desktop]
-                   (desktop, minimal, standard, server)
-   -r RELEASE      distribution release number or name []
-                   (lts, latest, dev, 15.10, 16.04, wily, xenial, etc)
+                     galliumos: desktop
+                     ubuntu etc: desktop, minimal, standard, server
+                     fedora: desktop, workstation, kde, xfce, lxde, mate,
+                       cinnamon, sugar
+   -r RELEASE      distribution release number or name [latest]
+                     galliumos: latest, 2.0, xenon, nightly
+                     ubuntu etc: latest, lts, dev, 16.04.1, xenial, etc
+                     fedora: latest, 23, 24, 25
    -a ARCH         processor architecture (i386, amd64) [amd64]
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
-   -p PACKAGE      additional packages, quote or repeat for multiple []
-                   (chrome, kodi, minecraft, steam, etc)
+   -p PACKAGE      additional packages to install, may repeat []
+                     kodi, minecraft, steam, etc, see chrx.org for more
+                     (not yet supported on fedora)
    -H HOSTNAME     hostname for new system [chrx]
    -U USERNAME     username of first created user [chrx]
    -L LOCALE       locale for new system [en_US.UTF-8]
    -Z TIMEZONE     timezone for new system, Eggert convention [America/New_York]
-                   (America/San_Francisco, Europe/Amsterdam, Etc/UTC, etc)
+                     America/San_Francisco, Europe/Amsterdam, Etc/UTC, etc
    -n              disable success/failure notifications
    -s              skip all customization, install stock OS only
    -y              run non-interactively, take defaults and do not confirm
    -v              increase output verbosity
    -h              show this help
-  
+
   Default values are shown in brackets, e.g.: [default].
   
   If TARGETDISK is not specified, chrx will select the internal SSD.
@@ -89,6 +96,8 @@ Options
 
 **chrx** can install additional software packages after installing
 your new operating system, using the `-p PACKAGE` option.
+
+This option is not yet supported on Fedora!
 
 You can install any package in the Ubuntu repositories via this
 method, plus a few non-Ubuntu packages for which **chrx** has
@@ -170,6 +179,7 @@ status| OS  | distribution | notes
 :white_check_mark:|Linux|[Kubuntu](http://kubuntu.org/)|Ubuntu with the KDE desktop environment.
 :white_check_mark:|Linux|[Edubuntu](http://edubuntu.org/)|Full Ubuntu plus application bundles used in educational settings.
 :white_check_mark:|Linux|[Ubuntu](https://ubuntu.com/)|The standard full Ubuntu distro.
+:white_check_mark:|Linux|[Fedora](https://fedoraproject.org/)|New 20161121!
 :x:|FreeBSD||Work in progress!
 
 
@@ -183,6 +193,7 @@ Selecting a distribution which meets these needs is therefore an important part 
 - **GalliumOS** is optimized specifically for Chromebooks. It scores well on all metrics, looks great, and installs quickly. Some memory-hungry applications (e.g. Steam games) perform *best* on GalliumOS thanks to careful optimizations. GalliumOS is the default distro installed by **chrx**.
 - **Lubuntu** also scores and performs well. It uses significantly less RAM than other distros.
 - **Xubuntu** is another good choice. It's a bit heavier-weight than Lubuntu, but still performs very well.
+- **Fedora** comes in several "spins" (desktop environments, selected with `-e ENVIRONMENT`), some of which (lxde) are lightweight, and some of which (desktop (gnome), default) are heavier. A few sample spins have been added to measurements below.
 - I would not choose standard, full, Ubuntu for a Chromebook. It is perfectly usable, bit it's heavier and suffers in performance, without offering any important benefits. Memory use starts higher and increases much more quickly as you use the desktop apps (not reflected in measurements below). If your Chromebook model has 4GB of RAM, the performance differences are reduced but not eliminated.
 
 
@@ -197,9 +208,11 @@ Lubuntu 16.04      | 3.1GB | 185MB | 19 mins | :white_check_mark: |
 Xubuntu 15.04      | 3.0GB | 360MB | 22 mins | :white_check_mark: |
 Ubuntu 15.04       | 3.5GB | 440MB | 28 mins | :x: |
 Kubuntu 15.10      | 4.2GB | 613MB |         | :x: |
+Fedora 24 (lxde)   | 2.9GB | 182MB | 20 mins | :white_check_mark: |
+Fedora 24          | 4.5GB | 647MB | 27 mins | :x: |
 
 
-1. All distributions were installed with the `desktop` environment option.
+1. All distributions were installed with the `desktop` environment option, except where noted.
 1. Disk space can be reduced by removing unwanted packages. The number shown reflects the default install for the desktop environment.
 1. RAM use is measured after graphical login, connecting to Wi-Fi, and opening one window of the default Terminal program to run `/usr/bin/free` after a couple minutes for the system to stabilize. The number shown is an average of several tests, and variance is very low (2-3%).
 1. Installation time will vary greatly depending on your Internet connection, but the ratios should be representative.
@@ -260,12 +273,6 @@ is a flexible setup, well-suited for many users, but of course not all.
 
 Consider these alternatives:
 
-- Hugh Greenberg's [Distroshare](https://www.distroshare.com/) has nicely
-updated ISOs (for Ubuntu and many other Linux distros!), which can be
-installed from USB/SD flash RAM. This method completely removes ChromeOS
-from your Chromebook, and devotes your entire SSD to Linux.
-  - See also John Lewis's [Alternate Firmware](https://johnlewis.ie/custom-chromebook-firmware/rom-download/) options for Chromebooks that do not support SeaBIOS Legacy Boot
-with stock firmware.
 - [Crouton](https://github.com/dnschneid/crouton) allows you to run ChromeOS
 and Linux simultaneously, instead of dual-booting like **chrx** or ChrUbuntu.
 This arrangement has a few drawbacks, but if you spend most of your time in
@@ -349,5 +356,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.2.6** (20160619): hide eMMC partitions properly (thanks gmykhailiuta); improve -r RELEASE handling for GalliumOS; add preliminary handling for running under non-ChromeOS
   - **2.2.7** (20160810): use version-dependent Ubuntu URL to match new Canonical schemes; update Ubuntu "trusty" to 14.04.5
   - **2.2.8** (20161002): add support for new GalliumOS hardware-specific pkgs: braswell, skylake, samus
+- **2.3** (20161121): add support for Fedora! thanks @jedigo!
 
 <!-- don't forget to update the version number in chrx-install! -->

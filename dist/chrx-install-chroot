@@ -196,7 +196,7 @@ install_distenv()
 fedora_install_distenv()
 {
   case "${CHRX_OS_DISTENV}" in
-    fedora-desktop)
+    fedora-desktop|fedora-workstation)
       CHRX_OS_DISTENV="Fedora Workstation"
       ;;
     fedora-kde)
@@ -222,14 +222,14 @@ fedora_install_distenv()
       ;;
     fedora-minimal)
       CHRX_OS_DISTENV="Minimal Install"
-      dnf -y install wpa_supplicant
+      dnf ${VERBOSITY_DNF} -y install wpa_supplicant
       ;;
     *)
       CHRX_OS_DISTENV="Basic Desktop"
     ;;
   esac
   echo_title "Installing \"${CHRX_OS_DISTENV}\"."
-  dnf -y group install "${CHRX_OS_DISTENV}"
+  dnf ${VERBOSITY_DNF} -y group install "${CHRX_OS_DISTENV}"
 }
 
 chrome_add_repos()
@@ -326,7 +326,7 @@ set_locale()
 
 fedora_set_locale()
 {
-  CHRX_LOCALE= ${CHRX_LOCALE/UTF/utf}
+  CHRX_LOCALE=${CHRX_LOCALE/UTF/utf}
   keymap=${CHRX_LOCALE:3:2}
   keymap=${keymap,,}
 
@@ -358,7 +358,7 @@ fedora_install_google_chrome()
   [ ! -x /usr/bin/X ] && return ## only if we have X
 
   echo_title "Installing Google Chrome."
-  dnf -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+  dnf ${VERBOSITY_DNF} -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 }
 
 install_desktop_support()
@@ -374,7 +374,7 @@ fedora_install_desktop_support()
   [ ! -x /usr/bin/X ] && return ## only if we have X
 
   echo_title "Installing desktop compatibility pkgs."
-  dnf -y install xbindkeys xdotool xbacklight xvkbd
+  dnf ${VERBOSITY_DNF} -y install xbindkeys xdotool xbacklight xvkbd
 }
 
 install_kernel()
@@ -388,7 +388,7 @@ fedora_install_kernel()
 {
   echo "add_drivers+=\" mmc_core mmc_block sdhci sdhci_acpi \"" > /etc/dracut.conf.d/chrx.conf
   echo_title "Installing Linux kernel and boot environment."
-  dnf -y install kernel
+  dnf ${VERBOSITY_DNF} -y install kernel
 }
 
 install_kernel_newer_than_min()
@@ -503,7 +503,7 @@ GRUB_CMDLINE_LINUX="rhgb quiet add_efi_memmap intel_pstate=enable i915.modeset=1
 GRUB_DISABLE_RECOVERY="true"
 GRUB_DISABLE_LINUX_UUID="true"
 EOF
-  dnf -y install grub2
+  dnf ${VERBOSITY_DNF} -y install grub2
   grub2-mkconfig -o /boot/grub2/grub.cfg
   grub2-install ${CHRX_TARGET_DISK} --force
 }
