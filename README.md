@@ -96,8 +96,6 @@ Options
 **chrx** can install additional software packages after installing
 your new operating system, using the `-p PACKAGE` option.
 
-This option is not yet supported on Fedora!
-
 You can install any package in the Ubuntu repositories via this
 method, plus a few non-Ubuntu packages for which **chrx** has
 special handling, and some aliases for convenience:

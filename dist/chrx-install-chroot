@@ -134,6 +134,71 @@ install_set_hdr()
   install_google_chrome_from_deb
 }
 
+fedora_install_additional_packages()
+{
+  for pkg in ${CHRX_ADD_PKGS}; do
+    echo_title "Installing additional package \"${pkg}\"."
+    case $pkg in
+      admin-misc)
+        dnf ${VERBOSITY_DNF} -y install vim tmux rsync openssh
+        ;;
+      dev-misc)
+        dnf ${VERBOSITY_DNF} -y install arduino geany geany-plugins-addons ruby ;;
+      kodi)
+        fedora_install_rpmfusion;
+        dnf ${VERBOSITY_DNF} -y install kodi
+        ;;
+      minecraft)
+        fedora_install_minecraft
+        ;;
+      steam)
+        fedora_install_rpmfusion
+        dnf ${VERBOSITY_DNF} -y install steam
+        ;;
+      simplescreenrecorder)
+        fedora_install_rpmfusion
+        dnf ${VERBOSITY_DNF} -y install simplescreenrecorder
+        ;;
+      chrome)
+        fedora_install_google_chrome
+        ;;
+      _hdr)
+        fedora_install_set_hdr
+        ;;
+      *)
+        dnf ${VERBOSITY_DNF} -y install $pkg ;;
+    esac
+  done
+}
+
+fedora_install_minecraft()
+{
+  dnf ${VERBOSITY_DNF} -y install java
+  curl -o /usr/local/bin/Minecraft.jar \
+    https://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+  curl -o /usr/share/pixmaps/minecraft.png https://chrx.org/minecraft.png
+  mkdir -p /usr/local/share/applications
+  cat > /usr/local/share/applications/minecraft.desktop <<-EOF
+	[Desktop Entry]
+	Type=Application
+	Name=Minecraft
+	Comment=Minecraft
+	Exec=java -jar /usr/local/bin/Minecraft.jar
+	Icon=/usr/share/pixmaps/minecraft.png
+	Categories=Game;
+	EOF
+}
+
+fedora_install_set_hdr()
+{
+  fedora_install_rpmfusion
+  dnf ${VERBOSITY_DNF} -y install vim tmux rsync openssh
+  dnf ${VERBOSITY_DNF} -y install arduino geany geany-plugins-addons ruby
+  fedora_install_minecraft
+  dnf ${VERBOSITY_DNF} -y install steam
+  fedora_install_google_chrome
+}
+
 ubuntu_add_repos()
 {
   echo_title "Adding Ubuntu software respositories."
@@ -350,7 +415,6 @@ install_google_chrome()
 
   apt_get_update_if_needed
   echo_title "Installing Google Chrome."
-  apt_get_install google-chrome-stable
 }
 
 fedora_install_google_chrome()
@@ -361,9 +425,37 @@ fedora_install_google_chrome()
   dnf ${VERBOSITY_DNF} -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 }
 
+
+fedora_install_rpmfusion()
+{
+  echo_title "Installing RPM Fusion software repository."
+  
+  dnf ${VERBOSITY_DNF} -y install \
+    https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+    https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+}
+
+fedora_install_codecs()
+{
+  [ ! -x /usr/bin/X ] && return ## only if we have X
+
+  fedora_install_rpmfusion
+  
+  echo_title "Installing non-free codecs codecs."
+  
+  dnf ${VERBOSITY_DNF} -y install gstreamer gstreamer-plugins-base  gstreamer-plugins-good \
+    gstreamer-plugins-good-extras gstreamer-plugins-bad gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras \
+    gstreamer-plugins-bad-nonfree gstreamer-plugins-ugly gstreamer-ffmpeg
+
+  dnf ${VERBOSITY_DNF} -y install gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-base-tools gstreamer1-plugins-good gstreamer1-plugins-good-extras gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-extras gstreamer1-plugins-bad-freeworld gstreamer1-plugins-ugly gstreamer1-libav
+
+  dnf ${VERBOSITY_DNF} -y install faad2 faac libdca compat-libstdc++-33 compat-libstdc++-296 xine-lib-extras-freeworld
+}
+
 install_desktop_support()
 {
   [ ! -x /usr/bin/X ] && return ## only if we have X
+  [ ! "${CHRX_CUSTOMIZATION_ENABLED}" ] && return
 
   echo_title "Installing desktop compatibility pkgs."
   apt_get_install xbindkeys xdotool xbacklight xvkbd
@@ -593,13 +685,18 @@ case "${CHRX_OS_DISTRO}" in
   fedora)
     fedora_install_kernel
     fedora_install_distenv
-    fedora_install_desktop_support
-    fedora_install_google_chrome
     fedora_set_timezone
     fedora_set_locale
     write_default_fstab
     fedora_install_grub2
-    fedora_set_selinux_autolabel
+    if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
+      fedora_install_desktop_support
+      fedora_install_google_chrome
+      fedora_install_codecs
+    else
+      fedora_set_selinux_autolabel
+    fi
+    fedora_install_additional_packages
     ;;
 esac
 
