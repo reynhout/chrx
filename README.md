@@ -44,7 +44,7 @@ skip directly to phase two.
 1. Update firmware, if necessary (*required* for Bay Trail models, *recommended* for Broadwell models, *optional* for Haswell models -- see [chromebooks](#chromebooks))
 1. Run **chrx**: `cd ; curl -Os https://chrx.org/go && sh go` (see [options](#options))
 1. Follow on-screen instructions to prepare your Chromebook for installation
-1. Reboot, then repeat steps 2-5 and 7 to install and configure your new system
+1. Reboot, then repeat steps 2-4 and 6 to install and configure your new system
 
 
 <a name="options"></a>
