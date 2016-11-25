@@ -39,11 +39,10 @@ skip directly to phase two.
 
 1. Enable [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices) (process is model-specific; for Acer C720, press `ESC+F3(Refresh)+Power`), then reboot
 1. Load ChromeOS by pressing `CTRL+D` at the white "OS verification is OFF" screen
-1. Configure your Wi-Fi network, if necessary
-1. Switch to Virtual Terminal (VT) 2 by pressing `CTRL+ALT+F2(top row right arrow)`
-1. Log in as user `chronos` (no password) to enter `chronos@localhost` shell
+1. Configure your Wi-Fi network if necessary, then log in (Guest account is fine)
+1. Open the ChromeOS Terminal by pressing `CTRL+ALT+T`, and enter `shell` at the prompt
 1. Update firmware, if necessary (*required* for Bay Trail models, *recommended* for Broadwell models, *optional* for Haswell models -- see [chromebooks](#chromebooks))
-1. Run **chrx**: `curl -Os https://chrx.org/go && sh go` (see [options](#options))
+1. Run **chrx**: `cd ; curl -Os https://chrx.org/go && sh go` (see [options](#options))
 1. Follow on-screen instructions to prepare your Chromebook for installation
 1. Reboot, then repeat steps 2-5 and 7 to install and configure your new system
 
@@ -119,19 +118,19 @@ you can quote the argument, e.g.: `-p "gimp blender inkscape"`.
 
 [GalliumOS](https://galliumos.org/) Desktop (latest), verbosely:
 
-`curl -Os https://chrx.org/go && sh go -v`
+`cd ; curl -Os https://chrx.org/go && sh go -v`
 
 [GalliumOS](https://galliumos.org/) Desktop (latest), plus packages:
 
-`curl -Os https://chrx.org/go && sh go -p "minecraft steam kodi"`
+`cd ; curl -Os https://chrx.org/go && sh go -p "minecraft steam kodi"`
 
 [Lubuntu](http://lubuntu.net/) Desktop (latest):
 
-`curl -Os https://chrx.org/go && sh go -d lubuntu`
+`cd ; curl -Os https://chrx.org/go && sh go -d lubuntu`
 
 [Ubuntu](https://ubuntu.com/) Standard, version 16.04, system name `hal`, first user `dave`, including some administrative tools:
 
-`curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 16.04 -H hal -U dave -p admin-misc`
+`cd ; curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 16.04 -H hal -U dave -p admin-misc`
 
 
 ### advanced usage
@@ -146,7 +145,7 @@ environment variable before running the `go` script, like this:
 
 ```
 export CHRX_WEB_ROOT="http://myserver/chrx"
-curl -O $CHRX_WEB_ROOT/go && sh go
+cd ; curl -O $CHRX_WEB_ROOT/go && sh go
 ```
 
 <a name="compatibility"></a>
