@@ -41,7 +41,7 @@ skip directly to phase two.
 1. Load ChromeOS by pressing `CTRL+D` at the white "OS verification is OFF" screen
 1. Configure your Wi-Fi network if necessary, then log in (Guest account is fine)
 1. Open the ChromeOS Terminal by pressing `CTRL+ALT+T`, and enter `shell` at the prompt
-1. Update firmware, if necessary (*required* for Bay Trail models, *recommended* for Broadwell models, *optional* for Haswell models -- see [chromebooks](#chromebooks))
+1. Update firmware, if necessary (*required* for Bay Trail and Braswell models, *recommended* for Broadwell and Skylake models, *optional* for Haswell models -- see [chromebooks](#chromebooks))
 1. Run **chrx**: `cd ; curl -Os https://chrx.org/go && sh go` (see [options](#options))
 1. Follow on-screen instructions to prepare your Chromebook for installation
 1. Reboot, then repeat steps 2-4 and 6 to install and configure your new system
@@ -156,7 +156,7 @@ cd ; curl -O $CHRX_WEB_ROOT/go && sh go
 ### chromebooks
 status            |CPU family                           |notes
 :----------------:|-------------------------------------|------------------
-:white_check_mark:|Intel Haswell                        |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
+:white_check_mark:|Intel Haswell                        |[Firmware update](https://mrchromebox.tech/#fwscript) available
 :white_check_mark:|Intel Broadwell                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
 :white_check_mark:|Intel Skylake                        |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
 :white_check_mark:|Intel Bay Trail                      |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
@@ -165,7 +165,7 @@ status            |CPU family                           |notes
 :question:        |Intel Pineview                       |Requires SeaBIOS with Legacy Boot capability
 :x:               |ARM                                  |ARM support is very unlikely
 
-If you do now know the CPU in your device, check here: https://wiki.galliumos.org/Hardware_Compatibility
+If you do not know the CPU in your device, check here: https://wiki.galliumos.org/Hardware_Compatibility
 
 <a name="operating systems"></a>
 ### operating systems
@@ -208,6 +208,7 @@ Xubuntu 15.04      | 3.0GB | 360MB | 22 mins | :white_check_mark: |
 Ubuntu 15.04       | 3.5GB | 440MB | 28 mins | :x: |
 Kubuntu 15.10      | 4.2GB | 613MB |         | :x: |
 Fedora 24 (lxde)   | 2.9GB | 182MB | 20 mins | :white_check_mark: |
+Fedora 24 (cinnamon)| 3.8GB | 384MB | 27 mins | :white_check_mark: |
 Fedora 24          | 4.5GB | 647MB | 27 mins | :x: |
 
 
