@@ -506,21 +506,13 @@ set_customizations_ubuntu()
     etc/systemd/logind.conf
   "
 
+  set_hidden_partitions_conf
   CHRX_CONFIGURE_GRUB_ENABLED=1
 }
 
 set_customizations_galliumos()
 {
-  if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` -eq 0 ]; then
-    CONF_FILES="
-      etc/udev/rules.d/99-hide-disks-mmc.rules
-    "
-  else
-    CONF_FILES="
-      etc/udev/rules.d/99-hide-disks-sda.rules
-    "
-  fi
-
+  set_hidden_partitions_conf
   CHRX_CONFIGURE_GRUB_ENABLED=
 }
 
@@ -542,17 +534,6 @@ set_customizations_fedora()
     etc/selinux/config
   "
 
-  if `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk`; then
-    CONF_FILES+="
-      etc/dracut.conf.d/mmc.conf
-      etc/udev/rules.d/99-hide-disks-mmc.rules
-    "
-  else
-    CONF_FILES+="
-      etc/udev/rules.d/99-hide-disks-sda.rules
-    "
-  fi
-
   EXEC_FILES="
     etc/rc.local
     etc/initramfs-tools/scripts/init-top/unbind_ehci
@@ -566,7 +547,28 @@ set_customizations_fedora()
     etc/systemd/logind.conf
   "
 
+  set_hidden_partitions_conf
   CHRX_CONFIGURE_GRUB_ENABLED=
+}
+
+set_hidden_partitions_conf()
+{
+  local _rootdev=$(rootdev -d -s)
+
+  case "$_rootdev" in
+    "/dev/mmcblk0")
+      CONF_FILES+="etc/udev/rules.d/99-hide-disks-mmc.rules "
+      if [ "$CHRX_OS_DISTRO" = "fedora" ]; then
+        CONF_FILES+="etc/dracut.conf.d/mmc.conf "
+      fi
+      ;;
+    "/dev/sda")
+      CONF_FILES+="etc/udev/rules.d/99-hide-disks-sda.rules "
+      ;;
+    *)
+      echo_warn "unexpected root device \"$_rootdev\""
+      ;;
+  esac
 }
 
 install_customizations()
