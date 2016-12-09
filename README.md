@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.3** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
+**Version 2.3.1** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -355,5 +355,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.2.7** (20160810): use version-dependent Ubuntu URL to match new Canonical schemes; update Ubuntu "trusty" to 14.04.5
   - **2.2.8** (20161002): add support for new GalliumOS hardware-specific pkgs: braswell, skylake, samus
 - **2.3** (20161121): add support for Fedora! thanks @jedigo!
+  - **2.3.1** (20161208): Fedora: add `-p` support, add latest to auto-detection, add nonfree codecs (thx @jedigo); GalliumOS: use chrx GRUB config; all: add more hidden mmcblk0 partitions, update GRUB config
 
 <!-- don't forget to update the version number in chrx-install! -->
