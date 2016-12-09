@@ -513,7 +513,7 @@ set_customizations_ubuntu()
 set_customizations_galliumos()
 {
   set_hidden_partitions_conf
-  CHRX_CONFIGURE_GRUB_ENABLED=
+  CHRX_CONFIGURE_GRUB_ENABLED=1
 }
 
 set_customizations_fedora()
