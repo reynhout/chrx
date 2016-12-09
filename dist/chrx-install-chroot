@@ -324,6 +324,16 @@ add_first_user()
 
 configure_grub()
 {
+  ## set resume parm to partition 5, only when installing to rootdev
+  ## TODO: would this overwrite ChromeOS hibernate image?
+  CHRX_RESUME_PARTITION="noresume"
+  #if [ "$(rootdev -d -s)" = "$CHRX_TARGET_DISK" ]; then
+  #  case "${CHRX_TARGET_DISK}" in
+  #    "/dev/sda")     CHRX_RESUME_PARTITION="resume=/dev/sda5" ;;
+  #    "/dev/mmcblk0") CHRX_RESUME_PARTITION="resume=/dev/mmcblk0p5" ;;
+  #  esac
+  #fi
+
   ## comment old settings
   sed -i~ 's/^\(GRUB_HIDDEN_TIMEOUT\)/#\1/g' /etc/default/grub
   sed -i~ 's/^\(GRUB_TIMEOUT\)/#\1/g' /etc/default/grub
@@ -337,6 +347,7 @@ configure_grub()
 ## GRUB_TIMEOUT_STYLE  UI for delay (menu|countdown|hidden)
 GRUB_TIMEOUT=10
 GRUB_TIMEOUT_STYLE=menu
+GRUB_GFXMODE=1920x1080,1600x900,1366x768,1280x850,1024x768
 
 ## kernel parameters
 ##
@@ -359,7 +370,7 @@ GRUB_TIMEOUT_STYLE=menu
 ##  noresume                  no resume partition (for hibernate)
 ##  noswap                    no swap partition
 ##
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash boot=local acpi_osi=Linux acpi_backlight=vendor add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic elevator=noop resume=/dev/sda5"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash boot=local acpi_osi=Linux acpi_backlight=vendor add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic elevator=noop ${CHRX_RESUME_PARTITION}"
 
 EO_GRUB
 }
