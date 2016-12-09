@@ -415,6 +415,7 @@ install_google_chrome()
 
   apt_get_update_if_needed
   echo_title "Installing Google Chrome."
+  apt_get_install google-chrome-stable
 }
 
 fedora_install_google_chrome()
