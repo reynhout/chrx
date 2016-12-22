@@ -309,18 +309,20 @@ chrome_add_repos()
 
 add_first_user()
 {
-  echo_title "Adding user \"${CHRX_USERNAME}\"."
+  echo_title "Creating user \"${CHRX_USERNAME}\"."
   useradd -m ${CHRX_USERNAME} -s /bin/bash
   echo ${CHRX_USERNAME}:${CHRX_USERNAME} | chpasswd
+
+  local _groups
   case "${CHRX_OS_DISTRO}" in
-    fedora)
-      usermod -a -G adm,wheel,cdrom ${CHRX_USERNAME}
-      ;;
-    *)
-      usermod -a -G adm,sudo,cdrom,dip,plugdev,lpadmin ${CHRX_USERNAME}
-      #sambashare
-      ;;
-    esac
+    fedora) _groups="adm wheel cdrom" ;;
+    *)      _groups="adm sudo cdrom dip plugdev lpadmin" ;; #sambashare
+  esac
+  echo_title "Adding user \"${CHRX_USERNAME}\" to groups \"$_groups\"."
+  ## add individually in case any groups do not exist (fixes #30)
+  for group in $_groups; do
+    usermod -a -G ${group} ${CHRX_USERNAME}
+  done
 }
 
 configure_grub()
