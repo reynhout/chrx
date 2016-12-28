@@ -5,12 +5,13 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.3.2"
+CHRX_VERSION="2.4"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
 CHRX_OS_RELEASE="latest"
 CHRX_OS_ARCH="amd64"
+CHRX_OS_MIRROR="primary"
 CHRX_TARGET_DISK=""
 CHRX_ADD_PKGS=
 CHRX_OS="linux"
@@ -53,6 +54,8 @@ Options
                      ubuntu etc: latest, lts, dev, 16.04, 16.10, xenial, etc
                      fedora: latest, 23, 24, 25
    -a ARCH         processor architecture (i386, amd64) [${CHRX_OS_ARCH}]
+   -m MIRROR       distribution-specific download mirror [${CHRX_OS_MIRROR}]
+                     galliumos: ny1.us, va1.us, ca1.us, rb1.fr
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) [${CHRX_TARGET_DISK}]
    -p PACKAGE      additional packages to install, may repeat [${CHRX_ADD_PKGS}]
                      kodi, minecraft, steam, etc, see chrx.org for more
@@ -388,47 +391,51 @@ get_os_version_galliumos()
   CHRX_OS_VERSION="2.0"
 }
 
+get_mirror_url_galliumos()
+{
+  local _mirror=$1
+
+  case "$_mirror" in
+    #ny1.us) CHRX_OS_MIRROR="https://galliumos.org/releases" ;;
+    va1.us) CHRX_OS_MIRROR="https://va1.us.mirror.galliumos.org/releases" ;;
+    ca1.us) CHRX_OS_MIRROR="https://ca1.us.mirror.galliumos.org/releases" ;;
+    rb1.fr) CHRX_OS_MIRROR="https://rb1.fr.mirror.galliumos.org/releases" ;;
+    *)      CHRX_OS_MIRROR="https://galliumos.org/releases" ;;
+  esac
+  echo "$CHRX_OS_MIRROR"
+}
+
 determine_osv_galliumos()
 {
-  #versions_file_url="https://galliumos.org/builds/VERSIONS"
+  local _url_base=$(get_mirror_url_galliumos $CHRX_OS_MIRROR)
+  local _url_path
+
+  local _versions_file_url="${_url_base_primary}/VERSIONS"
   #versions_file="`curl -s ${versions_file_url}`"
 
-  ## no versioning in apt repo yet, so override settings
-  ## FIXME need to add chromebox differentiation as well
-
   case "${CHRX_OS_RELEASE}" in
-    vivid) CHRX_OS_VERSION="1.0" ;;
-    xenon|2|2.0*)
-      CHRX_OS_VERSION="2.0"
-      #CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/2.0/galliumos-generic-coreimage-2.0.tgz"
-      ;;
-    '2.1'|beta)
-      CHRX_OS_VERSION="2.1"
-      CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/$CHRX_OS_VERSION/.beta/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
-      ;;
+    '1.0'|vivid) CHRX_OS_VERSION="1.0" ;;
+    '2.0'|xenon) CHRX_OS_VERSION="2.0" ;;
+    '2.1')       CHRX_OS_VERSION="2.1" ;;
     dev|nightly)
       CHRX_OS_VERSION="nightly"
       msg_os_version="${ANSI_YEL}(NOTE: nightly build!)${ANSI_RST}"
-      CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/nightly/galliumos-generic-coreimage-xenon-latest.tgz"
+      _url_path="/nightly/galliumos-generic-coreimage-xenon-latest.tgz"
+      CHRX_OS_CORE_IMAGE_URL="${_url_base}${_url_path}"
       ;;
     latest) get_os_version_galliumos $CHRX_OS_RELEASE ;;
     *)      CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
   esac
 
   if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
-    CHRX_OS_CORE_IMAGE_URL="https://galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
-    #CHRX_OS_CORE_IMAGE_URL="https://ca1.us.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
-    #CHRX_OS_CORE_IMAGE_URL="https://rb1.fr.mirror.galliumos.org/releases/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
+    _url_path="/$CHRX_OS_VERSION/galliumos-generic-coreimage-$CHRX_OS_VERSION.tgz"
+    CHRX_OS_CORE_IMAGE_URL="${_url_base}${_url_path}"
   fi
 
   case "${CHRX_OS_VERSION}" in
-    '1.0')
-      msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}"
-      ;;
+    '1.0') msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}" ;;
     '2.0') ;;
-    '2.1')
-      msg_os_version="${ANSI_YEL}(CAUTION: beta!)${ANSI_RST}"
-      ;;
+    '2.1') msg_os_version="${ANSI_YEL}(CAUTION: beta!)${ANSI_RST}" ;;
   esac
 }
 
@@ -794,8 +801,7 @@ validate_config()
   case "${osv_method}" in
     ubuntu)    determine_osv_ubuntu ;;
     galliumos) determine_osv_galliumos ;;
-    fedora) determine_osv_fedora ;;
-
+    fedora)    determine_osv_fedora ;;
   esac
 
   case "${customization_set}" in
@@ -808,6 +814,10 @@ validate_config()
     i386|amd64) ;;
     *) msg_os_arch="${ANSI_RED}invalid${ANSI_RST}" ; FAIL=1 ;;
   esac
+
+  if [ "$CHRX_OS_DISTRO" != "galliumos" -a ! -z "$CHRX_OS_MIRROR" ]; then
+    msg_os_mirror="${ANSI_RED}unknown, will use primary${ANSI_RST}"
+  fi
 }
 
 confirm_config()
@@ -823,6 +833,7 @@ confirm_config()
       release (-r):       ${CHRX_OS_RELEASE} ${msg_os_release}
         version:          ${CHRX_OS_VERSION} ${msg_os_version}
       architecture (-a):  ${CHRX_OS_ARCH} ${msg_os_arch}
+      mirror (-m):        ${CHRX_OS_MIRROR} ${msg_os_mirror}
       target_disk (-t):   ${CHRX_TARGET_DISK}
       packages (-p):      ${CHRX_ADD_PKGS}${msg_os_pkgs}
 
@@ -1015,13 +1026,14 @@ parse_opts()
 {
   ## parse command line options
   ## TODO: lubuntu[-desktop[-latest]] should be parseable
-  while getopts ":d:e:r:a:t:p:H:U:L:Z:nsyvh" OPTION
+  while getopts ":d:e:r:a:m:t:p:H:U:L:Z:nsyvh" OPTION
   do
     case "$OPTION" in
       d) CHRX_OS_DISTRO=$(downcase $OPTARG) ;;
       e) CHRX_OS_ENVIRONMENT=$(downcase $OPTARG) ;;
       r) CHRX_OS_RELEASE=$(downcase $OPTARG) ;;
       a) CHRX_OS_ARCH=$(downcase $OPTARG) ;;
+      m) CHRX_OS_MIRROR=$(downcase $OPTARG) ;;
       t) CHRX_TARGET_DISK=$OPTARG ;;
       p) CHRX_ADD_PKGS="${CHRX_ADD_PKGS}$(downcase $OPTARG) " ;;
       H) CHRX_HOSTNAME=$OPTARG ;;

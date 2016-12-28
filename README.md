@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.3.2** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
+**Version 2.4** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -69,6 +69,8 @@ Options
                      ubuntu etc: latest, lts, dev, 16.04.1, xenial, etc
                      fedora: latest, 23, 24, 25
    -a ARCH         processor architecture (i386, amd64) [amd64]
+   -m MIRROR       distribution-specific download mirror [${CHRX_OS_MIRROR}]
+                     galliumos: ny1.us, va1.us, ca1.us, rb1.fr
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
    -p PACKAGE      additional packages to install, may repeat []
                      kodi, minecraft, steam, etc, see chrx.org for more
@@ -357,5 +359,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **2.3** (20161121): add support for Fedora! thanks @jedigo!
   - **2.3.1** (20161208): Fedora: add `-p` support, add latest to auto-detection, add nonfree codecs (thx @jedigo); GalliumOS: use chrx GRUB config; all: add more hidden mmcblk0 partitions, update GRUB config
   - **2.3.2** (20161222): add first user to groups individually in case selected distro/metapackage/spin does not include all (fixes #30)
+- **2.4** (20161228): add support selection of mirror sites (GalliumOS-only)
 
 <!-- don't forget to update the version number in chrx-install! -->
