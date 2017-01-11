@@ -497,16 +497,6 @@ set_customizations_ubuntu()
     etc/X11/xorg.conf.d/50-cyapa-touchpad.conf
   "
 
-  if [ `readlink -f /dev/disk/by-label/ROOT-A | grep -q mmcblk` -eq 0 ]; then
-    CONF_FILES+="
-      etc/udev/rules.d/99-hide-disks-mmc.rules
-    "
-  else
-    CONF_FILES+="
-      etc/udev/rules.d/99-hide-disks-sda.rules
-    "
-  fi
-
   EXEC_FILES="
     etc/rc.local
     etc/initramfs-tools/scripts/init-top/unbind_ehci
