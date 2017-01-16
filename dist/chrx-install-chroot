@@ -661,6 +661,7 @@ case "${CHRX_OS_DISTRO}" in
 
     write_default_fstab
     
+    apt-get -y ${VERBOSITY_APTGET} autoremove
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
     install_grub
@@ -683,6 +684,7 @@ case "${CHRX_OS_DISTRO}" in
     install_additional_packages
     write_default_fstab
     
+    apt-get -y ${VERBOSITY_APTGET} autoremove
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
     install_grub
