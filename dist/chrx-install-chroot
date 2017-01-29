@@ -243,7 +243,8 @@ galliumos_install_hwspecific()
 
   case "$CHRX_HWID" in
     "SAMUS")              hwspec_pkgs="galliumos-samus" ;;
-    "LINK")               hwspec_pkgs="galliumos-hidpi" ;;
+    "LINK")               hwspec_pkgs+=" galliumos-hidpi" ;;
+    "CHELL")              hwspec_pkgs+=" galliumos-hidpi" ;;
   esac
 
   ## TODO: add galliumos-cbox instead of galliumos-laptop for Chromeboxes
