@@ -176,6 +176,7 @@ identify_hardware()
     BUDDY*)         _x='ES|BDW|2016|Acer Chromebase 24' ;;
     BUTTERFLY*)     _x='UN|SDB|2013|HP Pavilion Chromebook 14' ;;
     CANDY*)         _x='FS|BYT|2015|Dell Chromebook 11' ;;
+    CAVE*)          _x='RS|SKL|2016|ASUS Chromebook Flip C302' ;;
     CELES*)         _x='FS|BSW|2016|Samsung Chromebook 3' ;;
     CHELL*)         _x='RS|SKL|2016|HP Chromebook 13 G1' ;;
     CLAPPER*)       _x='FS|BYT|2014|Lenovo N20/N20P Chromebook' ;;
@@ -251,6 +252,7 @@ identify_hardware()
     PANTHER*)       _x='RS|HSW|2014|ASUS Chromebox CN60' ;;
     PARROT*)        _x='UN|IVB|2012|Acer C7 / C710 Chromebook' ;;
     PEPPY*)         _x='OK|HSW|2013|Acer C720, C720P Chromebook' ;;
+    X86_PEPPY*)     _x='OK|HSW|2013|Acer C720, C720P TEST Chromebook' ;;
     PIT*)           _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
     PI*)            _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
     QUAWKS*)        _x='FS|BYT|2014|ASUS Chromebook C300' ;;
@@ -267,6 +269,7 @@ identify_hardware()
     SETZER*)        _x='FS|BSW|2016|HP Chromebook 11 G5/11-vxxx' ;;
     SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
     SNOW*)          _x='NG|ARM|2012|Samsung Chromebook' ;;
+    DAISY*)         _x='NG|ARM|2012|Samsung Chromebook XE303C12 (SNOW)' ;;
     SPEEDY*)        _x='NG|ARM|2015|ASUS Chromebook C201' ;;
     SPRING*)        _x='NG|ARM|2013|HP Chromebook 11 G1' ;;
     SQUAWKS*)       _x='FS|BYT|2014|ASUS Chromebook C200' ;;
@@ -284,7 +287,9 @@ identify_hardware()
     WIZPIG_???-???-??A*) _x='NG|ARM|2016|CTL Chromebook J5' ;;
     WIZPIG_???-???-??B*) _x='NG|ARM|2016|Edugear CMT Chromebook' ;;
     WOLF*)          _x='RS|HSW|2014|Dell Chromebook 11' ;;
+    X86_WOLF*)      _x='RS|HSW|2014|Dell Chromebook 11' ;;
     YUNA*)          _x='OK|BDW|2014|Acer Chromebook 15 (CB5-571, C910)' ;;
+    AURON_YUNA*)    _x='OK|BDW|2014|Acer Chromebook 15 (CB5-571, C910)' ;;
     ZAKO*)          _x='RS|HSW|2014|HP Chromebox CB1/G1/for Meetings' ;;
     #*)              _='|||' ;;
   esac
@@ -608,6 +613,7 @@ report_unrecognized_device()
   ... You're running an unrecognized Chrome device! That's exciting.
   ...
   ... Inspecting your hardware reveals:
+  ...   hardware-id:         ${CHRX_HWID-(unknown)}
   ...   system-manufacturer: ${dmi_sm}
   ...   processor-version:   ${dmi_pv}
   ...
