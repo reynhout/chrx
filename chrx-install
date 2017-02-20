@@ -429,14 +429,17 @@ determine_osv_galliumos()
     '1.0'|vivid) CHRX_OS_VERSION="1.0" ;;
     '2.0'|xenon) CHRX_OS_VERSION="2.0" ;;
     '2.1')       CHRX_OS_VERSION="2.1" ;;
+    latest)      get_os_version_galliumos $CHRX_OS_RELEASE ;;
     dev|nightly)
       CHRX_OS_VERSION="nightly"
       msg_os_version="${ANSI_YEL}(NOTE: nightly build!)${ANSI_RST}"
       _url_path="/nightly/galliumos-generic-coreimage-xenon-latest.tgz"
       CHRX_OS_CORE_IMAGE_URL="${_url_base}${_url_path}"
       ;;
-    latest) get_os_version_galliumos $CHRX_OS_RELEASE ;;
-    *)      CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
+    *)
+      msg_os_version="${ANSI_YEL}(NOTE: unrecognized!)${ANSI_RST}"
+      CHRX_OS_VERSION=${CHRX_OS_RELEASE}
+      ;;
   esac
 
   if [ -z "${CHRX_OS_CORE_IMAGE_URL}" ]; then
