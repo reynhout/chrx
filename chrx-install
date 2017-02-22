@@ -354,7 +354,7 @@ determine_osv_ubuntu()
     utopic) CHRX_OS_VERSION="14.10" ;;
     vivid)  CHRX_OS_VERSION="15.04" ;;
     wily)   CHRX_OS_VERSION="15.10" ;;
-    xenial) CHRX_OS_VERSION="16.04.1" ;;
+    xenial) CHRX_OS_VERSION="16.04.2" ;;
     zesty)  CHRX_OS_VERSION="16.10" ;;
     dev)    get_os_version_and_core_url_dev_ubuntu $CHRX_OS_RELEASE ;;
     lts)    get_os_version_ubuntu $CHRX_OS_RELEASE ;;
