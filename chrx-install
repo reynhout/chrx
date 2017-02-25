@@ -169,20 +169,21 @@ identify_hardware()
     #TBD*)           _x='UN|...|2015|Dell 11P' ;;
     ACER_ZGB*)      _x='EF|PNV|2011|Acer AC700 Chromebook' ;;
     ARKHAM*)        _x='NG|ARM|2015|ASUS OnHub SRT-AC1900 Router' ;;
+    ASUKA*)         _x='RS|SKL|2017|Dell Chromebook 13 (xxxx)' ;;
     BANJO*)         _x='FS|BYT|2015|Acer Chromebook 15 (CB3-531)' ;;
-    BANON*)         _x='FS|BSW|2016|Acer Chromebook 15 (CBx-xxx)' ;;
+    BANON*)         _x='FS|BSW|2016|Acer Chromebook 15 (CB3-532)' ;;
     BIG*)           _x='NG|ARM|2014|Acer Chromebook 13 (CB5-311)' ;;
     BLAZE*)         _x='NG|ARM|2014|HP Chromebook 14 G3' ;;
     BUDDY*)         _x='ES|BDW|2016|Acer Chromebase 24' ;;
-    BUTTERFLY*)     _x='UN|SDB|2013|HP Pavilion Chromebook 14' ;;
+    BUTTERFLY*)     _x='UN|SNB|2013|HP Pavilion Chromebook 14' ;;
     CANDY*)         _x='FS|BYT|2015|Dell Chromebook 11' ;;
     CAVE*)          _x='RS|SKL|2016|ASUS Chromebook Flip C302' ;;
     CELES*)         _x='FS|BSW|2016|Samsung Chromebook 3' ;;
     CHELL*)         _x='RS|SKL|2016|HP Chromebook 13 G1' ;;
     CLAPPER*)       _x='FS|BYT|2014|Lenovo N20/N20P Chromebook' ;;
-    CYAN*)          _x='FS|BSW|2015|Acer Chromebook R11 (C738T, CB5-132T)' ;;
+    CYAN*)          _x='FS|BSW|2015|Acer Chromebook R11 (CB5-132T, C738T)' ;;
     EDGAR*)         _x='FS|BSW|2016|Acer Chromebook 14 (CB3-431)' ;;
-    ELM*)           _x='NG|ARM|2016|Acer Chromebook R13 (CBx-xxx)' ;;
+    ELM*)           _x='NG|ARM|2016|Acer Chromebook R13 (CB5-312T)' ;;
     ENGUARDE_???-???-??A*)  _x='FS|BYT|2014|CTL N6 Education Chromebook' ;;
     ENGUARDE_???-???-??B*)  _x='FS|BYT|2014|M&A Chromebook' ;;
     ENGUARDE_???-???-??C*)  _x='FS|BYT|2014|Senkatel C1101 Chromebook' ;;
@@ -200,6 +201,7 @@ identify_hardware()
     EXPRESSO_???-???-??C*)  _x='NG|ARM|2014|Edxis Chromebook' ;;
     EXPRESSO*)              _x='NG|ARM|201x|(unknown EXPRESSO)' ;;
     FALCO*)         _x='OK|HSW|2013|HP Chromebook 14' ;;
+    FIEVEL*)        _x='NG|ARM|2017|AOPEN Chromebox Mini' ;;
     GANDOF*)        _x='OK|BDW|2015|Toshiba Chromebook 2 CB30/CB35' ;;
     GLIMMER*)       _x='FS|BYT|2014|Lenovo ThinkPad 11e/Yoga Chromebook' ;;
     _GLIMMER*)      _x='FS|BYT|2014|Lenovo ThinkPad Yoga Chromebook' ;;
@@ -223,6 +225,7 @@ identify_hardware()
     JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
     JERRY_???-???-???-F*) _x='NG|ARM|2016|Epik Chromebook' ;;
     JERRY*)               _x='NG|ARM|201x|(unknown JERRY)' ;;
+    KEFKA*)               _x='RS|SKL|2017|Dell Chromebook 11 (3180,3189)' ;;
     KEVIN*)               _x='NG|ARM|2017|Samsung Chromebook Plus' ;;
     KIP_[ABC]*)     _x='FS|BYT|2015|HP Chromebook 11 G3/G4' ;;
     KIP_[DE]*)      _x='FS|BYT|2015|HP Chromebook 14 G4' ;;
@@ -231,8 +234,8 @@ identify_hardware()
     LARS*)          _x='RS|SKL|2016|Acer Chromebook 14 for Work' ;;
     LEON*)          _x='OK|HSW|2014|Toshiba CB30/CB35 Chromebook' ;;
     LINK*)          _x='RS|IVB|2013|Google Chromebook Pixel' ;;
-    LULU*)          _x='OK|BDW|2015|Dell Chromebook 13 7310' ;;
-    LUMPY*)         _x='UN|SDB|2012|Samsung Chromebook Series 5 550' ;;
+    LULU*)          _x='OK|BDW|2015|Dell Chromebook 13 (7310)' ;;
+    LUMPY*)         _x='UN|SNB|2012|Samsung Chromebook Series 5 550' ;;
     MCCLOUD*)       _x='RS|HSW|2014|Acer Chromebox CXI' ;;
     MICKEY*)        _x='NG|ARM|2015|ASUS Chromebit CS10' ;;
     MIGHTY_???-???-???-A*) _x='NG|ARM|2015|Haier Chromebook 11e' ;;
@@ -248,7 +251,7 @@ identify_hardware()
     MONROE_?[23]?*) _x='ES|HSW|2014|LG Chromebase 22CV241' ;;
     MONROE_?4?*)    _x='ES|HSW|2016|LG Chromebase 22CB25S' ;;
     MONROE*)        _x='ES|HSW|201x|(unknown MONROE)' ;;
-    NINJA*)         _x='FS|BYT|2015|AOpen Chromebox Commercial' ;;
+    NINJA*)         _x='FS|BYT|2015|AOPEN Chromebox Commercial' ;;
     ORCO*)          _x='FS|BYT|2015|Lenovo Ideapad 100S Chromebook' ;;
     PAINE*)         _x='OK|BDW|2014|Acer Chromebook 11 (C740)' ;;
     PANTHER*)       _x='RS|HSW|2014|ASUS Chromebox CN60' ;;
@@ -280,12 +283,13 @@ identify_hardware()
     SPRING*)        _x='NG|ARM|2013|HP Chromebook 11 G1' ;;
     SQUAWKS*)       _x='FS|BYT|2014|ASUS Chromebook C200' ;;
     STOUT*)         _x='UN|IVB|2013|Lenovo Thinkpad X131e Chromebook' ;;
-    STUMPY*)        _x='UN|SDB|2012|Samsung Chromebox Series 3' ;;
-    SUMO*)          _x='FS|BYT|2015|AOpen Chromebase Commercial' ;;
+    STUMPY*)        _x='UN|SNB|2012|Samsung Chromebox Series 3' ;;
+    SUMO*)          _x='FS|BYT|2015|AOPEN Chromebase Commercial' ;;
     SWANKY*)        _x='FS|BYT|2014|Toshiba Chromebook 2 CB30/CB35' ;;
     TERRA13*)       _x='FS|BSW|2016|ASUS Chromebook C300SA' ;;
     TERRA*)         _x='FS|BSW|2016|ASUS Chromebook C202SA' ;;
     TIDUS*)         _x='ES|BDW|2015|Lenovo ThinkCentre Chromebox' ;;
+    TIGER*)         _x='NG|ARM|2017|AOPEN Chromebase Mini' ;;
     TRICKY*)        _x='RS|HSW|2014|Dell Chromebox' ;;
     ULTIMA*)        _x='FS|BSW|2016|Lenovo ThinkPad 11e/Yoga Chromebook (G3)' ;;
     WHIRLWIND*)     _x='NG|ARM|2015|TP-Link OnHub TGR1900 Router' ;;
@@ -310,7 +314,7 @@ identify_hardware()
   case "$_cpuf" in
     ARM) _cpuf="ARM" ;;
     PNV) _cpuf="Intel Pineview" ;;
-    SDB) _cpuf="Intel Sandy Bridge" ;;
+    SNB) _cpuf="Intel Sandy Bridge" ;;
     IVB) _cpuf="Intel Ivy Bridge" ;;
     HSW) _cpuf="Intel Haswell" ;;
     BYT) _cpuf="Intel Bay Trail" ;;
