@@ -404,7 +404,7 @@ determine_osv_ubuntu()
 get_os_version_galliumos()
 {
   local _release=$1
-  CHRX_OS_VERSION="2.0"
+  CHRX_OS_VERSION="2.1"
 }
 
 get_mirror_url_galliumos()
@@ -431,8 +431,8 @@ determine_osv_galliumos()
 
   case "${CHRX_OS_RELEASE}" in
     '1.0'|vivid) CHRX_OS_VERSION="1.0" ;;
-    '2.0'|xenon) CHRX_OS_VERSION="2.0" ;;
-    '2.1')       CHRX_OS_VERSION="2.1" ;;
+    '2.0')       CHRX_OS_VERSION="2.0" ;;
+    '2.1'|xenon) CHRX_OS_VERSION="2.1" ;;
     latest)      get_os_version_galliumos $CHRX_OS_RELEASE ;;
     dev|nightly)
       CHRX_OS_VERSION="nightly"
@@ -453,8 +453,8 @@ determine_osv_galliumos()
 
   case "${CHRX_OS_VERSION}" in
     '1.0') msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}" ;;
-    '2.0') ;;
-    '2.1') msg_os_version="${ANSI_YEL}(CAUTION: beta!)${ANSI_RST}" ;;
+    '2.0') msg_os_version="${ANSI_YEL}(NOTE: newer version available)${ANSI_RST}" ;;
+    '2.1') ;;
   esac
 }
 
