@@ -169,7 +169,7 @@ identify_hardware()
     #TBD*)           _x='UN|...|2015|Dell 11P' ;;
     ACER_ZGB*)      _x='EF|PNV|2011|Acer AC700 Chromebook' ;;
     ARKHAM*)        _x='NG|ARM|2015|ASUS OnHub SRT-AC1900 Router' ;;
-    ASUKA*)         _x='RS|SKL|2017|Dell Chromebook 13 (xxxx)' ;;
+    ASUKA*)         _x='RS|SKL|2017|Dell Chromebook 13 (3380)' ;;
     BANJO*)         _x='FS|BYT|2015|Acer Chromebook 15 (CB3-531)' ;;
     BANON*)         _x='FS|BSW|2016|Acer Chromebook 15 (CB3-532)' ;;
     BIG*)           _x='NG|ARM|2014|Acer Chromebook 13 (CB5-311)' ;;
@@ -269,6 +269,7 @@ identify_hardware()
     RELM_???-C*)    _x='FS|BSW|2016|Edxis Education Chromebook' ;;
     RELM_???-F*)    _x='FS|BSW|2016|Mecer V2 Chromebook' ;;
     RELM_???-G*)    _x='FS|BSW|2016|HP Chromebook 11 G5 EE' ;;
+    RELM_???-H*)    _x='FS|BSW|2017|Acer Chromebook 11 N7 (C731)' ;;
     RELM_???-Z*)    _x='FS|BSW|2016|Quanta OEM Chromebook' ;;
     RELM*)          _x='FS|BSW|2016|(unknown RELM)' ;;
     RIKKU*)         _x='ES|BDW|2015|Acer Chromebox CXI2' ;;
