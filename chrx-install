@@ -282,14 +282,14 @@ identify_hardware()
     SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
     SNOW*)          _x='NG|ARM|2012|Samsung Chromebook' ;;
     DAISY*)         _x='NG|ARM|2012|Samsung Chromebook XE303C12 (SNOW)' ;;
-    SPEEDY*)        _x='NG|ARM|2015|ASUS Chromebook C201' ;;
+    SPEEDY*)        _x='NG|ARM|2015|ASUS Chromebook C201PA' ;;
     SPRING*)        _x='NG|ARM|2013|HP Chromebook 11 G1' ;;
     SQUAWKS*)       _x='FS|BYT|2014|ASUS Chromebook C200' ;;
     STOUT*)         _x='UN|IVB|2013|Lenovo Thinkpad X131e Chromebook' ;;
     STUMPY*)        _x='UN|SNB|2012|Samsung Chromebox Series 3' ;;
     SUMO*)          _x='FS|BYT|2015|AOPEN Chromebase Commercial' ;;
     SWANKY*)        _x='FS|BYT|2014|Toshiba Chromebook 2 CB30/CB35' ;;
-    TERRA13*)       _x='FS|BSW|2016|ASUS Chromebook C300SA' ;;
+    TERRA13*)       _x='FS|BSW|2016|ASUS Chromebook C300SA/C301SA' ;;
     TERRA*)         _x='FS|BSW|2016|ASUS Chromebook C202SA' ;;
     TIDUS*)         _x='ES|BDW|2015|Lenovo ThinkCentre Chromebox' ;;
     TIGER*)         _x='NG|ARM|2017|AOPEN Chromebase Mini' ;;
