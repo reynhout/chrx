@@ -6,7 +6,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 | | |
 | ------------ | ---------- |
 |**works on**|Most Chromebook models. See [chromebooks](#chromebooks).|
-|**installs**|Several Linux distributions. See [operating-systems](#operating systems) and [recommendations](#recommendations).|
+|**installs**|Several Linux distributions. See [operating systems](#operating-systems) and [recommendations](#recommendations).|
 
 
 
