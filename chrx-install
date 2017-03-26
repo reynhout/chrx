@@ -225,9 +225,9 @@ identify_hardware()
     JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
     JERRY_???-???-???-F*) _x='NG|ARM|2016|Epik Chromebook' ;;
     JERRY*)               _x='NG|ARM|201x|(unknown JERRY)' ;;
-    KEFKA_???-A*)         _x='RS|SKL|2017|Dell Chromebook 11 (3180)' ;;
-    KEFKA_???-B*)         _x='RS|SKL|2017|Dell Chromebook 11 (3189)' ;;
-    KEFKA*)               _x='RS|SKL|2017|(unknown KEFKA)' ;;
+    KEFKA_???-A*)         _x='RS|BSW|2017|Dell Chromebook 11 (3180)' ;;
+    KEFKA_???-B*)         _x='RS|BSW|2017|Dell Chromebook 11 (3189)' ;;
+    KEFKA*)               _x='RS|BSW|2017|(unknown KEFKA)' ;;
     KEVIN*)               _x='NG|ARM|2017|Samsung Chromebook Plus' ;;
     KIP_[ABC]*)     _x='FS|BYT|2015|HP Chromebook 11 G3/G4' ;;
     KIP_[DE]*)      _x='FS|BYT|2015|HP Chromebook 14 G4' ;;
