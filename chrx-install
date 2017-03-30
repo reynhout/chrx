@@ -571,6 +571,7 @@ set_customizations_fedora()
   APPENDED_FILES="
     etc/sysctl.conf
     etc/systemd/logind.conf
+    etc/dnf/dnf.conf
   "
 
   set_hidden_partitions_conf
@@ -961,9 +962,10 @@ do_install()
 
   ## get customization files
   mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
-  
+  #cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  #curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
+  cp -rf dist/* ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+
   if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
     install_customizations
   else

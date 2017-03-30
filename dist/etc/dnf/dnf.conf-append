@@ -1,0 +1,3 @@
+#chrx cusomisations
+#exclude=1kernel*-4.10*
+#exclude=1kernel-4.10*

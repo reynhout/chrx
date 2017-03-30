@@ -498,7 +498,11 @@ fedora_install_kernel()
 {
   echo "add_drivers+=\" mmc_core mmc_block sdhci sdhci_acpi \"" > /etc/dracut.conf.d/chrx.conf
   echo_title "Installing Linux kernel and boot environment."
-  dnf ${VERBOSITY_DNF} -y install kernel
+  
+  # install the release kernel
+  dnf ${VERBOSITY_DNF} -y --disablerepo "updates" install kernel kernel-modules kernel-core linux-firmware
+  #and then update to the latest
+  dnf ${VERBOSITY_DNF} -y update
 }
 
 install_kernel_newer_than_min()
@@ -609,7 +613,7 @@ GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
 GRUB_DEFAULT=saved
 GRUB_DISABLE_SUBMENU=true
 GRUB_TERMINAL_OUTPUT="console"
-GRUB_CMDLINE_LINUX="rhgb quiet add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic elevator=noop noswap"
+GRUB_CMDLINE_LINUX="rhgb quiet intel_pstate=enable i915.modeset=1 tpm_tis.force=1 nmi_watchdog=panic,lapic elevator=noop noswap"
 GRUB_DISABLE_RECOVERY="true"
 GRUB_DISABLE_LINUX_UUID="true"
 EOF
