@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.4** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
+**Version 2.4.1** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -133,6 +133,7 @@ you can quote the argument, e.g.: `-p "gimp blender inkscape"`.
 `cd ; curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 16.04 -H hal -U dave -p admin-misc`
 
 
+<a name="advanced-usage"></a>
 ### advanced usage
 
 You may choose to host or cache these installation files yourself.
@@ -295,7 +296,7 @@ be fully eliminated.
 
 If these are concerns of yours, you can mitigate your risks by auditing
 all of the code involved, comparing checksums of downloaded packages, and
-hosting local caches (see [advanced usage](#advanced usage)).
+hosting local caches (see [advanced usage](#advanced-usage)).
 
 Also, **chrx** "pings home" on every install to report success or failure.
 This ping includes **no personal information**, only data that might be
