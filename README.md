@@ -45,7 +45,7 @@ skip directly to phase two.
 1. Run **chrx**: `cd ; curl -Os https://chrx.org/go && sh go` (see [options](#options))
 1. Follow on-screen instructions to prepare your Chromebook for installation
 1. Reboot, then repeat steps 2-4 and 6 to install and configure your new system
-
+1. When rebooting from now on, you'll be at that the same developer screen. You may have to press CTRL+L to boot in Legacy Boot mode, and from there you have a choice of Linux or ChromeOS.
 
 <a name="options"></a>
 ### options
