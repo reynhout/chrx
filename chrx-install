@@ -210,6 +210,7 @@ identify_hardware()
     GNAWTY_???-???-??B*) _x='FS|BYT|2016|Acer Chromebook 11 (CB3-131,C735)' ;;
     GNAWTY*)        _x='FS|BYT|201x|(unknown GNAWTY)' ;;
     GUADO*)         _x='ES|BDW|2015|ASUS Chromebox CN62' ;;
+    HANA*)          _x='NG|ARM|2017|Lenovo N23 Yoga/Flex 11 Chromebook' ;;
     HELI*)          _x='FS|BYT|2015|Haier Chromebook G2' ;;
     #HELI*)          _x='FS|BYT|2015|Huaqin 11' ;;
     IEC_MARIO*)     _x='UN|PNV|2011|Google Cr-48' ;;
@@ -224,6 +225,8 @@ identify_hardware()
     JERRY_???-???-???-D*) _x='NG|ARM|2015|eduGear Chromebook K Series' ;;
     JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
     JERRY_???-???-???-F*) _x='NG|ARM|2016|Epik Chromebook' ;;
+    JERRY_???-???-???-G*) _x='NG|ARM|2017|Positivo Chromebook CH1190' ;;
+    JERRY_???-???-???-H*) _x='NG|ARM|2016|Mecer Chromebook' ;;
     JERRY*)               _x='NG|ARM|201x|(unknown JERRY)' ;;
     KEFKA_???-A*)         _x='RS|BSW|2017|Dell Chromebook 11 (3180)' ;;
     KEFKA_???-B*)         _x='RS|BSW|2017|Dell Chromebook 11 (3189)' ;;
@@ -248,6 +251,7 @@ identify_hardware()
     MIGHTY_???-???-???-G*) _x='NG|ARM|2016|PCmerge Chromebook PCM-116E' ;;
     MIGHTY_???-???-???-H*) _x='NG|ARM|2016|Lumos Education Chromebook' ;;
     MIGHTY_???-???-???-I*) _x='NG|ARM|2016|MEDION Chromebook S2015' ;;
+    MIGHTY_???-???-???-J*) _x='NG|ARM|2017|Prowise 11 Chromebook' ;;
     MIGHTY*)               _x='NG|ARM|201x|(unknown MIGHTY)' ;;
     MINNIE*)        _x='NG|ARM|2015|ASUS Chromebook Flip C100PA' ;;
     MONROE_?[23]?*) _x='ES|HSW|2014|LG Chromebase 22CV241' ;;
@@ -264,6 +268,8 @@ identify_hardware()
     PI*)            _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
     QUAWKS*)        _x='FS|BYT|2014|ASUS Chromebook C300' ;;
     REKS_???-???-???-B*) _x='FS|BSW|2016|Lenovo N42 Chromebook' ;;
+    REKS_???-???-???-C*) _x='FS|BSW|2017|Lenovo N23 Chromebook (Touch)' ;;
+    REKS_???-???-???-D*) _x='FS|BSW|2017|Lenovo N23 Chromebook' ;;
     REKS_???-???-???-*)  _x='FS|BSW|2016|Lenovo N22 Chromebook' ;;
     REKS*)          _x='FS|BSW|2016|(unknown REKS)' ;;
     #RELM_???-A*)    _x='FS|BSW|2016|n/a' ;;
@@ -299,6 +305,10 @@ identify_hardware()
     WINKY*)         _x='FS|BYT|2014|Samsung Chromebook 2 (XE500C12)' ;;
     WIZPIG_???-???-??A*) _x='NG|ARM|2016|CTL Chromebook J5' ;;
     WIZPIG_???-???-??B*) _x='NG|ARM|2016|Edugear CMT Chromebook' ;;
+    WIZPIG_???-???-??C*) _x='NG|ARM|2016|Haier Convertible Chromebook 11 C' ;;
+    WIZPIG_???-???-??D*) _x='NG|ARM|2016|Viglen Chromebook 360' ;;
+    WIZPIG_???-???-??G*) _x='NG|ARM|2017|Prowise ProLine Chromebook' ;;
+    WIZPIG_???-???-??H*) _x='NG|ARM|2016|PCMerge Chromebook PCM-116T-432B' ;;
     WIZPIG*)        _x='NG|ARM|2016|(unknown WIZPIG)' ;;
     WOLF*)          _x='RS|HSW|2014|Dell Chromebook 11' ;;
     X86_WOLF*)      _x='RS|HSW|2014|Dell Chromebook 11' ;;
