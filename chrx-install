@@ -174,6 +174,7 @@ identify_hardware()
     BANON*)         _x='FS|BSW|2016|Acer Chromebook 15 (CB3-532)' ;;
     BIG*)           _x='NG|ARM|2014|Acer Chromebook 13 (CB5-311)' ;;
     BLAZE*)         _x='NG|ARM|2014|HP Chromebook 14 G3' ;;
+    BOB*)           _x='NG|ARM|2017|ASUS Chromebook Flip C101PA' ;;
     BUDDY*)         _x='ES|BDW|2016|Acer Chromebase 24' ;;
     BUTTERFLY*)     _x='UN|SNB|2013|HP Pavilion Chromebook 14' ;;
     CANDY*)         _x='FS|BYT|2015|Dell Chromebook 11' ;;
@@ -201,6 +202,7 @@ identify_hardware()
     EXPRESSO_???-???-??B*)  _x='NG|ARM|2014|Bobicus Chromebook 11' ;;
     EXPRESSO_???-???-??C*)  _x='NG|ARM|2014|Edxis Chromebook' ;;
     EXPRESSO*)              _x='NG|ARM|201x|(unknown EXPRESSO)' ;;
+    EVE*)           _x='UN|KBL|2017|Google Pixelbook' ;;
     FALCO*)         _x='OK|HSW|2013|HP Chromebook 14' ;;
     FIEVEL*)        _x='NG|ARM|2017|AOPEN Chromebox Mini' ;;
     GANDOF*)        _x='OK|BDW|2015|Toshiba Chromebook 2 CB30/CB35' ;;
@@ -211,7 +213,9 @@ identify_hardware()
     GNAWTY_???-???-??B*) _x='FS|BYT|2016|Acer Chromebook 11 (CB3-131,C735)' ;;
     GNAWTY*)        _x='FS|BYT|201x|(unknown GNAWTY)' ;;
     GUADO*)         _x='ES|BDW|2015|ASUS Chromebox CN62' ;;
-    HANA*)          _x='NG|ARM|2017|Lenovo N23 Yoga/Flex 11 Chromebook' ;;
+    HANA_???-???-??A*) _x='NG|ARM|2017|Lenovo N23 Yoga/Flex 11 Chromebook' ;;
+    HANA_???-???-??B*) _x='NG|ARM|2017|Poin2 Chromebook 14' ;;
+    HANA*)             _x='NG|ARM|2017|(unknown HANA)' ;;
     HELI*)          _x='FS|BYT|2015|Haier Chromebook G2' ;;
     #HELI*)          _x='FS|BYT|2015|Huaqin 11' ;;
     IEC_MARIO*)     _x='UN|PNV|2011|Google Cr-48' ;;
@@ -224,7 +228,7 @@ identify_hardware()
     JERRY_???-???-???-B*) _x='NG|ARM|2015|CTL J2/J4 Chromebook for Education' ;;
     JERRY_???-???-???-C*) _x='NG|ARM|2015|Poin2 Chromebook 11' ;;
     JERRY_???-???-???-D*) _x='NG|ARM|2015|eduGear Chromebook K Series' ;;
-    JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100' ;;
+    JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100/110' ;;
     JERRY_???-???-???-F*) _x='NG|ARM|2016|Epik Chromebook' ;;
     JERRY_???-???-???-G*) _x='NG|ARM|2017|Positivo Chromebook CH1190' ;;
     JERRY_???-???-???-H*) _x='NG|ARM|2016|Mecer Chromebook' ;;
@@ -290,6 +294,7 @@ identify_hardware()
     RIKKU*)         _x='ES|BDW|2015|Acer Chromebox CXI2' ;;
     SAMS_ALEX*)     _x='EF|PNV|2011|Samsung Chromebook Series 5' ;;
     SAMUS*)         _x='OK|BDW|2015|Google Chromebook Pixel' ;;
+    SAND*)          _x='UN|APL|2017|Acer Chromebook 15 CB515-1HT/1H' ;;
     SENTRY*)        _x='RS|SKL|2016|Lenovo Thinkpad 13 Chromebook' ;;
     SETZER*)        _x='FS|BSW|2016|HP Chromebook 11 G5/11-vxxx' ;;
     SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
@@ -344,6 +349,7 @@ identify_hardware()
     BSW) _cpuf="Intel Braswell" ;;
     SKL) _cpuf="Intel Skylake" ;;
     APL) _cpuf="Intel Apollo Lake" ;;
+    KBL) _cpuf="Intel Kaby Lake" ;;
     #*)   _cpuf="(unrecognized)" ;;
   esac
 

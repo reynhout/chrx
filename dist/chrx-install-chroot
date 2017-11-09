@@ -239,6 +239,8 @@ galliumos_install_hwspecific()
     "Intel Bay Trail")    hwspec_pkgs="galliumos-baytrail" ;;
     "Intel Braswell")     hwspec_pkgs="galliumos-braswell" ;;
     "Intel Skylake")      hwspec_pkgs="galliumos-skylake" ;;
+    #"Intel Apollo Lake")  hwspec_pkgs="galliumos-apollolake" ;;
+    #"Intel Kaby Lake")    hwspec_pkgs="galliumos-kabylake" ;;
   esac
 
   case "$CHRX_HWID" in
