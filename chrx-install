@@ -274,10 +274,10 @@ identify_hardware()
     X86_PEPPY*)     _x='OK|HSW|2013|Acer C720, C720P TEST Chromebook' ;;
     PIT*)           _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
     PI*)            _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
-    PYRO*)          _x='UN|APL|2017|Lenovo Thinkpad 11e/Yoga Chromebook (G4)' ;;
+    PYRO*)          _x='FS|APL|2017|Lenovo Thinkpad 11e/Yoga Chromebook (G4)' ;;
     QUAWKS*)        _x='FS|BYT|2014|ASUS Chromebook C300' ;;
-    REEF_???-C*)    _x='UN|APL|2017|ASUS Chromebook C213NA' ;;
-    REEF*)          _x='UN|APL|2017|Acer Chromebook Spin 11 (R751T)' ;;
+    REEF_???-C*)    _x='FS|APL|2017|ASUS Chromebook C213NA' ;;
+    REEF*)          _x='FS|APL|2017|Acer Chromebook Spin 11 (R751T)' ;;
     REKS_???-???-???-B*) _x='FS|BSW|2016|Lenovo N42 Chromebook' ;;
     REKS_???-???-???-C*) _x='FS|BSW|2017|Lenovo N23 Chromebook (Touch)' ;;
     REKS_???-???-???-D*) _x='FS|BSW|2017|Lenovo N23 Chromebook' ;;
@@ -294,11 +294,11 @@ identify_hardware()
     RIKKU*)         _x='ES|BDW|2015|Acer Chromebox CXI2' ;;
     SAMS_ALEX*)     _x='EF|PNV|2011|Samsung Chromebook Series 5' ;;
     SAMUS*)         _x='OK|BDW|2015|Google Chromebook Pixel' ;;
-    SAND*)          _x='UN|APL|2017|Acer Chromebook 15 CB515-1HT/1H' ;;
+    SAND*)          _x='FS|APL|2017|Acer Chromebook 15 CB515-1HT/1H' ;;
     SENTRY*)        _x='RS|SKL|2016|Lenovo Thinkpad 13 Chromebook' ;;
     SETZER*)        _x='FS|BSW|2016|HP Chromebook 11 G5/11-vxxx' ;;
     SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
-    SNAPPY*)        _x='UN|APL|2017|HP Chromebook x360 11 G1 EE' ;;
+    SNAPPY*)        _x='FS|APL|2017|HP Chromebook x360 11 G1 EE' ;;
     SNOW*)          _x='NG|ARM|2012|Samsung Chromebook' ;;
     DAISY*)         _x='NG|ARM|2012|Samsung Chromebook XE303C12 (SNOW)' ;;
     SPEEDY*)        _x='NG|ARM|2015|ASUS Chromebook C201PA' ;;
