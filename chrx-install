@@ -496,7 +496,7 @@ get_os_version_fedora()
   CHRX_OS_VERSION=$(echo "${version_list}" | sort | tail -1)
   # default to 25
   if [[ $CHRX_OS_VERSION != [0-9][0-9] ]]; then
-    CHRX_OS_VERSION=25
+    CHRX_OS_VERSION=27
   fi
 }
 
@@ -507,7 +507,7 @@ determine_osv_fedora()
     latest)
       get_os_version_fedora
       ;;
-    24,25)
+    26,27)
       CHRX_OS_VERSION=${CHRX_OS_RELEASE}
       ;;
     rawhide)
@@ -525,7 +525,7 @@ determine_osv_fedora()
       ;;
   esac
   
-  CHRX_OS_CORE_IMAGE_URL='https://download.fedoraproject.org/pub/fedora/linux/releases/25/Docker/x86_64/images/Fedora-Docker-Base-25-1.3.x86_64.tar.xz'
+  CHRX_OS_CORE_IMAGE_URL='https://download.fedoraproject.org/pub/fedora/linux/releases/27/Docker/x86_64/images/Fedora-Docker-Base-27-1.6.x86_64.tar.xz'
   
 }
 

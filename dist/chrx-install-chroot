@@ -487,6 +487,16 @@ fedora_install_desktop_support()
 
   echo_title "Installing desktop compatibility pkgs."
   dnf ${VERBOSITY_DNF} -y install xbindkeys xdotool xbacklight xvkbd
+
+  # fix missing link to display-manager
+  if [ -e /usr/lib/systemd/system/gdm.service ]; then
+    ln -s /usr/lib/systemd/system/gdm.service /etc/systemd/system/display-manager.service
+  elif [ -e /usr/lib/systemd/system/lightdm.service ]; then
+    ln -s /usr/lib/systemd/system/lightdm.service /etc/systemd/system/display-manager.service
+  elif [ -e /usr/lib/systemd/system/sddm.service ]; then
+    ln -s /usr/lib/systemd/system/sddm.service /etc/systemd/system/display-manager.service
+  fi
+
 }
 
 install_kernel()
