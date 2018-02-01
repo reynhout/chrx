@@ -362,5 +362,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.3.2** (20161222): add first user to groups individually in case selected distro/metapackage/spin does not include all (fixes #30)
 - **2.4** (20161228): add support selection of mirror sites (GalliumOS-only)
   - **2.4.1** (20170129): GalliumOS: Fix LINK, add CHELL HiDPI pkg selection
+  - **2.4.2** (20180201): Fedora: updates for Fedora 27
 
 <!-- don't forget to update the version number in chrx-install! -->
