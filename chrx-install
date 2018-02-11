@@ -619,6 +619,9 @@ set_hidden_partitions_conf()
     "/dev/sda")
       CONF_FILES+="etc/udev/rules.d/99-hide-disks-sda.rules "
       ;;
+    "/dev/nvme0n1")
+      CONF_FILES+="etc/udev/rules.d/99-hide-disks-nvme.rules "
+      ;;
     *)
       echo_warn "unexpected root device \"$_rootdev\""
       ;;

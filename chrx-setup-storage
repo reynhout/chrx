@@ -10,6 +10,15 @@
 
 eval_try umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null ## be safe.
 
+set_root_partition() {
+  case "$CHRX_TARGET_DISK" in
+    "/dev/sd*")     CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}1" ;;
+    "/dev/mmcblk*") CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p1" ;;
+    "/dev/nvme*")   CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p1" ;;
+    *)              echo_fail "\nunrecognized disk device!" ;;
+  esac
+}
+
 if [ "${CHRX_TARGET_DISK}" ]; then
   echo_info "Installing to target disk ${ANSI_WHT}${CHRX_TARGET_DISK}${ANSI_RST}"
   cat <<- EOF
@@ -24,10 +33,11 @@ if [ "${CHRX_TARGET_DISK}" ]; then
 
   echo_info "Setting up target disk ${CHRX_TARGET_DISK}..."
 
-  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}1"
-  if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
-    CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p1"
-  fi
+  #CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}1"
+  #if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
+  #  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p1"
+  #fi
+  set_root_partition
 
   #dd if=/dev/zero of="${CHRX_ROOT_PARTITION}" bs=512 count=1
   #printf ",,L,*\n" | sfdisk "${CHRX_TARGET_DISK}"
@@ -125,10 +135,11 @@ fi
 
 ## set targets
 if [ -z "$CHRX_ROOT_PARTITION" ]; then
-  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}7"
-  if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
-    CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p7"
-  fi
+  #CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}7"
+  #if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
+  #  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p7"
+  #fi
+  set_root_partition
 fi
 
 echo_info "\nInstalling to ${CHRX_ROOT_PARTITION}..."
