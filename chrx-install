@@ -169,6 +169,7 @@ identify_hardware()
     #TBD*)           _x='UN|...|2015|Dell 11P' ;;
     ACER_ZGB*)      _x='EF|PNV|2011|Acer AC700 Chromebook' ;;
     ARKHAM*)        _x='NG|ARM|2015|ASUS OnHub SRT-AC1900 Router' ;;
+    ASTRONAUT*)     _x='FS|APL|2018|Acer Chromebook 11 (C732, C732T, C732L, C732LT)' ;;
     ASUKA*)         _x='RS|SKL|2017|Dell Chromebook 13 (3380)' ;;
     BANJO*)         _x='FS|BYT|2015|Acer Chromebook 15 (CB3-531)' ;;
     BANON*)         _x='FS|BSW|2016|Acer Chromebook 15 (CB3-532)' ;;
@@ -213,7 +214,7 @@ identify_hardware()
     GNAWTY_???-???-??B*) _x='FS|BYT|2016|Acer Chromebook 11 (CB3-131,C735)' ;;
     GNAWTY*)        _x='FS|BYT|201x|(unknown GNAWTY)' ;;
     GUADO*)         _x='ES|BDW|2015|ASUS Chromebox CN62' ;;
-    HANA_???-???-??A*)    _x='NG|ARM|2017|Lenovo N23 Yoga/Flex 11 Chromebook' ;;
+    HANA_???-???-??A*)    _x='NG|ARM|2017|Lenovo 300e/N23 Yoga/Flex 11 Chromebook' ;;
     HANA_???-???-??B*)    _x='NG|ARM|2017|Poin2 Chromebook 14' ;;
     HANA_???-???-??[CD]*) _x='NG|ARM|2017|Poin2 Chromebook 11C' ;;
     HANA*)             _x='NG|ARM|2017|(unknown HANA)' ;;
@@ -265,6 +266,8 @@ identify_hardware()
     MONROE_?[23]?*) _x='ES|HSW|2014|LG Chromebase 22CV241' ;;
     MONROE_?4?*)    _x='ES|HSW|2016|LG Chromebase 22CB25S' ;;
     MONROE*)        _x='ES|HSW|201x|(unknown MONROE)' ;;
+    NASHER360*)     _x='FS|APL|2018|Dell Chromebook 11 2-in-1 5190' ;;
+    NASHER*)        _x='FS|APL|2018|Dell Chromebook 11 5190' ;;
     NINJA*)         _x='FS|BYT|2015|AOPEN Chromebox Commercial' ;;
     ORCO*)          _x='FS|BYT|2015|Lenovo Ideapad 100S Chromebook' ;;
     PAINE*)         _x='OK|BDW|2014|Acer Chromebook 11 (C740)' ;;
@@ -293,9 +296,12 @@ identify_hardware()
     RELM_???-Z*)    _x='FS|BSW|2016|Quanta OEM Chromebook' ;;
     RELM*)          _x='FS|BSW|2016|(unknown RELM)' ;;
     RIKKU*)         _x='ES|BDW|2015|Acer Chromebox CXI2' ;;
+    ROBO360*)       _x='FS|APL|2018|Lenovo 500e Chromebook' ;;
+    ROBO*)          _x='FS|APL|2018|Lenovo 100e Chromebook' ;;
     SAMS_ALEX*)     _x='EF|PNV|2011|Samsung Chromebook Series 5' ;;
     SAMUS*)         _x='OK|BDW|2015|Google Chromebook Pixel' ;;
-    SAND*)          _x='FS|APL|2017|Acer Chromebook 15 CB515-1HT/1H' ;;
+    SAND*)          _x='FS|APL|2017|Acer Chromebook 15 (CB515-1H/1HT)' ;;
+    SANTA*)         _x='FS|APL|2018|Acer Chromebook 11 (CB311-8H/8HT)' ;;
     SENTRY*)        _x='RS|SKL|2016|Lenovo Thinkpad 13 Chromebook' ;;
     SETZER*)        _x='FS|BSW|2016|HP Chromebook 11 G5/11-vxxx' ;;
     SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
