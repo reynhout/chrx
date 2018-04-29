@@ -41,7 +41,7 @@ skip directly to phase two.
 1. Load ChromeOS by pressing `CTRL+D` at the white "OS verification is OFF" screen
 1. Configure your Wi-Fi network if necessary, then log in (Guest account is fine)
 1. Open the ChromeOS Terminal by pressing `CTRL+ALT+T`, and enter `shell` at the prompt
-1. Update firmware, if necessary (*required* for Bay Trail and Braswell models, *recommended* for Broadwell and Skylake models, *optional* for Haswell models -- see [chromebooks](#chromebooks))
+1. Update firmware, if necessary (*required* for Bay Trail, Braswell, and Apollo Lake models; *recommended* for Broadwell, Skylake, and Kaby Lake models; *optional* for Haswell models -- see [chromebooks](#chromebooks))
 1. Run **chrx**: `cd ; curl -Os https://chrx.org/go && sh go` (see [options](#options))
 1. Follow on-screen instructions to prepare your Chromebook for installation
 1. Reboot, then repeat steps 2-4 and 6 to install and configure your new system
@@ -160,8 +160,10 @@ status            |CPU family                           |notes
 :white_check_mark:|Intel Haswell                        |[Firmware update](https://mrchromebox.tech/#fwscript) available
 :white_check_mark:|Intel Broadwell                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
 :white_check_mark:|Intel Skylake                        |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
+:white_check_mark:|Intel Kaby Lake                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
 :white_check_mark:|Intel Bay Trail                      |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
 :white_check_mark:|Intel Braswell                       |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
+:white_check_mark:|Intel Apollo Lake                    |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
 :question:        |Intel Sandy/Ivy Bridge               |Requires SeaBIOS with Legacy Boot capability
 :question:        |Intel Pineview                       |Requires SeaBIOS with Legacy Boot capability
 :x:               |ARM                                  |ARM support is very unlikely
