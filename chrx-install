@@ -171,6 +171,7 @@ identify_hardware()
     ARKHAM*)        _x='NG|ARM|2015|ASUS OnHub SRT-AC1900 Router' ;;
     ASTRONAUT*)     _x='FS|APL|2018|Acer Chromebook 11 (C732, C732T, C732L, C732LT)' ;;
     ASUKA*)         _x='RS|SKL|2017|Dell Chromebook 13 (3380)' ;;
+    AURON_PAINE*)   _x='OK|BDW|2014|Acer Chromebook 11 (C740)' ;;
     BANJO*)         _x='FS|BYT|2015|Acer Chromebook 15 (CB3-531)' ;;
     BANON*)         _x='FS|BSW|2016|Acer Chromebook 15 (CB3-532)' ;;
     BIG*)           _x='NG|ARM|2014|Acer Chromebook 13 (CB5-311)' ;;
