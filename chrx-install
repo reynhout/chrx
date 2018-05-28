@@ -457,7 +457,7 @@ get_mirror_url_galliumos()
   case "$_mirror" in
     #ny1.us) CHRX_OS_MIRROR="https://galliumos.org/releases" ;;
     va1.us) CHRX_OS_MIRROR="https://va1.us.mirror.galliumos.org/releases" ;;
-    ca1.us) CHRX_OS_MIRROR="https://ca1.us.mirror.galliumos.org/releases" ;;
+    #ca1.us) CHRX_OS_MIRROR="https://ca1.us.mirror.galliumos.org/releases" ;;
     rb1.fr) CHRX_OS_MIRROR="https://rb1.fr.mirror.galliumos.org/releases" ;;
     *)      CHRX_OS_MIRROR="https://galliumos.org/releases" ;;
   esac
