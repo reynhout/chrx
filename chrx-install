@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.4.3"
+CHRX_VERSION="2.5dev1"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -55,7 +55,7 @@ Options
                      fedora: latest, 23, 24, 25
    -a ARCH         processor architecture (i386, amd64) [${CHRX_OS_ARCH}]
    -m MIRROR       distribution-specific download mirror [${CHRX_OS_MIRROR}]
-                     galliumos: ny1.us, va1.us, ca1.us, rb1.fr
+                     galliumos: ny1.us, va1.us, rb1.fr
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) [${CHRX_TARGET_DISK}]
    -p PACKAGE      additional packages to install, may repeat [${CHRX_ADD_PKGS}]
                      kodi, minecraft, steam, etc, see chrx.org for more
@@ -412,6 +412,7 @@ determine_osv_ubuntu()
     c*)      CHRX_OS_VERSION="18.10" ;;
     d*)      CHRX_OS_VERSION="19.04" ;;
     e*)      CHRX_OS_VERSION="19.10" ;;
+    f*)      CHRX_OS_VERSION="20.04" ;;
     *)       CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
   esac
 

@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.4.3** Add support for Fedora; Updated for Ubuntu 16.10; Installs GalliumOS by default. See [changelog](#changelog).
+**Version 2.5** Updates for GalliumOS 3.0. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -65,12 +65,12 @@ Options
                      fedora: desktop, workstation, kde, xfce, lxde, mate,
                        cinnamon, sugar
    -r RELEASE      distribution release number or name [latest]
-                     galliumos: latest, 2.0, xenon, nightly
-                     ubuntu etc: latest, lts, dev, 16.04.1, xenial, etc
+                     galliumos: latest, 3.0, bismuth, 2.0, xenon, nightly
+                     ubuntu etc: latest, lts, dev, 16.04, 16.10, xenial, etc
                      fedora: latest, 23, 24, 25
    -a ARCH         processor architecture (i386, amd64) [amd64]
-   -m MIRROR       distribution-specific download mirror [${CHRX_OS_MIRROR}]
-                     galliumos: ny1.us, va1.us, ca1.us, rb1.fr
+   -m MIRROR       distribution-specific download mirror [primary]
+                     galliumos: ny1.us, va1.us, rb1.fr
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
    -p PACKAGE      additional packages to install, may repeat []
                      kodi, minecraft, steam, etc, see chrx.org for more
@@ -86,9 +86,9 @@ Options
    -v              increase output verbosity
    -h              show this help
 
-  Default values are shown in brackets, e.g.: [default].
-  
-  If TARGETDISK is not specified, chrx will select the internal SSD.
+Default values are shown in brackets, e.g.: [default].
+
+If TARGETDISK is not specified, chrx will select the internal SSD.
 
 ```
 
@@ -366,5 +366,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.4.1** (20170129): GalliumOS: Fix LINK, add CHELL HiDPI pkg selection
   - **2.4.2** (20180201): Fedora: updates for Fedora 27
   - **2.4.3** (20180211): Ubuntu: update versioning; all: handle NVMe disks
+- **2.5** (20180607): GalliumOS: updates for GalliumOS 3.0
 
 <!-- don't forget to update the version numbers at top and in chrx-install! -->
