@@ -1003,10 +1003,11 @@ do_install()
   fi
   chmod a+rx ${CHRX_INSTALL_ROOT}/usr/bin/cgpt
 
-  ## The chroot needs a valid resolv.conf, so bring it over from ChromeOS
-  ## cat in case resolv.conf is a symlink (e.g. into /run/resolvconf etc)
-  ## sometimes /etc/resolv.conf is a dangling symlink, so fix parent dirs
+  ## The chroot needs a valid resolv.conf, so bring it over from ChromeOS.
+  ## Sometimes /etc/resolv.conf is a dangling symlink, so fix parent dirs.
   mkdir -p ${CHRX_INSTALL_ROOT}/run/resolvconf
+  mkdir -p ${CHRX_INSTALL_ROOT}/run/systemd/resolve
+  ## cat in case resolv.conf is a symlink (e.g. into /run/resolvconf etc).
   cat /etc/resolv.conf > ${CHRX_INSTALL_ROOT}/etc/resolv.conf
 
   echo ${CHRX_HOSTNAME} > ${CHRX_INSTALL_ROOT}/etc/hostname
