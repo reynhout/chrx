@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.5dev1"
+CHRX_VERSION="2.5dev2"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -238,6 +238,7 @@ identify_hardware()
     JERRY*)               _x='NG|ARM|201x|(unknown JERRY)' ;;
     KEFKA_???-A*)         _x='RS|BSW|2017|Dell Chromebook 11 (3180)' ;;
     KEFKA_???-B*)         _x='RS|BSW|2017|Dell Chromebook 11 (3189)' ;;
+    KENCH*)               _x='UN|KBL|2018|HP Chromebox G2' ;;
     KEFKA*)               _x='RS|BSW|2017|(unknown KEFKA)' ;;
     KEVIN*)               _x='NG|ARM|2017|Samsung Chromebook Plus' ;;
     KIP_[ABC]*)     _x='FS|BYT|2015|HP Chromebook 11 G3/G4' ;;
@@ -307,12 +308,14 @@ identify_hardware()
     SANTA*)         _x='FS|APL|2018|Acer Chromebook 11 (CB311-8H/8HT)' ;;
     SENTRY*)        _x='RS|SKL|2016|Lenovo Thinkpad 13 Chromebook' ;;
     SETZER*)        _x='FS|BSW|2016|HP Chromebook 11 G5/11-vxxx' ;;
+    SION*)          _x='UN|KBL|2018|Acer Chromebox CXI3' ;;
     SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
     SNAPPY_???-A*)  _x='FS|APL|2017|HP Chromebook x360 11 G1 EE' ;;
     SNAPPY_???-B*)  _x='FS|APL|2018|HP Chromebook 11 G6 EE' ;;
     SNAPPY_???-C*)  _x='FS|APL|2018|HP Chromebook 14 G5' ;;
     SNAPPY*)        _x='FS|APL|2018|(unknown SNAPPY)' ;;
     SNOW*)          _x='NG|ARM|2012|Samsung Chromebook' ;;
+    SORAKA*)        _x='UN|KBL|2018|HP Chromebook x2' ;;
     DAISY*)         _x='NG|ARM|2012|Samsung Chromebook XE303C12 (SNOW)' ;;
     SPEEDY*)        _x='NG|ARM|2015|ASUS Chromebook C201PA' ;;
     SPRING*)        _x='NG|ARM|2013|HP Chromebook 11 G1' ;;
@@ -321,6 +324,7 @@ identify_hardware()
     STUMPY*)        _x='UN|SNB|2012|Samsung Chromebox Series 3' ;;
     SUMO*)          _x='FS|BYT|2015|AOPEN Chromebase Commercial' ;;
     SWANKY*)        _x='FS|BYT|2014|Toshiba Chromebook 2 CB30/CB35' ;;
+    TEEMO*)         _x='UN|KBL|2018|ASUS Chromebox 3' ;;
     TERRA_???-???-???-A*) _x='FS|BSW|2016|ASUS Chromebook C202SA' ;;
     TERRA_???-???-???-B*) _x='FS|BSW|2016|ASUS Chromebook C300SA/C301SA' ;;
     TERRA*)               _x='FS|BSW|2016|(unknown TERRA)' ;;
@@ -340,6 +344,8 @@ identify_hardware()
     WIZPIG*)        _x='FS|BSW|2016|(unknown WIZPIG)' ;;
     WOLF*)          _x='RS|HSW|2014|Dell Chromebook 11' ;;
     X86_WOLF*)      _x='RS|HSW|2014|Dell Chromebook 11' ;;
+    WUKONG_??D*)    _x='UN|KBL|2018|CTL Chromebox CBx1' ;;
+    WUKONG_??C*)    _x='UN|KBL|2018|ViewSonic NMP660 Chromebox' ;;
     YUNA*)          _x='OK|BDW|2014|Acer Chromebook 15 (CB5-571, C910)' ;;
     AURON_YUNA*)    _x='OK|BDW|2014|Acer Chromebook 15 (CB5-571, C910)' ;;
     ZAKO*)          _x='RS|HSW|2014|HP Chromebox CB1/G1/for Meetings' ;;
