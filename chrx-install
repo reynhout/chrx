@@ -186,6 +186,7 @@ identify_hardware()
     CHELL*)         _x='RS|SKL|2016|HP Chromebook 13 G1' ;;
     CLAPPER*)       _x='FS|BYT|2014|Lenovo N20/N20P Chromebook' ;;
     CYAN*)          _x='FS|BSW|2015|Acer Chromebook R11 (CB5-132T, C738T)' ;;
+    DRU*)           _x='NG|ARM|2018|Acer Chromebook Tab 10' ;;
     EDGAR*)         _x='FS|BSW|2016|Acer Chromebook 14 (CB3-431)' ;;
     ELM*)           _x='NG|ARM|2016|Acer Chromebook R13 (CB5-312T)' ;;
     ENGUARDE_???-???-??A*)  _x='FS|BYT|2014|CTL N6 Education Chromebook' ;;
@@ -271,6 +272,7 @@ identify_hardware()
     MONROE*)        _x='ES|HSW|201x|(unknown MONROE)' ;;
     NASHER360*)     _x='FS|APL|2018|Dell Chromebook 11 2-in-1 5190' ;;
     NASHER*)        _x='FS|APL|2018|Dell Chromebook 11 5190' ;;
+    NAUTILUS*)      _x='UN|KBL|2018|Samsung Chromebook Plus (V2)' ;;
     NINJA*)         _x='FS|BYT|2015|AOPEN Chromebox Commercial' ;;
     ORCO*)          _x='FS|BYT|2015|Lenovo Ideapad 100S Chromebook' ;;
     PAINE*)         _x='OK|BDW|2014|Acer Chromebook 11 (C740)' ;;
