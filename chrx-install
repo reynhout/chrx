@@ -555,7 +555,7 @@ determine_osv_fedora()
       ;;
   esac
   
-  CHRX_OS_CORE_IMAGE_URL='https://download.fedoraproject.org/pub/fedora/linux/releases/27/Docker/x86_64/images/Fedora-Docker-Base-27-1.6.x86_64.tar.xz'
+  CHRX_OS_CORE_IMAGE_URL='https://archives.fedoraproject.org/pub/fedora/linux/releases/27/Docker/x86_64/images/Fedora-Docker-Base-27-1.6.x86_64.tar.xz'
   
 }
 
