@@ -239,8 +239,10 @@ galliumos_install_hwspecific()
     "Intel Bay Trail")    hwspec_pkgs="galliumos-baytrail" ;;
     "Intel Braswell")     hwspec_pkgs="galliumos-braswell" ;;
     "Intel Skylake")      hwspec_pkgs="galliumos-skylake" ;;
-    #"Intel Apollo Lake")  hwspec_pkgs="galliumos-apollolake" ;;
-    #"Intel Kaby Lake")    hwspec_pkgs="galliumos-kabylake" ;;
+    "Intel Apollo Lake")  hwspec_pkgs="galliumos-apollolake" ;;
+    "Intel Kaby Lake")    hwspec_pkgs="galliumos-kabylake" ;;
+    "Intel Gemini Lake")  hwspec_pkgs="galliumos-apollolake" ;;
+    "Intel Amber Lake")   hwspec_pkgs="galliumos-kabylake" ;;
   esac
 
   case "$CHRX_HWID" in
@@ -250,9 +252,7 @@ galliumos_install_hwspecific()
   esac
 
   ## TODO: add galliumos-cbox instead of galliumos-laptop for Chromeboxes
-  if [ "$hwspec_pkgs" ]; then
-    apt_get_install ${hwspec_pkgs} galliumos-laptop
-  fi
+  apt_get_install galliumos-laptop ${hwspec_pkgs}
 }
 
 install_distenv()

@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.5** Updates for GalliumOS 3.0. See [changelog](#changelog).
+**Version 2.5.1** Updates for GalliumOS 3.0. See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -367,5 +367,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
   - **2.4.2** (20180201): Fedora: updates for Fedora 27
   - **2.4.3** (20180211): Ubuntu: update versioning; all: handle NVMe disks
 - **2.5** (20180607): GalliumOS: updates for GalliumOS 3.0
+  - **2.5.1** (20190620): Add support for Intel Gemini Lake and Amber Lake
 
 <!-- don't forget to update the version numbers at top and in chrx-install! -->
