@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.5.1"
+CHRX_VERSION="2.6"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -511,7 +511,7 @@ determine_osv_ubuntu()
 get_os_version_galliumos()
 {
   local _release=$1
-  CHRX_OS_VERSION="2.1"
+  CHRX_OS_VERSION="3.0"
 }
 
 get_mirror_url_galliumos()
@@ -568,8 +568,8 @@ determine_osv_galliumos()
 
   case "${CHRX_OS_VERSION}" in
     '1.0') msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}" ;;
-    '2.0') msg_os_version="${ANSI_YEL}(NOTE: newer version available)${ANSI_RST}" ;;
-    '2.1') ;;
+    '2.0') msg_os_version="${ANSI_YEL}(CAUTION: deprecated!)${ANSI_RST}" ;;
+    '2.1') msg_os_version="${ANSI_YEL}(NOTE: newer version available)${ANSI_RST}" ;;
     '3.0') ;;
   esac
 }
