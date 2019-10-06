@@ -203,6 +203,7 @@ Selecting a distribution which meets these needs is therefore an important part 
 
 distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | recommended? |
 ------------------ | ----- | ----- | ------- |:---:|
+GalliumOS 3.0      | 3.4GB | 356MB | 10 mins | :white_check_mark: |
 GalliumOS 2.0      | 2.5GB | 291MB | 9 mins  | :white_check_mark: |
 GalliumOS 1.0      | 2.8GB | 287MB | 10 mins | :white_check_mark: |
 Lubuntu 15.10      | 2.7GB | 227MB | 18 mins | :white_check_mark: |
@@ -211,7 +212,7 @@ Xubuntu 15.04      | 3.0GB | 360MB | 22 mins | :white_check_mark: |
 Ubuntu 15.04       | 3.5GB | 440MB | 28 mins | :x: |
 Kubuntu 15.10      | 4.2GB | 613MB |         | :x: |
 Fedora 24 (lxde)   | 2.9GB | 182MB | 20 mins | :white_check_mark: |
-Fedora 24 (cinnamon)| 3.8GB | 384MB | 27 mins | :white_check_mark: |
+Fedora 24 (cinnamon)| 3.8GB |7 384MB | 27 mins | :white_check_mark: |
 Fedora 24          | 4.5GB | 647MB | 27 mins | :x: |
 
 
