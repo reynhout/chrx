@@ -203,6 +203,7 @@ Selecting a distribution which meets these needs is therefore an important part 
 
 distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | recommended? |
 ------------------ | ----- | ----- | ------- |:---:|
+GalliumOS 3.0      | 3.4GB | 356MB | 10 mins | :white_check_mark: |
 GalliumOS 2.0      | 2.5GB | 291MB | 9 mins  | :white_check_mark: |
 GalliumOS 1.0      | 2.8GB | 287MB | 10 mins | :white_check_mark: |
 Lubuntu 15.10      | 2.7GB | 227MB | 18 mins | :white_check_mark: |
