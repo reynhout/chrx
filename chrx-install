@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.7"
+CHRX_VERSION="2.8dev"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -145,6 +145,18 @@ ping_chrx_org()
 
 downcase() { echo "$@" | tr '[:upper:]' '[:lower:]'; }
 
+get_device_details() {
+  local hwid=$*
+
+  cat "${CHRX_DIST_DIR}/chrx-devices" | while read line; do
+    regex="$(echo "$line" | cut -d';' -f6-)"
+    if [ -n "$(echo "$hwid" | egrep "$regex")" ]; then
+      echo $line | cut -d';' -f1-5 | sed 's/;/ /g'
+      break
+    fi
+  done
+}
+
 # ref1, ref2
 identify_hardware()
 {
@@ -153,261 +165,36 @@ identify_hardware()
   local _outvar_year=$3
   local _outvar_cpuf=$4
   local _outvar_prognosis=$5
-  local _hwid_raw
-  local _hwid
+  local _hwid_full
+  local _hwid_codename
+  local _hwid_details
   local _prognosis
   local _desc
   local _cpuf
   local _year
   local _x
 
-  _hwid_raw=$(crossystem hwid 2>/dev/null)
-  [ "$_hwid_raw" ] || _hwid_raw=$(dmidecode -s system-product-name)
-  _hwid=$(echo "$_hwid_raw" | head -1 | tr a-z A-Z | sed 's/ /_/g')
+  CHRX_HOST_IS_CHROMEOS=$(grep "^CHROMEOS" /etc/lsb-release)
+  if [ -z "$CHRX_HOST_IS_CHROMEOS" ]; then
+    echo_warn "This does not appear to be ChromeOS!"
+    echo_warn "Chrx will attempt to continue, but you should expect errors."
+  fi
 
-  case "$_hwid" in
-    #TBD*)           _x='UN|UNK|2015|Dell 11P' ;;
-    ACER_ZGB*)      _x='EF|PNV|2011|Acer AC700 Chromebook' ;;
-    AKALI*)         _x='FS|KBL|2018|Acer Chromebook 13 (CP713-W)' ;;
-    AKALI360*)      _x='FS|KBL|2018|Acer Chromebook Spin 13 (CP713-1WN)' ;;
-    ALEENA*)        _x='UN|AMD|2019|Acer Chromebook 315' ;;
-    AMPTON*)        _x='UN|GLK|2019|ASUS Chromebook Flip C214' ;;
-    APEL*)          _x='UN|GLK|2019|ASUS Chromebook C204' ;;
-    ARKHAM*)        _x='NG|ARM|2015|ASUS OnHub SRT-AC1900 Router' ;;
-    ASTRONAUT*)     _x='FS|APL|2018|Acer Chromebook 11 (C732, C732T, C732L, C732LT)' ;;
-    ASUKA*)         _x='RS|SKL|2017|Dell Chromebook 13 (3380)' ;;
-    AURON_PAINE*)   _x='OK|BDW|2014|Acer Chromebook 11 (C740)' ;;
-    BABYMAKO*)      _x='FS|APL|2019|ASUS Chromebook C403' ;;
-    BABYMEGA*)      _x='FS|APL|2018|ASUS Chromebook C223' ;;
-    BABYTIGER*)     _x='FS|APL|2018|ASUS Chromebook C523' ;;
-    BANJO*)         _x='FS|BYT|2015|Acer Chromebook 15 (CB3-531)' ;;
-    BANON*)         _x='FS|BSW|2016|Acer Chromebook 15 (CB3-532)' ;;
-    BARLA*)         _x='UN|AMD|2019|HP Chromebook 11A G6 EE' ;;
-    BIG*)           _x='NG|ARM|2014|Acer Chromebook 13 (CB5-311)' ;;
-    BLACKTIP360*)   _x='FS|APL|2018|CTL chromebook NL7T-360' ;;
-    BLACKTIPLTE*)   _x='FS|APL|2019|CTL Chromebook NL7 LTE' ;;
-    BLACKTIP*)      _x='FS|APL|2018|CTL chromebook NL7' ;;
-    BLAZE*)         _x='NG|ARM|2014|HP Chromebook 14 G3' ;;
-    BOB*)           _x='NG|ARM|2017|ASUS Chromebook Flip C101PA' ;;
-    BOBBA360*)      _x='UN|GLK|2019|Acer Chromebook Spin 511' ;;
-    BOBBA*)         _x='UN|GLK|2019|Acer Chromebook 311' ;;
-    BUDDY*)         _x='ES|BDW|2016|Acer Chromebase 24' ;;
-    BUTTERFLY*)     _x='UN|SNB|2013|HP Pavilion Chromebook 14' ;;
-    CANDY*)         _x='FS|BYT|2015|Dell Chromebook 11' ;;
-    CAREENA*)       _x='UN|AMD|2019|HP Chromebook 14 db0000-db0999' ;;
-    CAROLINE*)      _x='RS|SKL|2017|Samsung Chromebook Pro' ;;
-    CAVE*)          _x='RS|SKL|2016|ASUS Chromebook Flip C302' ;;
-    CELES*)         _x='FS|BSW|2016|Samsung Chromebook 3' ;;
-    CHELL*)         _x='RS|SKL|2016|HP Chromebook 13 G1' ;;
-    CLAPPER*)       _x='FS|BYT|2014|Lenovo N20/N20P Chromebook' ;;
-    CYAN*)          _x='FS|BSW|2015|Acer Chromebook R11 (CB5-132T, C738T, CB3-132)' ;;
-    DRUWL*)         _x='NG|ARM|2019|CTL Chromebook Tab Tx1' ;;
-    DUMO*)          _x='NG|ARM|2019|ASUS Chromebook Tablet CT100' ;;
-    EDGAR*)         _x='FS|BSW|2016|Acer Chromebook 14 (CB3-431)' ;;
-    ELM*)           _x='NG|ARM|2016|Acer Chromebook R13 (CB5-312T)' ;;
-    ENGUARDE_???-???-??A*)  _x='FS|BYT|2014|CTL N6 Education Chromebook' ;;
-    ENGUARDE_???-???-??B*)  _x='FS|BYT|2014|M&A Chromebook' ;;
-    ENGUARDE_???-???-??C*)  _x='FS|BYT|2014|Senkatel C1101 Chromebook' ;;
-    ENGUARDE_???-???-??D*)  _x='FS|BYT|2014|Edxis Education Chromebook' ;;
-    ENGUARDE_???-???-??E*)  _x='FS|BYT|2015|Lenovo N21 Chromebook' ;;
-    ENGUARDE_???-???-??F*)  _x='FS|BYT|2016|RGS Education Chromebook' ;;
-    ENGUARDE_???-???-??G*)  _x='FS|BYT|2016|Crambo Chromebook' ;;
-    ENGUARDE_???-???-??H*)  _x='FS|BYT|2016|True IDC Chromebook' ;;
-    ENGUARDE_???-???-??I*)  _x='FS|BYT|2016|Videonet Chromebook' ;;
-    ENGUARDE_???-???-??J*)  _x='FS|BYT|2016|eduGear Chromebook R' ;;
-    ENGUARDE_???-???-??K*)  _x='FS|BYT|2016|ASI Chromebook' ;;
-    ENGUARDE*)              _x='FS|BYT|201x|(unknown ENGUARDE)' ;;
-    EPAULETTE*)     _x='FS|APL|2018|Acer Chromebook 514' ;;
-    EVE*)           _x='FS|KBL|2017|Google Pixelbook' ;;
-    EXPRESSO_???-???-??A*)  _x='NG|ARM|2014|HEXA Chromebook Pi' ;;
-    EXPRESSO_???-???-??B*)  _x='NG|ARM|2014|Bobicus Chromebook 11' ;;
-    EXPRESSO_???-???-??C*)  _x='NG|ARM|2014|Edxis Chromebook' ;;
-    EXPRESSO*)              _x='NG|ARM|201x|(unknown EXPRESSO)' ;;
-    FALCO*)         _x='OK|HSW|2013|HP Chromebook 14' ;;
-    FIEVEL*)        _x='NG|ARM|2017|AOPEN Chromebox Mini' ;;
-    FIZZ*)          _x='UN|UNK|2018|Chromebox Reference' ;;
-    FLEEX*)         _x='UN|GLK|2019|Dell Chromebook 3100' ;;
-    GANDOF*)        _x='OK|BDW|2015|Toshiba Chromebook 2 CB30/CB35' ;;
-    GLIMMER*)       _x='FS|BYT|2014|Lenovo ThinkPad 11e/Yoga Chromebook' ;;
-    GNAWTY_???-???-??A*) _x='FS|BYT|2014|Acer Chromebook 11 (CB3-111, C730, C730E)' ;;
-    GNAWTY_???-???-??B*) _x='FS|BYT|2016|Acer Chromebook 11 (CB3-131, C735)' ;;
-    GNAWTY*)        _x='FS|BYT|201x|(unknown GNAWTY)' ;;
-    GRABBITER*)     _x='UN|GLK|2019|Dell Chromebook 3100 2in1' ;;
-    GUADO*)         _x='ES|BDW|2015|ASUS Chromebox CN62' ;;
-    HANA_???-???-??A*)    _x='NG|ARM|2017|Lenovo 300e/N23 Yoga/Flex 11 Chromebook' ;;
-    HANA_???-???-??B*)    _x='NG|ARM|2017|Poin2 Chromebook 14' ;;
-    HANA_???-???-??E*)    _x='NG|ARM|2017|Lenovo Chromebook C330' ;;
-    HANA_???-???-??F*)    _x='NG|ARM|2017|Lenovo Chromebook S330' ;;
-    HANA_???-???-??[CD]*) _x='NG|ARM|2017|Poin2 Chromebook 11C' ;;
-    HANA_???-???-??H*)    _x='NG|ARM|2019|Lenovo 100e Chromebook 2nd Gen MTK' ;;
-    HANA_???-???-??I*)    _x='NG|ARM|2019|Lenovo 300e Chromebook 2nd Gen MTK' ;;
-    HANA*)             _x='NG|ARM|2017|(unknown HANA)' ;;
-    #HELI*)          _x='FS|BYT|2015|Huaqin 11' ;;
-    HELI*)          _x='FS|BYT|2015|Haier Chromebook G2' ;;
-    IEC_MARIO*)     _x='UN|PNV|2011|Google Cr-48' ;;
-    JAQ_???-???-???-A*) _x='NG|ARM|2015|Haier Chromebook 11' ;;
-    JAQ_???-???-???-B*) _x='NG|ARM|2015|True IDC Chromebook 11' ;;
-    JAQ_???-???-???-C*) _x='NG|ARM|2015|Xolo Chromebook' ;;
-    JAQ_???-???-???-D*) _x='NG|ARM|2016|Medion Akoya S2013 Chromebook' ;;
-    JAQ*)               _x='NG|ARM|201x|(unknown JAQ)' ;;
-    JERRY_???-???-???-A*) _x='NG|ARM|2015|HiSense Chromebook 11' ;;
-    JERRY_???-???-???-B*) _x='NG|ARM|2015|CTL J2/J4 Chromebook for Education' ;;
-    JERRY_???-???-???-C*) _x='NG|ARM|2015|Poin2 Chromebook 11' ;;
-    JERRY_???-???-???-D*) _x='NG|ARM|2015|eduGear Chromebook K Series' ;;
-    JERRY_???-???-???-E*) _x='NG|ARM|2016|NComputing Chromebook CX100/110' ;;
-    JERRY_???-???-???-F*) _x='NG|ARM|2016|Epik Chromebook' ;;
-    JERRY_???-???-???-G*) _x='NG|ARM|2017|Positivo Chromebook CH1190' ;;
-    JERRY_???-???-???-H*) _x='NG|ARM|2016|Mecer Chromebook' ;;
-    JERRY*)               _x='NG|ARM|201x|(unknown JERRY)' ;;
-    KASUMI360*)     _x='UN|AMD|2019|Acer Chromebook Spin 311 (R721T)' ;;
-    KASUMI*)        _x='UN|AMD|2019|Acer Chromebook 311 (C721)' ;;
-    KEFKA_???-A*)         _x='RS|BSW|2017|Dell Chromebook 11 (3180)' ;;
-    KEFKA_???-B*)         _x='RS|BSW|2017|Dell Chromebook 11 (3189)' ;;
-    KEFKA*)               _x='RS|BSW|2017|(unknown KEFKA)' ;;
-    KENCH*)               _x='FS|KBL|2018|HP Chromebox G2' ;;
-    KEVIN*)               _x='NG|ARM|2017|Samsung Chromebook Plus' ;;
-    KIP_[ABC]*)     _x='FS|BYT|2015|HP Chromebook 11 G3/G4' ;;
-    KIP_[DE]*)      _x='FS|BYT|2015|HP Chromebook 14 G4' ;;
-    KIP*)           _x='FS|BYT|201x|(unknown KIP)' ;;
-    KITTY*)         _x='NG|ARM|2015|Acer Chromebase' ;;
-    LARS_???-???-???-?3?*) _x='RS|SKL|2017|Acer Chromebook 11 (C771, C771T)' ;;
-    LARS*)          _x='RS|SKL|2016|Acer Chromebook 14 for Work (CP5-471)' ;;
-    LAVA*)          _x='RS|APL|2018|Acer Chromebook Spin 11 (CP311-1H/N)' ;;
-    LEON*)          _x='OK|HSW|2014|Toshiba CB30/CB35 Chromebook' ;;
-    LIARA*)         _x='UN|AMD|2019|Lenovo 14e Chromebook' ;;
-    LINK*)          _x='RS|IVB|2013|Google Chromebook Pixel' ;;
-    LULU*)          _x='OK|BDW|2015|Dell Chromebook 13 (7310)' ;;
-    LUMPY*)         _x='UN|SNB|2012|Samsung Chromebook Series 5 550' ;;
-    MCCLOUD*)       _x='RS|HSW|2014|Acer Chromebox CXI' ;;
-    MEEP*)          _x='UN|GLK|2019|HP Chromebook x360 11 G2 EE' ;;
-    MICKEY*)        _x='NG|ARM|2015|ASUS Chromebit CS10' ;;
-    MIGHTY_???-???-???-A*) _x='NG|ARM|2015|Haier Chromebook 11e' ;;
-    MIGHTY_???-???-???-B*) _x='NG|ARM|2015|Nexian Chromebook' ;;
-    MIGHTY_???-???-???-D*) _x='NG|ARM|2015|eduGear Chromebook M Series' ;;
-    MIGHTY_???-???-???-E*) _x='NG|ARM|2015|Sector 5 E1 Rugged Chromebook' ;;
-    MIGHTY_???-???-???-F*) _x='NG|ARM|2015|Viglen Chromebook 11' ;;
-    MIGHTY_???-???-???-G*) _x='NG|ARM|2016|PCmerge Chromebook PCM-116E' ;;
-    MIGHTY_???-???-???-H*) _x='NG|ARM|2016|Lumos Education Chromebook' ;;
-    MIGHTY_???-???-???-I*) _x='NG|ARM|2016|MEDION Chromebook S2015' ;;
-    MIGHTY_???-???-???-J*) _x='NG|ARM|2017|Prowise 11 Chromebook' ;;
-    MIGHTY*)               _x='NG|ARM|201x|(unknown MIGHTY)' ;;
-    MIMROCK*)       _x='UN|GLK|2019|HP Chromebook 11 G7 EE' ;;
-    MINNIE*)        _x='NG|ARM|2015|ASUS Chromebook Flip C100PA' ;;
-    X86_LINK*)      _x='RS|IVB|2013|Google TEST Chromebook Pixel' ;;
-    MONROE_?[23]?*) _x='ES|HSW|2014|LG Chromebase 22CV241' ;;
-    MONROE_?4?*)    _x='ES|HSW|2016|LG Chromebase 22CB25S' ;;
-    MONROE*)        _x='ES|HSW|201x|(unknown MONROE)' ;;
-    NASHER360*)     _x='FS|APL|2018|Dell Chromebook 11 2-in-1 5190' ;;
-    NASHER*)        _x='FS|APL|2018|Dell Chromebook 11 5190' ;;
-    NAUTILUS_???-???-??[A-P]*) _x='FS|KBL|2018|Samsung Chromebook Plus (V2)' ;;
-    NAUTILUS_???-???-??[Q-Z2-7]*) _x='FS|KBL|2018|Samsung Chromebook Plus (LTE)' ;;
-    NINJA*)         _x='FS|BYT|2015|AOPEN Chromebox Commercial' ;;
-    NOCTURNE_KBL*)  _x='FS|KBL|2018|Google Pixel Slate (Celeron)' ;;
-    NOCTURNE_AML*)  _x='UN|AML|2018|Google Pixel Slate (m3, i5, i7)' ;;
-    NOCTURNE*)      _x='FS|KBL|2018|Google Pixel Slate (Celeron)' ;;
-    ORBATRIX*)      _x='UN|GLK|2019|Dell Chromebook 3400' ;;
-    ORCO*)          _x='FS|BYT|2015|Lenovo Ideapad 100S Chromebook' ;;
-    PAINE*)         _x='OK|BDW|2014|Acer Chromebook 11 (C740)' ;;
-    PANTHEON*)      _x='FS|KBL|2018|Lenovo Yoga C630 Chromebook' ;;
-    PANTHER*)       _x='RS|HSW|2014|ASUS Chromebox CN60' ;;
-    PARROT*)        _x='UN|IVB|2012|Acer C7 / C710 Chromebook' ;;
-    X86_PARROT*)    _x='UN|IVB|2012|Acer C7 / C710 TEST Chromebook' ;;
-    PEPPY*)         _x='OK|HSW|2013|Acer C720, C720P Chromebook' ;;
-    X86_PEPPY*)     _x='OK|HSW|2013|Acer C720, C720P TEST Chromebook' ;;
-    PHASER360*)     _x='NG|ARM|2019|Lenovo 300e/500e Chromebook 2nd Gen' ;;
-    PHASER*)        _x='NG|ARM|2019|Lenovo 100e Chromebook 2nd Gen' ;;
-    PIT*)           _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C12)' ;;
-    PI*)            _x='NG|ARM|2014|Samsung Chromebook 2 (XE503C32)' ;;
-    PYRO*)          _x='FS|APL|2017|Lenovo Thinkpad 11e/Yoga Chromebook (G4)' ;;
-    QUAWKS*)        _x='FS|BYT|2014|ASUS Chromebook C300MA' ;;
-    RABBID*)        _x='FS|APL|2018|ASUS Chromebook C423' ;;
-    REEF_???-C*)    _x='FS|APL|2017|ASUS Chromebook C213NA/C213SA' ;;
-    REEF_???-B*)    _x='FS|APL|2017|Acer Chromebook Spin 11 (R751T)' ;;
-    REEF*)          _x='FS|APL|2017|(unknown REEF)' ;;
-    REKS_???-???-???-B*) _x='FS|BSW|2016|Lenovo N42 Chromebook' ;;
-    REKS_???-???-???-C*) _x='FS|BSW|2017|Lenovo N23 Chromebook (Touch)' ;;
-    REKS_???-???-???-D*) _x='FS|BSW|2017|Lenovo N23 Chromebook' ;;
-    REKS_???-???-???-*)  _x='FS|BSW|2016|Lenovo N22 Chromebook' ;;
-    REKS*)          _x='FS|BSW|2016|(unknown REKS)' ;;
-    #RELM_???-A*)    _x='FS|BSW|2016|n/a' ;;
-    RELM_???-B*)    _x='FS|BSW|2016|CTL NL61 Chromebook' ;;
-    RELM_???-C*)    _x='FS|BSW|2016|Edxis Education Chromebook' ;;
-    RELM_???-F*)    _x='FS|BSW|2016|Mecer V2 Chromebook' ;;
-    RELM_???-G*)    _x='FS|BSW|2016|HP Chromebook 11 G5 EE' ;;
-    RELM_???-H*)    _x='FS|BSW|2017|Acer Chromebook 11 N7 (C731, CB311?)' ;;
-    RELM_???-I*)    _x='FS|BSW|2018|Positivo Chromebook C216B' ;;
-    RELM_???-Z*)    _x='FS|BSW|2016|Quanta OEM Chromebook' ;;
-    RELM*)          _x='FS|BSW|2016|(unknown RELM)' ;;
-    RIKKU*)         _x='ES|BDW|2015|Acer Chromebox CXI2' ;;
-    ROBO360*)       _x='FS|APL|2018|Lenovo 500e Chromebook' ;;
-    ROBO*)          _x='FS|APL|2018|Lenovo 100e Chromebook' ;;
-    SAMS_ALEX*)     _x='EF|PNV|2011|Samsung Chromebook Series 5' ;;
-    SAMUS*)         _x='OK|BDW|2015|Google Chromebook Pixel' ;;
-    SAND*)          _x='FS|APL|2017|Acer Chromebook 15 (CB515-1H/1HT)' ;;
-    SANTA*)         _x='FS|APL|2018|Acer Chromebook 11 (CB311-8H/8HT)' ;;
-    SCARLET*)       _x='NG|ARM|2019|Acer Chromebook Tab 10 (D651N / D650N)' ;;
-    SENTRY*)        _x='RS|SKL|2016|Lenovo Thinkpad 13 Chromebook' ;;
-    SETZER*)        _x='FS|BSW|2016|HP Chromebook 11 G5/11-vxxx' ;;
-    SHYVANA*)       _x='UN|AML|2019|ASUS Chromebook Flip C434' ;;
-    SION*)          _x='FS|KBL|2018|Acer Chromebox CXI3' ;;
-    SKATE*)         _x='NG|ARM|2013|HP Chromebook 11 G2' ;;
-    SNAPPY_???-A*)  _x='FS|APL|2017|HP Chromebook x360 11 G1 EE' ;;
-    SNAPPY_???-B*)  _x='FS|APL|2018|HP Chromebook 11 G6 EE' ;;
-    SNAPPY_???-C*)  _x='FS|APL|2018|HP Chromebook 14 G5' ;;
-    SNAPPY*)        _x='FS|APL|2018|(unknown SNAPPY)' ;;
-    SNOW*)          _x='NG|ARM|2012|Samsung Chromebook' ;;
-    DAISY*)         _x='NG|ARM|2012|Samsung Chromebook XE303C12 (SNOW)' ;;
-    SONA*)          _x='FS|KBL|2018|HP Chromebook x360 14' ;;
-    SORAKA*)        _x='FS|KBL|2018|HP Chromebook x2' ;;
-    SPARKY360*)     _x='UN|GLK|2019|Acer Chromebook Spin 512(R851TN)' ;;
-    SPARKY*)        _x='UN|GLK|2019|Acer Chromebook 512(C851/C851T)' ;;
-    SPEEDY*)        _x='NG|ARM|2015|ASUS Chromebook C201PA' ;;
-    SPRING*)        _x='NG|ARM|2013|HP Chromebook 11 G1' ;;
-    SQUAWKS*)       _x='FS|BYT|2014|ASUS Chromebook C200MA' ;;
-    STOUT*)         _x='UN|IVB|2013|Lenovo Thinkpad X131e Chromebook' ;;
-    STUMPY*)        _x='UN|SNB|2012|Samsung Chromebox Series 3' ;;
-    SUMO*)          _x='FS|BYT|2015|AOPEN Chromebase Commercial' ;;
-    SWANKY*)        _x='FS|BYT|2014|Toshiba Chromebook 2 CB30/CB35' ;;
-    SYNDRA*)        _x='FS|KBL|2019|HP Chromebook 15 G1' ;;
-    TEEMO*)         _x='FS|KBL|2018|ASUS Chromebox 3' ;;
-    TERRA_???-???-???-A*) _x='FS|BSW|2016|ASUS Chromebook C202SA' ;;
-    TERRA_???-???-???-B*) _x='FS|BSW|2016|ASUS Chromebook C300SA/C301SA' ;;
-    TERRA*)               _x='FS|BSW|2016|(unknown TERRA)' ;;
-    TIDUS*)         _x='ES|BDW|2015|Lenovo ThinkCentre Chromebox' ;;
-    TIGER*)         _x='NG|ARM|2017|AOPEN Chromebase Mini' ;;
-    TRICKY*)        _x='RS|HSW|2014|Dell Chromebox' ;;
-    ULTIMA*)        _x='FS|BSW|2016|Lenovo ThinkPad 11e/Yoga Chromebook (G3)' ;;
-    VAYNE*)         _x='FS|KBL|2018|Dell Inspiron Chromebook 14 2-in-1 7486' ;;
-    WHIRLWIND*)     _x='NG|ARM|2015|TP-Link OnHub TGR1900 Router' ;;
-    WHITETIP_??D*)  _x='FS|APL|2018|CTL Chromebook J41 / J41T' ;;
-    WHITETIP_??E*)  _x='FS|APL|2019|Prowise Chromebook Eduline' ;;
-    WHITETIP_??F*)  _x='FS|APL|2019|Sector 5 E3 Chromebook' ;;
-    WHITETIP_??G*)  _x='FS|APL|2019|PCmerge Chromebook AL116' ;;
-    WHITETIP_??H*)  _x='FS|APL|2019|Viglen Chromebook 11C' ;;
-    WHITETIP*)      _x='FS|APL|2019|(unknown WHITETIP)' ;;
-    WINKY*)         _x='FS|BYT|2014|Samsung Chromebook 2 (XE500C12)' ;;
-    WIZPIG_???-???-??A*) _x='FS|BSW|2016|CTL Chromebook J5' ;;
-    WIZPIG_???-???-??B*) _x='FS|BSW|2016|Edugear CMT Chromebook' ;;
-    WIZPIG_???-???-??C*) _x='FS|BSW|2016|Haier Convertible Chromebook 11 C' ;;
-    WIZPIG_???-???-??D*) _x='FS|BSW|2016|Viglen Chromebook 360' ;;
-    WIZPIG_???-???-??G*) _x='FS|BSW|2017|Prowise ProLine Chromebook' ;;
-    WIZPIG_???-???-??H*) _x='FS|BSW|2016|PCMerge Chromebook PCM-116T-432B' ;;
-    WIZPIG_???-???-??I*) _x='FS|BSW|2017|Multilaser M11C Chromebook' ;;
-    WIZPIG*)        _x='FS|BSW|2016|(unknown WIZPIG)' ;;
-    WOLF*)          _x='RS|HSW|2014|Dell Chromebook 11' ;;
-    X86_WOLF*)      _x='RS|HSW|2014|Dell Chromebook 11' ;;
-    WUKONG_??D*)    _x='FS|KBL|2018|CTL Chromebox CBx1' ;;
-    WUKONG_??C*)    _x='FS|KBL|2018|ViewSonic NMP660 Chromebox' ;;
-    WUKONG_??H*)    _x='FS|KBL|2019|Promethean Chromebox' ;;
-    YUNA*)          _x='OK|BDW|2014|Acer Chromebook 15 (CB5-571, C910)' ;;
-    AURON_YUNA*)    _x='OK|BDW|2014|Acer Chromebook 15 (CB5-571, C910)' ;;
-    ZAKO*)          _x='RS|HSW|2014|HP Chromebox CB1/G1/for Meetings' ;;
-  esac
+  _hwid_full=$(crossystem hwid 2>/dev/null | head -1 | tr a-z A-Z)
+  _hwid_details=$(get_device_details $_hwid_full)
 
-  _prognosis=`echo $_x | cut -d\| -f1`
-  _cpuf=`echo $_x | cut -d\| -f2`
-  _year=`echo $_x | cut -d\| -f3`
-  _desc=`echo $_x | cut -d\| -f4-`
+  if [ -n "$_hwid_details" ]; then
+    set $_hwid_details
+    _hwid=$1 ; shift
+    _prognosis=$1 ; shift
+    _cpuf=$1 ; shift
+    _year=$1 ; shift
+    _desc=$*
+  else
+    echo_fail "No model found matching \"$_hwid_full\""
+    # TODO(?) attempt stem match on codename.. useful?
+    _hwid_codename=$(dmidecode -s system-product-name | tr a-z A-Z)
+  fi
 
   ## CPU family, Processor core, other distinguishing characteristic
   case "$_cpuf" in
@@ -422,12 +209,13 @@ identify_hardware()
     SKL) _cpuf="Intel Skylake" ;;      # succeeds BDW
     KBL) _cpuf="Intel Kaby Lake" ;;    # succeeds SKL
     AML) _cpuf="Intel Amber Lake" ;;   # succeeds KBL
+    WHL) _cpuf="Intel Whiskey Lake" ;; # succeeds KBL
     #
     BYT) _cpuf="Intel Bay Trail" ;;
     BSW) _cpuf="Intel Braswell" ;;     # succeeds BYT
     APL) _cpuf="Intel Apollo Lake" ;;  # succeeds BSW
     GLK) _cpuf="Intel Gemini Lake" ;;  # succeeds APL
-    #*)   _cpuf="(unrecognized)" ;;
+    *)   _cpuf="(unrecognized)" ;;
   esac
 
   eval $_outvar_hwid=\$_hwid
@@ -725,16 +513,16 @@ install_customizations()
   done
 
   for fpath in ${SKEL_FILES}; do
-    install ${VERBOSITY_INSTALL} -m 644 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
+    install ${VERBOSITY_INSTALL} -m 644 ${CHRX_DIST_DIR}/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
   done
   for fpath in ${CONF_FILES}; do
-    install ${VERBOSITY_INSTALL} -m 644 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
+    install ${VERBOSITY_INSTALL} -m 644 ${CHRX_DIST_DIR}/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
   done
   for fpath in ${EXEC_FILES}; do
-    install ${VERBOSITY_INSTALL} -m 755 ./dist/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
+    install ${VERBOSITY_INSTALL} -m 755 ${CHRX_DIST_DIR}/${fpath} ${CHRX_INSTALL_ROOT}/${fpath}
   done
   for fpath in ${APPENDED_FILES}; do
-    cat ./dist/${fpath}-append >> ${CHRX_INSTALL_ROOT}/${fpath}
+    cat ${CHRX_DIST_DIR}/${fpath}-append >> ${CHRX_INSTALL_ROOT}/${fpath}
   done
 }
 
@@ -842,8 +630,7 @@ setup_and_validate_environment()
     report_unrecognized_device
   fi
 
-  HOST_IS_CHROMEOS=$(grep "^CHROMEOS" /etc/lsb-release)
-  if [ "$HOST_IS_CHROMEOS" ]; then
+  if [ "$CHRX_HOST_IS_CHROMEOS" ]; then
     check_support_for_legacy_boot
   else
     echo -e "Skipping legacy boot check, because this is not ChromeOS.\n"
@@ -994,6 +781,14 @@ ${ANSI_RST}
   prompt_if_interactive
 }
 
+get_dist_files() {
+  CHRX_DIST_DIR=${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  mkdir -p ${CHRX_DIST_DIR}
+  #cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz |
+    tar xzC ${CHRX_DIST_DIR} --no-same-owner
+}
+
 do_install()
 {
   start_date=`date`
@@ -1080,11 +875,6 @@ do_install()
   echo ${CHRX_HOSTNAME} > ${CHRX_INSTALL_ROOT}/etc/hostname
   echo -e "\n127.0.0.1       ${CHRX_HOSTNAME}" >> ${CHRX_INSTALL_ROOT}/etc/hosts
 
-  ## get customization files
-  mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  cd ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
-  curl ${VERBOSITY_CURL} ${CHRX_WEB_ROOT}/dist.tar.gz | tar xz --no-same-owner
-
   if [ "${CHRX_CUSTOMIZATION_ENABLED}" ]; then
     install_customizations
   else
@@ -1103,25 +893,16 @@ do_install()
   export ANSI_RED ANSI_YEL ANSI_GRN ANSI_VIO ANSI_BLU ANSI_WHT ANSI_RST
   export -f echo_info ## this does not reach the chroot
 
-  install ${VERBOSITY_INSTALL} -m 755 ./dist/chrx-install-chroot ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  install ${VERBOSITY_INSTALL} -m 755 ${CHRX_DIST_DIR}/chrx-install-chroot ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 
   echo ">> entering chroot"
   chroot ${CHRX_INSTALL_ROOT} /bin/bash -c ${CHRX_CACHE_DIR}/chrx-install-chroot
   # | tee -a ${CHRX_LOGFILE}
   echo "<< exiting chroot"
 
-  ## untested bits from ChrUbuntu ... TODO: test
-  #if echo `crossystem hwid` | grep -q "^PANTHER "; then
-  #  echo_green "Fixing SeaBIOS on ASUS Chromebox"
-  #  echo_green "Thanks to John Lewis"
-  #  echo_green "http://johnlewis.ie/asus-chromebox-owners-rejoice/"
-  #  wget http://johnlewis.ie/asus-chromebox-SeaBIOS-new.bin
-  #  flashrom -w -i RW_LEGACY:asus-chromebox-SeaBIOS-new.bin
-  #fi
-
   ## set eeprom bits
   #crossystem dev_boot_legacy=1 dev_boot_signed_only=1
-  [ "$HOST_IS_CHROMEOS" ] && crossystem dev_boot_legacy=1
+  [ "$CHRX_HOST_IS_CHROMEOS" ] && crossystem dev_boot_legacy=1
 
   ## wind up
   finish_date=`date`
@@ -1197,6 +978,7 @@ main()
   parse_opts "$@"
 
   echo_note "chrx installer, version ${CHRX_VERSION}\n"
+  get_dist_files
   identify_hardware CHRX_HWID CHRX_HWDESC CHRX_HWYEAR CHRX_HWCPUF CHRX_HWSTATUS
 
   ping_chrx_org "begin"
