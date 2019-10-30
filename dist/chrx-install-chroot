@@ -298,7 +298,7 @@ fedora_install_distenv()
     ;;
   esac
   echo_title "Installing \"${CHRX_OS_DISTENV}\"."
-  dnf ${VERBOSITY_DNF} -y group install "${CHRX_OS_DISTENV}"
+  dnf ${VERBOSITY_DNF} -y --allowerasing group install "${CHRX_OS_DISTENV}"
 }
 
 chrome_add_repos()
@@ -510,7 +510,11 @@ fedora_install_kernel()
 {
   echo "add_drivers+=\" mmc_core mmc_block sdhci sdhci_acpi \"" > /etc/dracut.conf.d/chrx.conf
   echo_title "Installing Linux kernel and boot environment."
-  
+
+  # Remove anything installed outside the chroot in case the main install
+  # has included these accidentally
+  dnf ${VERBOSITY_DNF} -y remove kernel kernel-modules kernel-core linux-firmware
+
   # install the release kernel
   dnf ${VERBOSITY_DNF} -y --disablerepo "updates" install kernel kernel-modules kernel-core linux-firmware
   #and then update to the latest
