@@ -251,31 +251,35 @@ determine_osv_ubuntu()
     latest)  get_os_version_ubuntu $CHRX_OS_RELEASE ;;
     lts)     get_os_version_ubuntu $CHRX_OS_RELEASE ;;
     dev)     get_os_version_and_core_url_dev_ubuntu $CHRX_OS_RELEASE ;;
-    trusty)  CHRX_OS_VERSION="14.04.5" ;;
-    utopic)  CHRX_OS_VERSION="14.10" ;;
-    vivid)   CHRX_OS_VERSION="15.04" ;;
-    wily)    CHRX_OS_VERSION="15.10" ;;
-    xenial)  CHRX_OS_VERSION="16.04.3" ;;
-    yakkety) CHRX_OS_VERSION="16.10" ;;
-    zesty)   CHRX_OS_VERSION="17.04" ;;
-    artful)  CHRX_OS_VERSION="17.10" ;;
-    bionic)  CHRX_OS_VERSION="18.04" ;;
-    c*)      CHRX_OS_VERSION="18.10" ;;
-    d*)      CHRX_OS_VERSION="19.04" ;;
-    e*)      CHRX_OS_VERSION="19.10" ;;
-    f*)      CHRX_OS_VERSION="20.04" ;;
+    trusty)  CHRX_OS_VERSION="14.04.6" ;; # EOL 201904
+    utopic)  CHRX_OS_VERSION="14.10" ;;   # EOL 201507
+    vivid)   CHRX_OS_VERSION="15.04" ;;   # EOL 201602
+    wily)    CHRX_OS_VERSION="15.10" ;;   # EOL 201607
+    xenial)  CHRX_OS_VERSION="16.04.6" ;; # EOL 202104
+    yakkety) CHRX_OS_VERSION="16.10" ;;   # EOL 201707
+    zesty)   CHRX_OS_VERSION="17.04" ;;   # EOL 201801
+    artful)  CHRX_OS_VERSION="17.10" ;;   # EOL 201807
+    bionic)  CHRX_OS_VERSION="18.04.3" ;; # EOL 202304
+    cosmic)  CHRX_OS_VERSION="18.10" ;;   # EOL 201907
+    disco)   CHRX_OS_VERSION="19.04" ;;   # EOL 202001
+    eoan)    CHRX_OS_VERSION="19.10" ;;   # EOL 202007
+    focal)   CHRX_OS_VERSION="20.04" ;;   # EOL 202504
+    g*)      CHRX_OS_VERSION="20.10" ;;   # EOL 202107
+    h*)      CHRX_OS_VERSION="21.04" ;;   # EOL 202201
+    i*)      CHRX_OS_VERSION="21.10" ;;   # EOL 202207
+    j*)      CHRX_OS_VERSION="22.04" ;;   # EOL 202704
     *)       CHRX_OS_VERSION=${CHRX_OS_RELEASE} ;;
   esac
 
   local _ubuntu_corebase='base'
 
   case "${CHRX_OS_VERSION}" in
-    '17.10') ;;
+    "18.04*") ;;
     "16.04*") _ubuntu_corebase='core' ;;
     "14.04*") _ubuntu_corebase='core'
       msg_os_version="${ANSI_YEL}(CAUTION: not well-tested!)${ANSI_RST}"
       ;;
-    "14.*"|"15.*"|"16.*"|"17.*")
+    "1[45678].*")
       ## TODO: get this from meta-release/Supported instead?
       msg_os_version="${ANSI_YEL}(ERROR: no longer available!)${ANSI_RST}"
       FAIL=1
