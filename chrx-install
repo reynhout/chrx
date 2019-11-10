@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="2.8dev"
+CHRX_VERSION="3.0beta1"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -148,7 +148,8 @@ downcase() { echo "$@" | tr '[:upper:]' '[:lower:]'; }
 get_device_details() {
   local hwid=$*
 
-  cat "${CHRX_DIST_DIR}/chrx-devices" | while read line; do
+  #cat "${CHRX_DIST_DIR}/chrx-devices" | while read line; do
+  cat "/usr/local/etc/chrx-devices" | while read line; do
     regex="$(echo "$line" | cut -d';' -f6-)"
     if [ -n "$(echo "$hwid" | egrep "$regex")" ]; then
       echo $line | cut -d';' -f1-5 | sed 's/;/ /g'
@@ -645,8 +646,9 @@ setup_storage()
 {
   SETUP_STORAGE_ERROR="failed"
 
-  curl -Os -A "${CHRX_UA}" ${CHRX_WEB_ROOT}/chrx-setup-storage
-  [ -r ./chrx-setup-storage ] && . ./chrx-setup-storage
+  #curl -Os -A "${CHRX_UA}" ${CHRX_WEB_ROOT}/chrx-setup-storage
+  #[ -r ./chrx-setup-storage ] && . ./chrx-setup-storage
+  . /usr/local/bin/chrx-setup-storage
 
   if [ "${SETUP_STORAGE_ERROR}" ]; then
     echo_fail "fatal error from chrx-setup-storage. exiting!"
@@ -897,7 +899,9 @@ do_install()
   export ANSI_RED ANSI_YEL ANSI_GRN ANSI_VIO ANSI_BLU ANSI_WHT ANSI_RST
   export -f echo_info ## this does not reach the chroot
 
-  install ${VERBOSITY_INSTALL} -m 755 ${CHRX_DIST_DIR}/chrx-install-chroot ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  #install ${VERBOSITY_INSTALL} -m 755 ${CHRX_DIST_DIR}/chrx-install-chroot ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  install ${VERBOSITY_INSTALL} -m 755 /usr/local/bin/chrx-install-chroot ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
 
   echo ">> entering chroot"
   chroot ${CHRX_INSTALL_ROOT} /bin/bash -c ${CHRX_CACHE_DIR}/chrx-install-chroot
@@ -982,7 +986,9 @@ main()
   parse_opts "$@"
 
   echo_note "chrx installer, version ${CHRX_VERSION}\n"
-  get_dist_files
+  #get_dist_files
+  mkdir -p ${CHRX_INSTALL_ROOT}${CHRX_CACHE_DIR}
+  CHRX_DIST_DIR="/usr/local/etc/chrx-files"
   identify_hardware CHRX_HWID CHRX_HWDESC CHRX_HWYEAR CHRX_HWCPUF CHRX_HWSTATUS
 
   ping_chrx_org "begin"

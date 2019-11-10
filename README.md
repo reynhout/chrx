@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 2.8** Updates for GalliumOS 3.0 and Fedora 30, 31. See [changelog](#changelog).
+**Version 3.0beta1** See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -25,7 +25,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 Installing Linux via **chrx** onto a new (or freshly recovered) Chromebook
 is a two-phase process:
 
-- The first phase reserves space on your SSD or other storage device for
+- The first phase reserves space on your storage device for
 the new operating system, **and then reboots**.
 - The second phase installs your chosen distribution, and configures the
 new system according to your selected options.
@@ -37,14 +37,24 @@ skip directly to phase two.
 <a name="step-by-step"></a>
 ### step-by-step
 
-1. Enable [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices) (process is model-specific; for Acer C720, press `ESC+F3(Refresh)+Power`), then reboot
-1. Load ChromeOS by pressing `CTRL+D` at the white "OS verification is OFF" screen
-1. Configure your Wi-Fi network if necessary, then log in (Guest account is fine)
-1. Open the ChromeOS Terminal by pressing `CTRL+ALT+T`, and enter `shell` at the prompt
-1. Update firmware, if necessary (*required* for Bay Trail, Braswell, and Apollo Lake models; *recommended* for Broadwell, Skylake, and Kaby Lake models; *optional* for Haswell models -- see [chromebooks](#chromebooks))
-1. Run **chrx**: `cd ; curl -Os https://chrx.org/go && sh go` (see [options](#options))
-1. Follow on-screen instructions to prepare your Chromebook for installation
-1. Reboot, then repeat steps 2-4 and 6 to install and configure your new system
+1. **Enable [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices)**
+  * (for most models, press `ESC+F3(Refresh)+Power`)
+1. **Boot into ChromeOS**
+  * Press `CTRL+D` at the white "ChromeOS is missing or damaged" (or "OS verification is OFF") screen
+1. **Configure Wi-Fi and log in**
+  * Guest account is fine
+1. **Open ChromeOS Terminal**
+  * Press `CTRL+ALT+T`, and enter `shell` at the prompt
+1. **Update firmware, if necessary** -- see [chromebooks](#chromebooks)
+  * *required* for Bay Trail, Braswell, and Apollo Lake models
+  * *recommended* for Broadwell, Skylake, and Kaby Lake models
+  * *optional* for Haswell models
+1. **Download and run chrx**
+  * `curl https://chrx.org/dev | sudo tar xzfC - /usr/local && chrx`
+  * (see [options](#options), below)
+1. **Follow on-screen instructions** to allocate storage space for Linux
+  * chrx will suggest dedicating as much space as possible to Linux, and as little as necessary for ChromeOS. Choose your allocation ratio according to your personal requirements and preferences!
+1. **Repeat steps 2-4 and 6** to install and configure your new system
 
 
 <a name="options"></a>
@@ -118,21 +128,22 @@ you can quote the argument, e.g.: `-p "gimp blender inkscape"`.
 
 [GalliumOS](https://galliumos.org/) Desktop (latest), verbosely:
 
-`cd ; curl -Os https://chrx.org/go && sh go -v`
+`chrx -v`
 
 [GalliumOS](https://galliumos.org/) Desktop (latest), plus packages:
 
-`cd ; curl -Os https://chrx.org/go && sh go -p "minecraft steam kodi"`
+`chrx -p "minecraft steam kodi"`
 
 [Lubuntu](http://lubuntu.net/) Desktop (latest):
 
-`cd ; curl -Os https://chrx.org/go && sh go -d lubuntu`
+`chrx -d lubuntu`
 
 [Ubuntu](https://ubuntu.com/) Standard, version 16.04, system name `hal`, first user `dave`, including some administrative tools:
 
-`cd ; curl -Os https://chrx.org/go && sh go -d ubuntu -e standard -r 16.04 -H hal -U dave -p admin-misc`
+`chrx -d ubuntu -e standard -r 16.04 -H hal -U dave -p admin-misc`
 
 
+<!--
 <a name="advanced-usage"></a>
 ### advanced usage
 
@@ -142,12 +153,13 @@ a large number of installations. However, setup can be somewhat more
 complicated, and instructions are outside the scope of this README.
 
 To point **chrx** at your cache, just set the `CHRX_WEB_ROOT`
-environment variable before running the `go` script, like this:
+environment variable before running the `chrx` script, like this:
 
 ```
 export CHRX_WEB_ROOT="http://myserver/chrx"
 cd ; curl -O $CHRX_WEB_ROOT/go && sh go
 ```
+-->
 
 <a name="compatibility"></a>
 ## compatibility
@@ -203,7 +215,7 @@ Selecting a distribution which meets these needs is therefore an important part 
 
 distribution&sup1; | disk space&sup2; | RAM use&sup3; | install time&#8308; | recommended? |
 ------------------ | ----- | ----- | ------- |:---:|
-GalliumOS 3.0      | 3.4GB | 356MB | 10 mins | :white_check_mark: |
+GalliumOS 3.0      | 3.2GB | 320MB | 10 mins | :white_check_mark: |
 GalliumOS 2.0      | 2.5GB | 291MB | 9 mins  | :white_check_mark: |
 GalliumOS 1.0      | 2.8GB | 287MB | 10 mins | :white_check_mark: |
 Lubuntu 15.10      | 2.7GB | 227MB | 18 mins | :white_check_mark: |
@@ -244,29 +256,6 @@ Fedora 24          | 4.5GB | 647MB | 27 mins | :x: |
 
 This list might evolve. Your input is welcome!
 
-## evolution
-
-### chrx past
-
-**chrx** began as an updated and enhanced version of
-[ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html),
-and still retains some original ChrUbuntu code (especially the
-disk partitioning bits).
-
-
-### chrx present
-
-**chrx** has been used to install Linux on thousands of Chromebooks.
-Users and discussion can be found on [/r/chrubuntu](https://www.reddit.com/r/chrubuntu).
-
-
-### chrx future
-
-I'd like to test on a wider variety of hardware, and to install other
-Linux distributions.
-
-Support for FreeBSD is coming. See http://blog.grem.de/pages/c720.html if you can't wait.
-
 
 ## alternatives
 
@@ -278,14 +267,17 @@ is a flexible setup, well-suited for many users, but of course not all.
 Consider these alternatives:
 
 - [Crouton](https://github.com/dnschneid/crouton) allows you to run ChromeOS
-and Linux simultaneously, instead of dual-booting like **chrx** or ChrUbuntu.
+and Linux simultaneously, instead of dual-booting like **chrx**.
 This arrangement has a few drawbacks, but if you spend most of your time in
 ChromeOS and your Linux needs are limited, it should serve well.
+- [Crostini](https://chromium.googlesource.com/chromiumos/docs/+/master/containers_and_vms.md) is Google's Linux-apps-in-containers-inside-virtual-machines-on-ChromeOS project. It's available on many new Chromebooks, and might suit your needs.
+<!--
 - The original [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html) has been tested on a wide variety of hardware. Unfortunately, it is now significantly outdated, and fails to install Ubuntu
 15.04 and newer properly. 14.10 and older should install successfully via
 ChrUbuntu, but they will require significant additional configuration to work
 well. If your Chromebook is older and unsupported by **chrx**, give ChrUbuntu
 a try.
+-->
 
 
 ## notes on security and privacy
@@ -335,42 +327,42 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 <a name="changelog"></a>
 ## changelog
 
-- **1.0** (20141223)
-- **1.1** (20150504): add support for Ubuntu 15.04
-  - **1.1.1** (20150508): add "-r RELEASE" option; validate some input
-  - **1.1.2** (20151005): update Ubuntu "trusty" to 14.04.3; add recognized HWIDs (PEPTO, LINK, SAMUS, LEON, PAINE, YUNA, SPRING, SKATE, FALCO, WOLF); always verify chrx.org certificates
-- **2.0** (20151025): add GalliumOS support; add support for Ubuntu 15.10; add detection and installation prognosis for all known ChromeOS devices; add "-d DISTRIBUTION" and "-e ENVIRONMENT" options; remove "-m METAPACKAGE" option; remove "-i IMAGE" option, make RELEASE smarter; work around `systemd` conflict; refactor code into functions to facilitate multiple distros and future operating systems
-  - **2.0.1** (20151113): update core image pathname for GalliumOS
-  - **2.0.2** (20151118): update some HWIDs
-  - **2.0.3** (20151119): bugfix: issue #4, parted and partprobe removed from ChromeOS
-  - **2.0.4** (20151120): bugfix: issue #5, "-r RELEASE" handling failing for some values of RELEASE
-  - **2.0.5** (20151212): add first user to important groups; use generic coreimage for GalliumOS
-  - **2.0.6** (20151214): bugfix: issue #7, add GalliumOS hwspecific pkgs properly
-  - **2.0.7** (20151214): update detection for all known ChromeOS devices; improve prognosis descriptions
-  - **2.0.8** (20160102): add CHRX_NO_REBOOT env var for use with https://github.com/MattDevo/scripts
-- **2.1** (20160103): add "-p PACKAGE" option to install additional packages
-  - **2.1.1** (20160120): update URL for GalliumOS coreimage; make sure util pkgs are added
-  - **2.1.2** (20160130): add parsing for "-r nightly" (GalliumOS only, installs nightly build); log chrx command line for debugging; add first user to groups more quietly
-- **2.2** (20160304): switch default distribution to GalliumOS
-  - **2.2.1** (20160316): bugfix: issue #12, errors installing to external media
-  - **2.2.2** (20160420): retry/resume failed image downloads; add new HWIDs
-  - **2.2.3** (20160426): do not drop to shell before reboot; do not retry coreimage downloads; update steam install for xenial; update docs for Ubuntu 16.04
-  - **2.2.4** (20160505): add Google Chrome to installable packages; add new HWIDs, update others
-  - **2.2.5** (20160512): update Ubuntu base/core image URL (thanks arsfeld)
-  - **2.2.6** (20160619): hide eMMC partitions properly (thanks gmykhailiuta); improve -r RELEASE handling for GalliumOS; add preliminary handling for running under non-ChromeOS
-  - **2.2.7** (20160810): use version-dependent Ubuntu URL to match new Canonical schemes; update Ubuntu "trusty" to 14.04.5
-  - **2.2.8** (20161002): add support for new GalliumOS hardware-specific pkgs: braswell, skylake, samus
-- **2.3** (20161121): add support for Fedora! thanks @jedigo!
-  - **2.3.1** (20161208): Fedora: add `-p` support, add latest to auto-detection, add nonfree codecs (thx @jedigo); GalliumOS: use chrx GRUB config; all: add more hidden mmcblk0 partitions, update GRUB config
-  - **2.3.2** (20161222): add first user to groups individually in case selected distro/metapackage/spin does not include all (fixes #30)
-- **2.4** (20161228): add support selection of mirror sites (GalliumOS-only)
-  - **2.4.1** (20170129): GalliumOS: Fix LINK, add CHELL HiDPI pkg selection
-  - **2.4.2** (20180201): Fedora: updates for Fedora 27
-  - **2.4.3** (20180211): Ubuntu: update versioning; all: handle NVMe disks
-- **2.5** (20180607): GalliumOS: updates for GalliumOS 3.0
-  - **2.5.1** (20190620): Add support for Intel Gemini Lake and Amber Lake
-- **2.6** (20190629): GalliumOS: default to 3.0
-- **2.7** (20191029): Fedora: fixes for versions 30, 31. Thanks @jedigo!
-- **2.8** (20191101): update and improve hardware detection matching
-
 <!-- don't forget to update the version numbers at top and in chrx-install! -->
+- **3.0** (20191110): internal improvements for noexec partitions; separate HWID lists to simplify reuse and updates; new, more-complicated, command line :(
+- **2.8** (20191101): update and improve hardware detection matching
+- **2.7** (20191029): Fedora: fixes for versions 30, 31. Thanks @jedigo!
+- **2.6** (20190629): GalliumOS: default to 3.0
+- **2.5.1** (20190620): Add support for Intel Gemini Lake and Amber Lake
+- **2.5** (20180607): GalliumOS: updates for GalliumOS 3.0
+- **2.4.3** (20180211): Ubuntu: update versioning; all: handle NVMe disks
+- **2.4.2** (20180201): Fedora: updates for Fedora 27
+- **2.4.1** (20170129): GalliumOS: Fix LINK, add CHELL HiDPI pkg selection
+- **2.4** (20161228): add support selection of mirror sites (GalliumOS-only)
+- **2.3.2** (20161222): add first user to groups individually in case selected distro/metapackage/spin does not include all (fixes #30)
+- **2.3.1** (20161208): Fedora: add `-p` support, add latest to auto-detection, add nonfree codecs (thx @jedigo); GalliumOS: use chrx GRUB config; all: add more hidden mmcblk0 partitions, update GRUB config
+- **2.3** (20161121): add support for Fedora! thanks @jedigo!
+- **2.2.8** (20161002): add support for new GalliumOS hardware-specific pkgs: braswell, skylake, samus
+- **2.2.7** (20160810): use version-dependent Ubuntu URL to match new Canonical schemes; update Ubuntu "trusty" to 14.04.5
+- **2.2.6** (20160619): hide eMMC partitions properly (thanks gmykhailiuta); improve -r RELEASE handling for GalliumOS; add preliminary handling for running under non-ChromeOS
+- **2.2.5** (20160512): update Ubuntu base/core image URL (thanks arsfeld)
+- **2.2.4** (20160505): add Google Chrome to installable packages; add new HWIDs, update others
+- **2.2.3** (20160426): do not drop to shell before reboot; do not retry coreimage downloads; update steam install for xenial; update docs for Ubuntu 16.04
+- **2.2.2** (20160420): retry/resume failed image downloads; add new HWIDs
+- **2.2.1** (20160316): bugfix: issue #12, errors installing to external media
+- **2.2** (20160304): switch default distribution to GalliumOS
+- **2.1.2** (20160130): add parsing for "-r nightly" (GalliumOS only, installs nightly build); log chrx command line for debugging; add first user to groups more quietly
+- **2.1.1** (20160120): update URL for GalliumOS coreimage; make sure util pkgs are added
+- **2.1** (20160103): add "-p PACKAGE" option to install additional packages
+- **2.0.8** (20160102): add CHRX_NO_REBOOT env var for use with https://github.com/MattDevo/scripts
+- **2.0.7** (20151214): update detection for all known ChromeOS devices; improve prognosis descriptions
+- **2.0.6** (20151214): bugfix: issue #7, add GalliumOS hwspecific pkgs properly
+- **2.0.5** (20151212): add first user to important groups; use generic coreimage for GalliumOS
+- **2.0.4** (20151120): bugfix: issue #5, "-r RELEASE" handling failing for some values of RELEASE
+- **2.0.3** (20151119): bugfix: issue #4, parted and partprobe removed from ChromeOS
+- **2.0.2** (20151118): update some HWIDs
+- **2.0.1** (20151113): update core image pathname for GalliumOS
+- **2.0** (20151025): add GalliumOS support; add support for Ubuntu 15.10; add detection and installation prognosis for all known ChromeOS devices; add "-d DISTRIBUTION" and "-e ENVIRONMENT" options; remove "-m METAPACKAGE" option; remove "-i IMAGE" option, make RELEASE smarter; work around `systemd` conflict; refactor code into functions to facilitate multiple distros and future operating systems
+- **1.1.2** (20151005): update Ubuntu "trusty" to 14.04.3; add recognized HWIDs (PEPTO, LINK, SAMUS, LEON, PAINE, YUNA, SPRING, SKATE, FALCO, WOLF); always verify chrx.org certificates
+- **1.1.1** (20150508): add "-r RELEASE" option; validate some input
+- **1.1** (20150504): add support for Ubuntu 15.04
+- **1.0** (20141223)
