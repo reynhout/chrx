@@ -157,13 +157,13 @@ cd ; curl -O $CHRX_WEB_ROOT/go && sh go
 ### chromebooks
 status            |CPU family                           |notes
 :----------------:|-------------------------------------|------------------
-:white_check_mark:|Intel Haswell                        |[Firmware update](https://mrchromebox.tech/#fwscript) available
-:white_check_mark:|Intel Broadwell                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
-:white_check_mark:|Intel Skylake                        |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
-:white_check_mark:|Intel Kaby Lake                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended*
-:white_check_mark:|Intel Bay Trail                      |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
-:white_check_mark:|Intel Braswell                       |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
-:white_check_mark:|Intel Apollo Lake                    |[Firmware update](https://mrchromebox.tech/#fwscript) **required**
+:white_check_mark:|Intel Haswell                        |[Firmware update](https://mrchromebox.tech/#fwscript) available (RW_LEGACY)
+:white_check_mark:|Intel Broadwell                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended* (RW_LEGACY)
+:white_check_mark:|Intel Skylake                        |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended* (RW_LEGACY)
+:white_check_mark:|Intel Kaby Lake                      |[Firmware update](https://mrchromebox.tech/#fwscript) *recommended* (RW_LEGACY)
+:white_check_mark:|Intel Bay Trail                      |[Firmware update](https://mrchromebox.tech/#fwscript) **required** (RW_LEGACY)
+:white_check_mark:|Intel Braswell                       |[Firmware update](https://mrchromebox.tech/#fwscript) **required** (RW_LEGACY)
+:white_check_mark:|Intel Apollo Lake                    |[Firmware update](https://mrchromebox.tech/#fwscript) **required** (RW_LEGACY)
 :question:        |Intel Sandy/Ivy Bridge               |Requires SeaBIOS with Legacy Boot capability
 :question:        |Intel Pineview                       |Requires SeaBIOS with Legacy Boot capability
 :x:               |ARM                                  |ARM support is very unlikely
@@ -277,16 +277,24 @@ is a flexible setup, well-suited for many users, but of course not all.
 
 Consider these alternatives:
 
+- Single-Boot instead of dual-boot. If you don't need or want ChromeOS,
+you don't need to keep it. You can install directly from a Linux ISO
+written to a USB/SD device. As with dual-boot, you might need to update
+firmware (full ROM/UEFI is recommended for single-boot only), and
+[GalliumOS](https://wiki.galliumos.org/Installing) is the distro of choice.
 - [Crouton](https://github.com/dnschneid/crouton) allows you to run ChromeOS
 and Linux simultaneously, instead of dual-booting like **chrx** or ChrUbuntu.
 This arrangement has a few drawbacks, but if you spend most of your time in
 ChromeOS and your Linux needs are limited, it should serve well.
+- [Crostini](https://chromium.googlesource.com/chromiumos/docs/+/master/containers_and_vms.md) is Google's Linux-apps-in-containers-inside-virtual-machines-on-ChromeOS project. It's only available on newer Chromebook models, so be sure to check the compatibility list first.
+
+<!--
 - The original [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-for-new-chromebooks-now-with.html) has been tested on a wide variety of hardware. Unfortunately, it is now significantly outdated, and fails to install Ubuntu
 15.04 and newer properly. 14.10 and older should install successfully via
 ChrUbuntu, but they will require significant additional configuration to work
 well. If your Chromebook is older and unsupported by **chrx**, give ChrUbuntu
 a try.
-
+-->
 
 ## notes on security and privacy
 
