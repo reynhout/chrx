@@ -44,12 +44,13 @@ skip directly to phase two.
     * Configure Wi-Fi and log in (Guest account is fine)
     * Open ChromeOS Terminal by pressing `CTRL+ALT+T`, and entering `shell` at the prompt
 1. **Update firmware, if necessary** -- see [chromebooks](#chromebooks)
-    * *required* for Bay Trail, Braswell, and Apollo Lake models
-    * *recommended* for Broadwell, Skylake, and Kaby Lake models
-    * *optional* for Haswell models
+    * ***required*** for Bay Trail, Braswell, and Apollo Lake models
+    * ***recommended*** for Broadwell, Skylake, and Kaby Lake models
+    * ***optional*** for Haswell models
 1. **Download and run chrx**
     * `curl https://chrx.org/dev | sudo tar xzfC - /usr/local && chrx`
-    * (see [options](#options), below)
+    * Several [options](#options) are available to customize your installation
+    * This new command line is required for ChromeOS M82 and newer. It also works on older ChromeOS versions.
 1. **Follow on-screen instructions** to allocate storage space for Linux
     * chrx will suggest dedicating as much space as possible to Linux, and as little as necessary for ChromeOS. Choose your allocation ratio according to your personal requirements and preferences!
 1. **Repeat steps 2 and 4** to install and configure your new system
