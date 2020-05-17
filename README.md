@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 3.0beta1** See [changelog](#changelog).
+**Version 3.0** See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -48,7 +48,7 @@ skip directly to phase two.
     * ***recommended*** for Broadwell, Skylake, and Kaby Lake models
     * ***optional*** for Haswell models
 1. **Download and run chrx**
-    * `curl https://chrx.org/dev | sudo tar xzfC - /usr/local && chrx`
+    * `curl https://chrx.org/ | sudo tar xzfC - /usr/local && chrx`
     * Several [options](#options) are available to customize your installation
     * This new command line is required for ChromeOS M82 and newer. It also works on older ChromeOS versions.
 1. **Follow on-screen instructions** to allocate storage space for Linux
@@ -331,42 +331,43 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 <a name="changelog"></a>
 ## changelog
 
-<!-- don't forget to update the version numbers at top and in chrx-install! -->
-- **3.0** (20191110): internal improvements for noexec partitions; separate HWID lists to simplify reuse and updates; new, more-complicated, command line :(
-- **2.8** (20191101): update and improve hardware detection matching
-- **2.7** (20191029): Fedora: fixes for versions 30, 31. Thanks @jedigo!
-- **2.6** (20190629): GalliumOS: default to 3.0
-- **2.5.1** (20190620): Add support for Intel Gemini Lake and Amber Lake
-- **2.5** (20180607): GalliumOS: updates for GalliumOS 3.0
-- **2.4.3** (20180211): Ubuntu: update versioning; all: handle NVMe disks
-- **2.4.2** (20180201): Fedora: updates for Fedora 27
-- **2.4.1** (20170129): GalliumOS: Fix LINK, add CHELL HiDPI pkg selection
-- **2.4** (20161228): add support selection of mirror sites (GalliumOS-only)
-- **2.3.2** (20161222): add first user to groups individually in case selected distro/metapackage/spin does not include all (fixes #30)
-- **2.3.1** (20161208): Fedora: add `-p` support, add latest to auto-detection, add nonfree codecs (thx @jedigo); GalliumOS: use chrx GRUB config; all: add more hidden mmcblk0 partitions, update GRUB config
-- **2.3** (20161121): add support for Fedora! thanks @jedigo!
-- **2.2.8** (20161002): add support for new GalliumOS hardware-specific pkgs: braswell, skylake, samus
-- **2.2.7** (20160810): use version-dependent Ubuntu URL to match new Canonical schemes; update Ubuntu "trusty" to 14.04.5
-- **2.2.6** (20160619): hide eMMC partitions properly (thanks gmykhailiuta); improve -r RELEASE handling for GalliumOS; add preliminary handling for running under non-ChromeOS
-- **2.2.5** (20160512): update Ubuntu base/core image URL (thanks arsfeld)
-- **2.2.4** (20160505): add Google Chrome to installable packages; add new HWIDs, update others
-- **2.2.3** (20160426): do not drop to shell before reboot; do not retry coreimage downloads; update steam install for xenial; update docs for Ubuntu 16.04
-- **2.2.2** (20160420): retry/resume failed image downloads; add new HWIDs
-- **2.2.1** (20160316): bugfix: issue #12, errors installing to external media
-- **2.2** (20160304): switch default distribution to GalliumOS
-- **2.1.2** (20160130): add parsing for "-r nightly" (GalliumOS only, installs nightly build); log chrx command line for debugging; add first user to groups more quietly
-- **2.1.1** (20160120): update URL for GalliumOS coreimage; make sure util pkgs are added
-- **2.1** (20160103): add "-p PACKAGE" option to install additional packages
-- **2.0.8** (20160102): add CHRX_NO_REBOOT env var for use with https://github.com/MattDevo/scripts
-- **2.0.7** (20151214): update detection for all known ChromeOS devices; improve prognosis descriptions
-- **2.0.6** (20151214): bugfix: issue #7, add GalliumOS hwspecific pkgs properly
-- **2.0.5** (20151212): add first user to important groups; use generic coreimage for GalliumOS
-- **2.0.4** (20151120): bugfix: issue #5, "-r RELEASE" handling failing for some values of RELEASE
-- **2.0.3** (20151119): bugfix: issue #4, parted and partprobe removed from ChromeOS
-- **2.0.2** (20151118): update some HWIDs
-- **2.0.1** (20151113): update core image pathname for GalliumOS
-- **2.0** (20151025): add GalliumOS support; add support for Ubuntu 15.10; add detection and installation prognosis for all known ChromeOS devices; add "-d DISTRIBUTION" and "-e ENVIRONMENT" options; remove "-m METAPACKAGE" option; remove "-i IMAGE" option, make RELEASE smarter; work around `systemd` conflict; refactor code into functions to facilitate multiple distros and future operating systems
-- **1.1.2** (20151005): update Ubuntu "trusty" to 14.04.3; add recognized HWIDs (PEPTO, LINK, SAMUS, LEON, PAINE, YUNA, SPRING, SKATE, FALCO, WOLF); always verify chrx.org certificates
-- **1.1.1** (20150508): add "-r RELEASE" option; validate some input
-- **1.1** (20150504): add support for Ubuntu 15.04
 - **1.0** (20141223)
+- **1.1** (20150504): add support for Ubuntu 15.04
+- **1.1.1** (20150508): add "-r RELEASE" option; validate some input
+- **1.1.2** (20151005): update Ubuntu "trusty" to 14.04.3; add recognized HWIDs (PEPTO, LINK, SAMUS, LEON, PAINE, YUNA, SPRING, SKATE, FALCO, WOLF); always verify chrx.org certificates
+- **2.0** (20151025): add GalliumOS support; add support for Ubuntu 15.10; add detection and installation prognosis for all known ChromeOS devices; add "-d DISTRIBUTION" and "-e ENVIRONMENT" options; remove "-m METAPACKAGE" option; remove "-i IMAGE" option, make RELEASE smarter; work around `systemd` conflict; refactor code into functions to facilitate multiple distros and future operating systems
+- **2.0.1** (20151113): update core image pathname for GalliumOS
+- **2.0.2** (20151118): update some HWIDs
+- **2.0.3** (20151119): bugfix: issue #4, parted and partprobe removed from ChromeOS
+- **2.0.4** (20151120): bugfix: issue #5, "-r RELEASE" handling failing for some values of RELEASE
+- **2.0.5** (20151212): add first user to important groups; use generic coreimage for GalliumOS
+- **2.0.6** (20151214): bugfix: issue #7, add GalliumOS hwspecific pkgs properly
+- **2.0.7** (20151214): update detection for all known ChromeOS devices; improve prognosis descriptions
+- **2.0.8** (20160102): add CHRX_NO_REBOOT env var for use with https://github.com/MattDevo/scripts
+- **2.1** (20160103): add "-p PACKAGE" option to install additional packages
+- **2.1.1** (20160120): update URL for GalliumOS coreimage; make sure util pkgs are added
+- **2.1.2** (20160130): add parsing for "-r nightly" (GalliumOS only, installs nightly build); log chrx command line for debugging; add first user to groups more quietly
+- **2.2** (20160304): switch default distribution to GalliumOS
+- **2.2.1** (20160316): bugfix: issue #12, errors installing to external media
+- **2.2.2** (20160420): retry/resume failed image downloads; add new HWIDs
+- **2.2.3** (20160426): do not drop to shell before reboot; do not retry coreimage downloads; update steam install for xenial; update docs for Ubuntu 16.04
+- **2.2.4** (20160505): add Google Chrome to installable packages; add new HWIDs, update others
+- **2.2.5** (20160512): update Ubuntu base/core image URL (thanks arsfeld)
+- **2.2.6** (20160619): hide eMMC partitions properly (thanks gmykhailiuta); improve -r RELEASE handling for GalliumOS; add preliminary handling for running under non-ChromeOS
+- **2.2.7** (20160810): use version-dependent Ubuntu URL to match new Canonical schemes; update Ubuntu "trusty" to 14.04.5
+- **2.2.8** (20161002): add support for new GalliumOS hardware-specific pkgs: braswell, skylake, samus
+- **2.3** (20161121): add support for Fedora! thanks @jedigo!
+- **2.3.1** (20161208): Fedora: add `-p` support, add latest to auto-detection, add nonfree codecs (thx @jedigo); GalliumOS: use chrx GRUB config; all: add more hidden mmcblk0 partitions, update GRUB config
+- **2.3.2** (20161222): add first user to groups individually in case selected distro/metapackage/spin does not include all (fixes #30)
+- **2.4** (20161228): add support selection of mirror sites (GalliumOS-only)
+- **2.4.1** (20170129): GalliumOS: Fix LINK, add CHELL HiDPI pkg selection
+- **2.4.2** (20180201): Fedora: updates for Fedora 27
+- **2.4.3** (20180211): Ubuntu: update versioning; all: handle NVMe disks
+- **2.5** (20180607): GalliumOS: updates for GalliumOS 3.0
+- **2.5.1** (20190620): Add support for Intel Gemini Lake and Amber Lake
+- **2.6** (20190629): GalliumOS: default to 3.0
+- **2.7** (20191029): Fedora: fixes for versions 30, 31. Thanks @jedigo!
+- **2.8** (20191101): update and improve hardware detection matching
+- **3.0** (20191110): internal improvements for noexec partitions; separate HWID lists to simplify reuse and updates; new, more-complicated, command line :(
+
+<!-- don't forget to update the version numbers at top and in chrx-install! -->
