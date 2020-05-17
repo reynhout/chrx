@@ -38,23 +38,21 @@ skip directly to phase two.
 ### step-by-step
 
 1. **Enable [Developer Mode](http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices)**
-  * (for most models, press `ESC+F3(Refresh)+Power`)
-1. **Boot into ChromeOS**
-  * Press `CTRL+D` at the white "ChromeOS is missing or damaged" (or "OS verification is OFF") screen
-1. **Configure Wi-Fi and log in**
-  * Guest account is fine
-1. **Open ChromeOS Terminal**
-  * Press `CTRL+ALT+T`, and enter `shell` at the prompt
+    * (for most models, press `ESC+F3(Refresh)+Power`)
+1. **Boot ChromeOS and open Terminal**
+    * Press `CTRL+D` at the white "ChromeOS is missing or damaged" (or "OS verification is OFF") screen
+    * Configure Wi-Fi and log in (Guest account is fine)
+    * Open ChromeOS Terminal by pressing `CTRL+ALT+T`, and entering `shell` at the prompt
 1. **Update firmware, if necessary** -- see [chromebooks](#chromebooks)
-  * *required* for Bay Trail, Braswell, and Apollo Lake models
-  * *recommended* for Broadwell, Skylake, and Kaby Lake models
-  * *optional* for Haswell models
+    * *required* for Bay Trail, Braswell, and Apollo Lake models
+    * *recommended* for Broadwell, Skylake, and Kaby Lake models
+    * *optional* for Haswell models
 1. **Download and run chrx**
-  * `curl https://chrx.org/dev | sudo tar xzfC - /usr/local && chrx`
-  * (see [options](#options), below)
+    * `curl https://chrx.org/dev | sudo tar xzfC - /usr/local && chrx`
+    * (see [options](#options), below)
 1. **Follow on-screen instructions** to allocate storage space for Linux
-  * chrx will suggest dedicating as much space as possible to Linux, and as little as necessary for ChromeOS. Choose your allocation ratio according to your personal requirements and preferences!
-1. **Repeat steps 2-4 and 6** to install and configure your new system
+    * chrx will suggest dedicating as much space as possible to Linux, and as little as necessary for ChromeOS. Choose your allocation ratio according to your personal requirements and preferences!
+1. **Repeat steps 2 and 4** to install and configure your new system
 
 
 <a name="options"></a>
