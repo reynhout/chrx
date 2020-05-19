@@ -1,32 +1,22 @@
 #!/bin/sh
 #
-# chrx
+# go
 #
-# A wrapper for chrx-install
+# Instructions for update
 #
 
-: ${CHRX_WEB_ROOT:="https://chrx.org"}
-CHRX_CACHE0_DIR="/var/tmp/chrx"
-CHRX_LOG_FILE="${CHRX_CACHE0_DIR}/chrx-install.log"
+cat << EOMSG
 
-## silence sudo msg
-sudo -v >/dev/null 2>&1
+  Instructions for running chrx have been updated to work on newer
+  versions of ChromeOS (R82 and later).
 
-rm -rf ${CHRX_CACHE0_DIR}
-mkdir -p ${CHRX_CACHE0_DIR}
-cd ${CHRX_CACHE0_DIR}
+  These new instructions also work on older versions of ChromeOS,
+  and are recommended for all.
 
-echo "## $0 $@" > $CHRX_LOG_FILE
+  The new chrx command line is:
 
-## need sudo -E to keep exported environment vars
-(
-export CHRX_WEB_ROOT CHRX_CACHE0_DIR
-#curl -Os ${CHRX_WEB_ROOT}/chrx-install && sudo -E bash ./chrx-install "$@"
-sudo -E /usr/local/bin/chrx-install "$@"
-) 2>&1 | tee -a ${CHRX_LOG_FILE}
+    curl https://chrx.org/ | sudo tar xzfC - /usr/local && chrx
 
-## logfile will be copied to chroot by install-chrx.
-## can't copy here -- partition is unmounted when we get back.
+  Please see https://chrx.org/ for full details.
 
-## get stderr into tee: bash: `|& tee`;  sh: `2>&1 | tee`
-
+EOMSG
