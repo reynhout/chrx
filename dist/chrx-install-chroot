@@ -656,7 +656,6 @@ case "${CHRX_OS_DISTRO}" in
     create_fakebins
     apt_get_update
 
-    #apt_get_update
     ubuntu_update_core_image
     install_curl
     ubuntu_add_repos
@@ -674,8 +673,8 @@ case "${CHRX_OS_DISTRO}" in
     set_locale
 
     install_desktop_support ## TODO: ubuntu-only?
-    chrome_add_repos
-    install_google_chrome ## TODO: ubuntu-only?
+    #chrome_add_repos
+    #install_google_chrome
 
     install_kernel
     install_kernel_newer_than_min

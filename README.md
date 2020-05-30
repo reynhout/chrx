@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 3.0** See [changelog](#changelog).
+**Version 3.0.1** See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -369,5 +369,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **2.7** (20191029): Fedora: fixes for versions 30, 31. Thanks @jedigo!
 - **2.8** (20191101): update and improve hardware detection matching
 - **3.0** (20191110): internal improvements for noexec partitions; separate HWID lists to simplify reuse and updates; new, more-complicated, command line :(
+- **3.0.1** (20200530): Print useful error message if run with old command-line on older ChromeOS; Ubuntu: do not install Google Chrome by default
 
 <!-- don't forget to update the version numbers at top and in chrx-install! -->
