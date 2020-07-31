@@ -407,6 +407,46 @@ determine_osv_fedora()
   
 }
 
+get_os_version_deepin()
+{
+  release_log_url="https://www.deepin.org/en/category/release-notes/"
+  version_list=$(curl -s ${release_log_url} | grep -Eo ">[0-9][0-9]/" | grep -o "[0-9][0-9]")
+  CHRX_OS_VERSION=$(echo "${version_list}" | sort | tail -1)
+  # default to 15.11
+  if [[ $CHRX_OS_VERSION != [0-9][0-9] ]]; then
+    CHRX_OS_VERSION="15.11"
+  fi
+}
+
+determine_osv_deepin()
+{
+  msg_os_version="${ANSI_YEL}(CAUTION: chrx support is beta!)${ANSI_RST}"
+  case "${CHRX_OS_RELEASE}" in
+    latest)
+      get_os_version_deepin
+      ;;
+    15.11,15.10,15.9,15.8,15.7,15.6,15,5,15.4,15.3,15.2,15.1)
+      CHRX_OS_VERSION=${CHRX_OS_RELEASE}
+      ;;
+    rawhide)
+      CHRX_OS_VERSION=${CHRX_OS_RELEASE}
+      msg_os_version="${ANSI_YEL}(CAUTION: development version; may not work!)${ANSI_RST}"
+      ;;
+    *)
+      if [[ ${CHRX_OS_RELEASE} == [0-9][0-9] ]]; then
+        CHRX_OS_VERSION=${CHRX_OS_RELEASE}
+        msg_os_version="${ANSI_YEL}(CAUTION: untested!)${ANSI_RST}"
+      else
+        msg_os_version="${ANSI_RED}(invalid!)${ANSI_RST}"
+        FAIL=1
+      fi
+      ;;
+  esac
+  
+  CHRX_OS_CORE_IMAGE_URL='http://cdimage.deepin.com/releases/20Beta/deepin-20Beta-desktop-amd64.iso'
+  
+}
+
 set_customizations_ubuntu()
 {
   SKEL_FILES="
