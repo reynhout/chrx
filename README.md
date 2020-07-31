@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 3.0.1** See [changelog](#changelog).
+**Version 3.0.2** See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -370,5 +370,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **2.8** (20191101): update and improve hardware detection matching
 - **3.0** (20191110): internal improvements for noexec partitions; separate HWID lists to simplify reuse and updates; new, more-complicated, command line :(
 - **3.0.1** (20200530): Print useful error message if run with old command-line on older ChromeOS; Ubuntu: do not install Google Chrome by default
+- **3.0.2** (20200731): Remove redundant check form RW_LEGACY via mosys
 
 <!-- don't forget to update the version numbers at top and in chrx-install! -->

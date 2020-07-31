@@ -5,7 +5,7 @@
 # chromebook unix installer
 #
 
-CHRX_VERSION="3.0.1"
+CHRX_VERSION="3.0.2"
 
 CHRX_OS_DISTRO="galliumos"
 CHRX_OS_ENVIRONMENT="desktop"
@@ -565,6 +565,7 @@ report_unrecognized_device()
 }
 
 check_support_for_legacy_boot()
+# obsolete due to removal of eeprom command from mosys in ChromeOS 85
 {
   echo_info "Checking hardware support for legacy boot...  \c"
 
@@ -636,9 +637,11 @@ setup_and_validate_environment()
   fi
 
   if [ "$CHRX_HOST_IS_CHROMEOS" ]; then
-    check_support_for_legacy_boot
+    :
+    # disabled, redundant after hwid check
+    #check_support_for_legacy_boot
   else
-    echo -e "Skipping legacy boot check, because this is not ChromeOS.\n"
+    echo_warn "Skipping legacy boot check, because this is not ChromeOS."
   fi
 }
 
