@@ -143,7 +143,6 @@ you can quote the argument, e.g.: `-p "gimp blender inkscape"`.
 `chrx -d ubuntu -e standard -r 16.04 -H hal -U dave -p admin-misc`
 
 
-<!--
 <a name="advanced-usage"></a>
 ### advanced usage
 
@@ -152,14 +151,23 @@ There are many good reasons to do so, especially if you'll be doing
 a large number of installations. However, setup can be somewhat more
 complicated, and instructions are outside the scope of this README.
 
-To point **chrx** at your cache, just set the `CHRX_WEB_ROOT`
-environment variable before running the `chrx` script, like this:
+To point **chrx** at a local copy, just set the `CHRX_WEB_ROOT`
+environment variable after running `bash make-dist.sh` script, like this:
 
 ```
-export CHRX_WEB_ROOT="http://myserver/chrx"
-cd ; curl -O $CHRX_WEB_ROOT/go && sh go
+# Auto version dev appended
+bash make-dist.sh
+# Explicit version no dev appended
+CHRX_VERSION=3.3.3 bash make-dist.sh
+# manual fetch of local version
+export CHRX_WEB_ROOT="http://localhost:8000/"
+curl http://$CHRX_WEB_ROOT/dist.tar.gz | sudo tar xzfC - /usr/local && chrx -h
+# or just source the convenience script that exports the variable and
+# installs chrx, most useful if you already partitioned your disk and
+# are adding a new distro or adding more testing to the installer
+. fetch-install-from-local.sh
+chrx -h | grep -E 'installer.*version'
 ```
--->
 
 <a name="compatibility"></a>
 ## compatibility
