@@ -7,7 +7,7 @@
 
 CHRX_VERSION="3.0.2"
 
-CHRX_OS_DISTRO="galliumos"
+CHRX_OS_DISTRO="ubuntu"
 CHRX_OS_ENVIRONMENT="desktop"
 CHRX_OS_RELEASE="latest"
 CHRX_OS_ARCH="amd64"
@@ -18,7 +18,7 @@ CHRX_OS="linux"
 CHRX_HOSTNAME="chrx"
 CHRX_USERNAME="chrx"
 CHRX_LOCALE="en_US.UTF-8"
-CHRX_TZ="America/New_York"
+CHRX_TZ="America/Chicago"
 
 CHRX_CACHE_DIR="/var/cache/chrx"
 CHRX_INSTALL_ROOT="/tmp/chrxroot"

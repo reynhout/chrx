@@ -405,7 +405,12 @@ install_language_support()
 set_locale()
 {
   echo_title "Setting locale to \"${CHRX_LOCALE}\"."
-  update-locale LANG=${CHRX_LOCALE} LC_MESSAGES=${CHRX_LOCALE}
+  LANG=${CHRX_LOCALE}
+  apt_get_install locales && \
+    sed -i -e "s/# $LANG.*/$LANG.UTF-8 UTF-8/" /etc/locale.gen && \
+    dpkg-reconfigure --frontend=noninteractive locales && \
+    localedef -i en_US -f UTF-8 en_US.UTF-8 && \
+    update-locale LANG=$LANG
 }
 
 fedora_set_locale()
