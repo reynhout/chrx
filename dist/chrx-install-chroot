@@ -47,7 +47,7 @@ install_curl()
 install_utilities()
 {
   apt_get_update_if_needed
-  apt_get_install zram-config grub-pc
+  apt_get_install zram-config grub-efi-amd64 shim-signed grub-efi-amd64-signed
 }
 
 apt_get_install()
@@ -354,7 +354,7 @@ configure_grub()
 GRUB_TIMEOUT=10
 GRUB_TIMEOUT_STYLE=menu
 
-GRUB_GFXMODE=1920x1080,1680x1050,1600x900,1366x768,1280x850,1024x768,auto
+GRUB_GFXMODE=1920x1080,auto
 GRUB_TERMINAL_OUTPUT=gfxterm
 
 ## kernel parameters
@@ -378,7 +378,7 @@ GRUB_TERMINAL_OUTPUT=gfxterm
 ##  noresume                  no resume partition (for hibernate)
 ##  noswap                    no swap partition
 ##
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash boot=local acpi_osi=Linux acpi_backlight=vendor add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic elevator=noop ${CHRX_RESUME_PARTITION}"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_pstate=enable i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic elevator=noop ${CHRX_RESUME_PARTITION}"
 
 EO_GRUB
 }
@@ -613,7 +613,7 @@ install_grub()
   fi
   
   grub-mkconfig -o /boot/grub/grub.cfg
-  grub-install ${CHRX_TARGET_DISK} --force
+  grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
   
   #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
   #apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
