@@ -6,6 +6,7 @@
 #
 
 : ${CHRX_WEB_ROOT:="https://chrx.org"}
+export DEBIAN_FRONTEND=noninteractive
 CHRX_CACHE0_DIR="/var/tmp/chrx"
 CHRX_LOG_FILE="${CHRX_CACHE0_DIR}/chrx-install.log"
 
