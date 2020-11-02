@@ -632,9 +632,10 @@ install_grub()
   if [ -z "${CHRX_ADD_PKGS}" ]; then
     grub-install ${CHRX_TARGET_DISK} --force
   else
-    mkdir -p /boot/efi
-    mount ${CHRX_TARGET_DISK}p12 /boot/efi
-    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+    #mkdir -p /boot/efi
+    #mount ${CHRX_TARGET_DISK}p12 /boot/efi
+    #grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
   fi
   
   #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
