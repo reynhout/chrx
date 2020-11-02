@@ -5,6 +5,7 @@
 # chromebook unix installer
 #
 
+LC_ALL='en_US.utf-8'
 CHRX_VERSION="3.0.2"
 
 CHRX_OS_DISTRO="ubuntu"
