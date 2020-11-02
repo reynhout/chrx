@@ -629,7 +629,13 @@ install_grub()
   fi
   
   grub-mkconfig -o /boot/grub/grub.cfg
-  grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+  if [ -z "${CHRX_ADD_PKGS}" ]; then
+    grub-install ${CHRX_TARGET_DISK} --force
+  else
+    mkdir -p /boot/efi
+    mount ${CHRX_TARGET_DISK}p12 /boot/efi
+    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+  fi
   
   #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
   #apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
