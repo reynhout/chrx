@@ -912,6 +912,8 @@ do_install()
   # | tee -a ${CHRX_LOGFILE}
   echo "<< exiting chroot"
 
+  # Copy the keyboard mapping from ChromeOS to installed OS so keyboard is immediately useful
+  cp /etc/udev/hwdb.d/* ${CHRX_INSTALL_ROOT}/etc/udev/hwdb.d/
   ## set eeprom bits
   #crossystem dev_boot_legacy=1 dev_boot_signed_only=1
   [ "$CHRX_HOST_IS_CHROMEOS" ] && crossystem dev_boot_legacy=1
