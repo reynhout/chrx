@@ -47,7 +47,7 @@ install_curl()
 install_utilities()
 {
   apt_get_update_if_needed
-  apt_get_install zram-config grub-pc
+  apt_get_install zram-config ${CHRX_BOOTLOADER}
 }
 
 apt_get_install()

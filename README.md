@@ -16,7 +16,7 @@ Install Linux onto your Chromebook. Dual-boot alongside ChromeOS for maximum fle
 
 ## status
 
-**Version 3.0.2** See [changelog](#changelog).
+**Version 3.1** See [changelog](#changelog).
 
 
 <a name="usage"></a>
@@ -81,6 +81,7 @@ Options
    -m MIRROR       distribution-specific download mirror [primary]
                      galliumos: ny1.us, va1.us, rb1.fr
    -t TARGETDISK   target disk (/dev/mmcblk1, /dev/sdb, etc) []
+   -b BOOTLOADER   bootloader (grub-pc, grub-efi-amd64) [(model-dependent)]
    -p PACKAGE      additional packages to install, may repeat []
                      kodi, minecraft, steam, etc, see chrx.org for more
                      (not yet supported on fedora)
@@ -371,5 +372,6 @@ To Jay Lee for [ChrUbuntu](http://chromeos-cr48.blogspot.fr/2013/10/chrubuntu-fo
 - **3.0** (20191110): internal improvements for noexec partitions; separate HWID lists to simplify reuse and updates; new, more-complicated, command line :(
 - **3.0.1** (20200530): Print useful error message if run with old command-line on older ChromeOS; Ubuntu: do not install Google Chrome by default
 - **3.0.2** (20200731): Remove redundant check form RW_LEGACY via mosys
+- **3.1** (20201108): Add bootloader selection and default (-b)
 
 <!-- don't forget to update the version numbers at top and in chrx-install! -->
