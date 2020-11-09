@@ -127,7 +127,7 @@ prompt_if_interactive()
   ## TODO this would be better with passed (lexical) refs
   PROMPT_RESPONSE=
   if [ "${CHRX_PROMPT_ENABLED}" ]; then
-    read PROMPT_RESPONSE
+    read -e PROMPT_RESPONSE
   else
     echo
   fi
