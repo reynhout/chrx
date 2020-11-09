@@ -211,6 +211,7 @@ identify_hardware()
     KBL) _cpuf="Intel Kaby Lake" ;;    # succeeds SKL
     AML) _cpuf="Intel Amber Lake" ;;   # succeeds KBL
     WHL) _cpuf="Intel Whiskey Lake" ;; # succeeds KBL
+    CML) _cpuf="Intel Coffee Lake" ;;  # succeeds KBL
     #
     BYT) _cpuf="Intel Bay Trail" ;;
     BSW) _cpuf="Intel Braswell" ;;     # succeeds BYT
