@@ -55,7 +55,7 @@ install_curl()
 install_utilities()
 {
   apt_get_update_if_needed
-  apt_get_install zram-config grub-efi-amd64 shim-signed grub-efi-amd64-signed
+  apt_get_install zram-config ${CHRX_BOOTLOADER}
 }
 
 apt_get_install()
@@ -352,6 +352,9 @@ configure_grub()
   sed -i~ 's/^\(GRUB_HIDDEN_TIMEOUT\)/#\1/g' /etc/default/grub
   sed -i~ 's/^\(GRUB_TIMEOUT\)/#\1/g' /etc/default/grub
   sed -i~ 's/^\(GRUB_CMDLINE_LINUX\)/#\1/g' /etc/default/grub
+  ## grub-mkconfig run before/after this might reset?
+  # May also want to disable the UUID lookups if using Chrx to install to USB
+  # since BIOS vs EFI might identify the partitions uniquely?
   ## add our settings
   cat >> /etc/default/grub <<EO_GRUB
 
@@ -362,7 +365,7 @@ configure_grub()
 GRUB_TIMEOUT=10
 GRUB_TIMEOUT_STYLE=menu
 
-GRUB_GFXMODE=1920x1080,auto
+GRUB_GFXMODE=1920x1080,1680x1050,1600x900,1366x768,1280x850,1024x768,auto
 GRUB_TERMINAL_OUTPUT=gfxterm
 
 ## kernel parameters
@@ -386,7 +389,7 @@ GRUB_TERMINAL_OUTPUT=gfxterm
 ##  noresume                  no resume partition (for hibernate)
 ##  noswap                    no swap partition
 ##
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_pstate=enable i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic elevator=noop ${CHRX_RESUME_PARTITION}"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash boot=local acpi_osi=Linux acpi_backlight=vendor add_efi_memmap intel_pstate=enable i915.modeset=1 tpm_tis.force=1 tpm_tis.interrupts=0 nmi_watchdog=panic,lapic elevator=noop ${CHRX_RESUME_PARTITION}"
 
 EO_GRUB
 }
@@ -628,14 +631,25 @@ install_grub()
     echo_title_yel "(skipping chrx grub config)"
   fi
   
-  grub-mkconfig -o /boot/grub/grub.cfg
-  if [ -z "${CHRX_ADD_PKGS}" ]; then
-    grub-install ${CHRX_TARGET_DISK} --force
+  BOOT_DIR=/boot/
+  ESP_DIR=/efi/
+  mkdir -p ${ESP_DIR}
+  grub-mkconfig -o ${BOOT_DIR}/grub/grub.cfg
+  # Need to gracefully handle if the EFI partition is CSM (compatibility mode) only for SeaBIOS
+  # Need to check if CHRX_TARGET_DISK contains /dev/sd* or /dev/nvme*
+  CHRX_EFI_PARTITION=$(get_disk_plus_partition 12)
+  mount ${CHRX_EFI_PARTITION} ${ESP_DIR}
+  if [ -d "${ESP_DIR}/EFI" -o -d "${ESP_DIR}/efi" ]; then
+    #apt_get_install grub-efi-amd64 shim-signed grub-efi-amd64-signed
+    grub-install --target=x86_64-efi --efi-directory=${ESP_DIR} --boot-directory=${BOOT_DIR} --recheck --removable
   else
-    #mkdir -p /boot/efi
-    #mount ${CHRX_TARGET_DISK}p12 /boot/efi
-    #grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
-    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+    umount ${EFI_DIR}
+    rmdir -f ${EFI_DIR}
+    # Install regular (BIOS) grub
+    #apt_get_install grub-pc
+    # Grub can figure out target if we aren't forcing EFI
+    # --target=i386-pc
+    grub-install --boot-directory=${BOOT_DIR} --recheck --removable ${CHRX_TARGET_DISK}
   fi
   
   #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
@@ -710,7 +724,7 @@ case "${CHRX_OS_DISTRO}" in
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
     install_grub
-    rm /etc/apt/apt.conf.d/local
+    rm -f /etc/apt/apt.conf.d/local
     ;;
   galliumos)
     export DEBIAN_FRONTEND=noninteractive
@@ -734,7 +748,7 @@ case "${CHRX_OS_DISTRO}" in
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
     install_grub
-    rm /etc/apt/apt.conf.d/local
+    rm -f /etc/apt/apt.conf.d/local
     ;;
 #  galliumos_apt)
 #    ubuntu_update_core_image

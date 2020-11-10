@@ -757,7 +757,7 @@ confirm_config()
       distribution (-d):  ${CHRX_OS_DISTRO} ${msg_os_dist}
       environment (-e):   ${CHRX_OS_ENVIRONMENT} ${msg_os_env}
       release (-r):       ${CHRX_OS_RELEASE} ${msg_os_release}
-        version:          ${CHRX_OS_VERSION} ${msg_os_version}
+      version:            ${CHRX_OS_VERSION} ${msg_os_version}
       architecture (-a):  ${CHRX_OS_ARCH} ${msg_os_arch}
       mirror (-m):        ${CHRX_OS_MIRROR} ${msg_os_mirror}
       target_disk (-t):   ${CHRX_TARGET_DISK}
@@ -912,8 +912,8 @@ do_install()
   # | tee -a ${CHRX_LOGFILE}
   echo "<< exiting chroot"
 
-  # Copy the keyboard mapping from ChromeOS to installed OS so keyboard is immediately useful
-  cp /etc/udev/hwdb.d/* ${CHRX_INSTALL_ROOT}/etc/udev/hwdb.d/
+  # Copy the keyboard mapping from ChromeOS to installed OS so keyboard is immediately useful *IF* they exist
+  (ls -A /etc/udev/hwdb.d/* >/dev/null 2>&1) && cp /etc/udev/hwdb.d/* ${CHRX_INSTALL_ROOT}/etc/udev/hwdb.d/
   ## set eeprom bits
   #crossystem dev_boot_legacy=1 dev_boot_signed_only=1
   [ "$CHRX_HOST_IS_CHROMEOS" ] && crossystem dev_boot_legacy=1
