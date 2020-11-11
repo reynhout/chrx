@@ -352,9 +352,6 @@ configure_grub()
   sed -i~ 's/^\(GRUB_HIDDEN_TIMEOUT\)/#\1/g' /etc/default/grub
   sed -i~ 's/^\(GRUB_TIMEOUT\)/#\1/g' /etc/default/grub
   sed -i~ 's/^\(GRUB_CMDLINE_LINUX\)/#\1/g' /etc/default/grub
-  ## grub-mkconfig run before/after this might reset?
-  # May also want to disable the UUID lookups if using Chrx to install to USB
-  # since BIOS vs EFI might identify the partitions uniquely?
   ## add our settings
   cat >> /etc/default/grub <<EO_GRUB
 
@@ -424,7 +421,7 @@ set_locale()
   apt_get_install locales && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     localedef -i en_US -f UTF-8 en_US.UTF-8 && \
-    update-locale LANG=$LANG
+  update-locale LANG=${CHRX_LOCALE} LC_MESSAGES=${CHRX_LOCALE}
 }
 
 fedora_set_locale()
@@ -724,7 +721,6 @@ case "${CHRX_OS_DISTRO}" in
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
     install_grub
-    rm -f /etc/apt/apt.conf.d/local
     ;;
   galliumos)
     export DEBIAN_FRONTEND=noninteractive
@@ -748,7 +744,6 @@ case "${CHRX_OS_DISTRO}" in
     apt-get -y ${VERBOSITY_APTGET} clean
     dpkg-query -W --showformat='${Package} ${Version}\n' > ${CHRX_CACHE_DIR}/apt-list-installed 2>&1
     install_grub
-    rm -f /etc/apt/apt.conf.d/local
     ;;
 #  galliumos_apt)
 #    ubuntu_update_core_image
