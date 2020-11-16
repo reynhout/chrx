@@ -612,8 +612,13 @@ install_grub()
     echo_title_yel "(skipping chrx grub config)"
   fi
   
+  case "${CHRX_TARGET_DISK}" in
+    /dev/sda*)     CHRX_EFI_PARTITION="${CHRX_TARGET_DISK}12" ;;
+    /dev/mmcblk*|/dev/nvme*) CHRX_EFI_PARTITION="${CHRX_TARGET_DISK}p12" ;;
+  esac
+  if [[ "$CHRX_BOOTLOADER}" == *efi* ]]; then echo "EFI requested"; EFI_DIR_CMD="--removable --target=x86_64-efi --efi-directory=/boot/efi"; mkdir -p /boot/efi; mount ${CHRX_EFI_PARTITION} /boot/efi; fi
+  grub-install ${EFI_DIR_CMD:-} --boot-dir=/boot ${CHRX_TARGET_DISK} --force
   grub-mkconfig -o /boot/grub/grub.cfg
-  grub-install ${CHRX_TARGET_DISK} --force
   
   #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
   #apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
@@ -648,6 +653,7 @@ fedora_set_selinux_autolabel()
 ## begin
 #echo debug ; bash
 
+do_install() {
 case "${CHRX_OS_DISTRO}" in
   *ubuntu)
     export DEBIAN_FRONTEND=noninteractive
@@ -741,4 +747,6 @@ esac
 
 
 add_first_user
+}
 
+(return 0 2>/dev/null) && sourced=1 || sourced=0 do_install
