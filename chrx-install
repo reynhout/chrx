@@ -404,7 +404,7 @@ determine_osv_fedora()
       ;;
   esac
   
-  CHRX_OS_CORE_IMAGE_URL='https://download.fedoraproject.org/pub/fedora/linux/releases/30/Container/x86_64/images/Fedora-Container-Base-30-1.2.x86_64.tar.xz'
+  CHRX_OS_CORE_IMAGE_URL="https://dl.fedoraproject.org/pub/fedora/linux/releases/${CHRX_OS_VERSION}/Container/${CHRX_OS_ARCH}/images/Fedora-Container-Base-${CHRX_OS_VERSION}-1.2.${CHRX_OS_ARCH}.tar.xz"
   
 }
 
