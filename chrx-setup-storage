@@ -10,16 +10,18 @@
 
 eval_try umount -R ${CHRX_INSTALL_ROOT} 2>/dev/null ## be safe.
 
-set_root_partition() {
+get_disk_plus_partition() {
   pnum=$1
 
   case "$CHRX_TARGET_DISK" in
-    /dev/sd*)     CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}${pnum}" ;;
-    /dev/mmcblk*) CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p${pnum}" ;;
-    /dev/nvme*)   CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p${pnum}" ;;
+    /dev/sd*)     echo "${CHRX_TARGET_DISK}${pnum}" ;;
+    /dev/mmcblk*) echo "${CHRX_TARGET_DISK}p${pnum}" ;;
+    /dev/nvme*)   echo "${CHRX_TARGET_DISK}p${pnum}" ;;
     *) echo_fail "\nunrecognized disk device: \"$CHRX_TARGET_DISK\"!"; exit 1 ;;
   esac
 }
+# Export this so we can call it from subshells to capture values instead of setting globals
+export -f get_disk_plus_partition
 
 if [ "${CHRX_TARGET_DISK}" ]; then
   echo_info "Installing to target disk ${ANSI_WHT}${CHRX_TARGET_DISK}${ANSI_RST}"
@@ -35,11 +37,7 @@ if [ "${CHRX_TARGET_DISK}" ]; then
 
   echo_info "Setting up target disk ${CHRX_TARGET_DISK} formatting..."
 
-  #CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}1"
-  #if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
-  #  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p1"
-  #fi
-  set_root_partition 1
+  CHRX_ROOT_PARTITION=$(get_disk_plus_partition 1)
 
   #dd if=/dev/zero of="${CHRX_ROOT_PARTITION}" bs=512 count=1
   #printf ",,L,*\n" | sfdisk "${CHRX_TARGET_DISK}"
@@ -137,11 +135,7 @@ fi
 
 ## set targets
 if [ -z "$CHRX_ROOT_PARTITION" ]; then
-  #CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}7"
-  #if [[ "${CHRX_TARGET_DISK}" =~ "mmcblk" ]]; then
-  #  CHRX_ROOT_PARTITION="${CHRX_TARGET_DISK}p7"
-  #fi
-  set_root_partition 7
+  CHRX_ROOT_PARTITION=$(get_disk_plus_partition 7)
 fi
 
 echo_info "\nInstalling to ${CHRX_ROOT_PARTITION}..."
@@ -155,6 +149,8 @@ if [ "`mount | grep ${CHRX_ROOT_PARTITION}`" ]; then
   exit 1
 fi
 
+# TODO: since this is sourced this could define a command or function to run that gets executed in the chrx-install only after the user confirms they are good with losing data, and after it does a test mount to examine whether there is already something in partition 7
+# set_partitions {
 eval_crit mkfs.ext4 ${VERBOSITY_MKFS} ${CHRX_ROOT_PARTITION}
 
 echo_info "Preparing installation root directory ${CHRX_INSTALL_ROOT}"
@@ -166,7 +162,7 @@ if [ ! -d "${CHRX_INSTALL_ROOT}" ]; then
 fi
 
 eval_crit mount -t ext4 ${CHRX_ROOT_PARTITION} ${CHRX_INSTALL_ROOT}
-
+# }
 ## clear error variable, which is checked in the calling script
 SETUP_STORAGE_ERROR=""
 
