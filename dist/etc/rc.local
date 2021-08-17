@@ -36,7 +36,8 @@ echo EHCI > /proc/acpi/wakeup
 echo XHCI > /proc/acpi/wakeup
 
 ## set backlight brightness on boot (min is 0, max is 937)
-echo 400 > /sys/class/backlight/intel_backlight/brightness
+max_bright=$(cat /sys/class/backlight/intel_backlight/max_brightness)
+echo $(( max_bright / 4 ))  > /sys/class/backlight/intel_backlight/brightness
 
 exit 0
 ## end chrx additions
