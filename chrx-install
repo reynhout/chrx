@@ -654,9 +654,16 @@ setup_storage()
 
   #curl -Os -A "${CHRX_UA}" ${CHRX_WEB_ROOT}/chrx-setup-storage
   #[ -r ./chrx-setup-storage ] && . ./chrx-setup-storage
+  # Export all variables/functions for subshells
+  set -a
   . /usr/local/bin/chrx-setup-storage
+  set +a
 
-  if [ "${SETUP_STORAGE_ERROR}" ]; then
+  declare -f get_disk_plus_partition
+  declare -f prep_install
+  prep_install
+  SETUP_STORAGE_ERROR=$?
+  if [ "${SETUP_STORAGE_ERROR}" -ne 0 ]; then
     echo_fail "fatal error from chrx-setup-storage. exiting!"
     exit 1
   fi
@@ -1034,5 +1041,5 @@ main()
 }
 
 #set -e
-main "$@"
+(return 0 2>/dev/null) && sourced=1 || sourced=0 main "$@"
 

@@ -1,0 +1,25 @@
+#!/bin/bash
+# Manual Grub fixing for Chrx
+# This exports any variables set between -a/+a
+# while the := allows passing in an alternate path to mount/
+. ./chrx-setup-storage
+set -a
+: ${CHRX_INSTALL_ROOT:=/tmp/chrxroot} # \
+  ${CHRX_ROOT_PARTITION:=$(get_disk_plus_partition 7)} \
+  ${CHRX_EFI_PARTITION:=$(get_disk_plus_partition 12)}
+set +a
+# Need to use chrx-setup-storage if we can source it without setting the world on fire
+# Or borrow the conditional that checks for the ROOT_DISK+partition
+sudo mkdir -p ${CHRX_INSTALL_ROOT}/efi
+sudo mount ${CHRX_ROOT_PARTITION} ${CHRX_INSTALL_ROOT}
+sudo mount -o bind /proc    ${CHRX_INSTALL_ROOT}/proc
+sudo mount -o bind /dev     ${CHRX_INSTALL_ROOT}/dev
+sudo mount -o bind /dev/pts ${CHRX_INSTALL_ROOT}/dev/pts
+sudo mount -o bind /sys     ${CHRX_INSTALL_ROOT}/sys
+sudo mount -o bind /run     ${CHRX_INSTALL_ROOT}/run
+sudo mkdir -p ${CHRX_INSTALL_ROOT}/run/resolvconf
+sudo mkdir -p ${CHRX_INSTALL_ROOT}/run/systemd/resolve
+cat /etc/resolv.conf | sudo tee ${CHRX_INSTALL_ROOT}/etc/resolv.conf
+sudo mount ${CHRX_EFI_PARTITION} ${CHRX_INSTALL_ROOT}/efi
+
+sudo chroot ${CHRX_INSTALL_ROOT} /bin/bash

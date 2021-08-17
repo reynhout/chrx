@@ -629,25 +629,20 @@ install_grub()
   fi
   
   BOOT_DIR=/boot/
-  ESP_DIR=/efi/
-  mkdir -p ${ESP_DIR}
-  grub-mkconfig -o ${BOOT_DIR}/grub/grub.cfg
   # Need to gracefully handle if the EFI partition is CSM (compatibility mode) only for SeaBIOS
   # Need to check if CHRX_TARGET_DISK contains /dev/sd* or /dev/nvme*
-  CHRX_EFI_PARTITION=$(get_disk_plus_partition 12)
-  mount ${CHRX_EFI_PARTITION} ${ESP_DIR}
-  if [ -d "${ESP_DIR}/EFI" -o -d "${ESP_DIR}/efi" ]; then
-    #apt_get_install grub-efi-amd64 shim-signed grub-efi-amd64-signed
-    grub-install --target=x86_64-efi --efi-directory=${ESP_DIR} --boot-directory=${BOOT_DIR} --recheck --removable
-  else
-    umount ${EFI_DIR}
-    rmdir -f ${EFI_DIR}
-    # Install regular (BIOS) grub
-    #apt_get_install grub-pc
-    # Grub can figure out target if we aren't forcing EFI
-    # --target=i386-pc
-    grub-install --boot-directory=${BOOT_DIR} --recheck --removable ${CHRX_TARGET_DISK}
+  if [[ "${CHRX_BOOTLOADER}" == *efi* ]]; then
+    ESP_DIR=$BOOT_DIR/efi/
+    mkdir -p ${ESP_DIR}
+    # Assumes the root partition is 7, it mounts partition 12 EFI-SYSTEM
+    # Currently only supports ChromeOS partitioned internal drive
+    mount ${CHRX_ROOT_PARTITION/%[7]/12} ${ESP_DIR}
+    # Removable avoids efibootmgr warnings
+    EFI_GRUB_OPTS="--target=x86_64-efi --efi-directory=${ESP_DIR}"
   fi
+  # Grub can figure out target if we aren't forcing EFI
+  grub-install ${EFI_GRUB_OPTS:-} --boot-directory=${BOOT_DIR} --recheck --removable ${CHRX_TARGET_DISK}
+  grub-mkconfig -o ${BOOT_DIR}/grub/grub.cfg
   
   #echo -e "\n${ANSI_GRN}Purging unwanted pkgs.${ANSI_RST}"
   #apt-get -y ${VERBOSITY_APTGET} purge openjade openjade1.3 jade tex-common sgml-base
@@ -682,6 +677,7 @@ fedora_set_selinux_autolabel()
 ## begin
 #echo debug ; bash
 
+do_install() {
 case "${CHRX_OS_DISTRO}" in
   *ubuntu)
     export DEBIAN_FRONTEND=noninteractive
@@ -775,4 +771,6 @@ esac
 
 
 add_first_user
+}
 
+(return 0 2>/dev/null) && sourced=1 || sourced=0 do_install
