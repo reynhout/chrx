@@ -60,6 +60,12 @@ install_utilities()
 
 apt_get_install()
 {
+    cat > /etc/apt/apt.conf.d/local <<-'EO_DPKG'
+Dpkg::Options {
+   "--force-confdef";
+   "--force-confold";
+}
+EO_DPKG
   apt-get -y ${VERBOSITY_APTGET} install $*
 }
 
